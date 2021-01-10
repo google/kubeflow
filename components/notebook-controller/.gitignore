@@ -26,3 +26,4 @@ bin
 gcb_build/**
 manager
 testbin/*
+*.temp

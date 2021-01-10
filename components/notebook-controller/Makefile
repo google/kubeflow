@@ -1,13 +1,8 @@
-
 # Image URL to use all building/pushing image targets
 IMG ?= gcr.io/kubeflow-images-public/notebook-controller
 TAG ?= $(eval TAG := $(shell date +v%Y%m%d)-$(shell git describe --tags --always --dirty)-$(shell git diff | shasum -a256 | cut -c -6))$(TAG)
 GOLANG_VERSION ?= 1.11.2
 SHELL := /bin/bash
-
-# Whether to use cached images with GCB
-USE_IMAGE_CACHE ?= true
-
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd"
 
@@ -37,6 +32,10 @@ test: generate fmt vet manifests
 # Build manager binary
 manager: generate fmt vet
 	go build -o bin/manager main.go
+
+# Uninstall CRDs from a cluster
+uninstall: manifests
+	kustomize build config/crd | kubectl delete -f -
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
 run: generate fmt vet
@@ -69,9 +68,10 @@ generate: controller-gen
 
 # Build the docker image
 docker-build: test
-	cd .. && docker build . -t ${IMG} -f ./notebook-controller/Dockerfile
+	cd .. && docker build . -t ${IMG}:${TAG} -f ./notebook-controller/Dockerfile
 	@echo "updating kustomize image patch file for manager resource"
 	sed -i'' -e 's@image: .*@image: '"${IMG}"'@' ./config/default/manager_image_patch.yaml
+
 
 # Push the docker image
 docker-push:
@@ -95,3 +95,25 @@ build-gcr: test
 push-gcr: build-gcr
 	docker push $(IMG):$(TAG)
 	@echo Pushed $(IMG):$(TAG)
+
+k3d:
+ifeq (, $(shell which k3d))
+	curl -sS https://raw.githubusercontent.com/rancher/k3d/1030f0fa47b65d78eb9ffbdf94f0623a08d19b97/install.sh  | TAG=v3.2.0 bash
+endif
+
+# Functional test using existing k8s cluster
+e2e-tests-existing-cluster: k3d docker-build manifests
+		# Assumes that the notebook controller image is loaded into the k8s cluster.
+		# The tests doesn't load the image into the cluster.
+		@echo "Testing notebook controller with the existing k8s cluster"
+		 TEST_USE_EXISTING_CLUSTER=true  ginkgo --focus="E2E TEST:" -v  ./e2e/...
+
+# Functional test using k3d cluster.
+e2e-tests-k3d: k3d docker-build manifests
+		@echo "Testing k3d 1.16"
+		TEST_K3D_DOCKER_IMAGE=docker.io/rancher/k3s:v1.16.14-k3s1 TEST_USE_EXISTING_CLUSTER=false TEST_IMAGE=$(IMG):$(TAG) ginkgo --focus="E2E TEST:" -v  ./e2e/...
+		@echo "Testing k3d 1.17"
+		TEST_K3D_DOCKER_IMAGE=docker.io/rancher/k3s:v1.17.14-k3s2 TEST_USE_EXISTING_CLUSTER=false TEST_IMAGE=$(IMG):$(TAG) ginkgo --focus="E2E TEST:" -v  ./e2e/...
+		@echo "Testing k3d 1.18"
+		TEST_K3D_DOCKER_IMAGE=docker.io/rancher/k3s:v1.18.12-k3s1 TEST_USE_EXISTING_CLUSTER=false TEST_IMAGE=$(IMG):$(TAG) ginkgo --focus="E2E TEST:" -v  ./e2e/...
+
