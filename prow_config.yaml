@@ -2,14 +2,14 @@
 # see kubeflow/testing/py/run_e2e_workflow.py
 python_paths:
   - kubeflow/kubeflow/py
-workflows:
+workflows: []
   # Run unittests
   # TODO(jlewi): Need to add step to run go and python unittests
-  - app_dir: kubeflow/kubeflow/testing/workflows
-    component: unit_tests
-    name: unittests
-    params:
-      workflowName: unittest
+  # - app_dir: kubeflow/kubeflow/testing/workflows
+  #   component: unit_tests
+  #   name: unittests
+  #   params:
+  #     workflowName: unittest
   # Image Auto Release workflows.
   # The workflows below are related to auto building our Docker images.
   # We have separate pre/postsubmit jobs because we want to use different
