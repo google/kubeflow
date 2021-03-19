@@ -7,6 +7,36 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - apps
   resources:
   - statefulsets
@@ -61,8 +91,20 @@ rules:
 - apiGroups:
   - kubeflow.org
   resources:
+  - notebooks/finalizers
+  verbs:
+  - '*'
+- apiGroups:
+  - kubeflow.org
+  resources:
   - notebooks/status
   verbs:
   - get
   - patch
   - update
+- apiGroups:
+  - networking.istio.io
+  resources:
+  - virtualservices
+  verbs:
+  - '*'
