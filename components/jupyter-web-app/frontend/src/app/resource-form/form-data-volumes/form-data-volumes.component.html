@@ -1,41 +1,33 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'hdd']" class="check"></fa-icon>
+    <fa-icon [icon]="['fas', 'hdd']"></fa-icon>
     Data Volumes
   </h3>
-  <p>Configure the Volumes to be mounted as your Datasets.</p>
-  <p *ngIf="readonly">
-    *The Cluster Administrator has disabled editing this Section!
-  </p>
-  <button
-    mat-stroked-button
-    color="accent"
-    (click)="addVol()"
-    type="button"
-    [disabled]="readonly"
-  >
-    <mat-icon>add</mat-icon>ADD VOLUME
+  <p>Specify additional PersistentVolumes to mount for data storage.</p>
+
+  <button mat-stroked-button
+          color="accent"
+          type="button"
+          (click)="addVol()"
+          [disabled]="readonly">
+    <mat-icon>add</mat-icon>
+    <span>ADD VOLUME</span>
   </button>
 
   <div *ngFor="let vol of datavols; let i = index" class="volume-wrapper">
-    <app-volume
-      [volume]="vol"
-      [notebookName]="parentForm.get('name').value"
-      [namespace]="parentForm.get('namespace').value"
-      [pvcs]="pvcs"
-      [ephemeral]="false"
-      [defaultStorageClass]="defaultStorageClass"
-    >
+    <app-volume [volumeForm]="vol"
+                [notebookName]="parentForm.value.name"
+                [namespace]="parentForm.value.namespace"
+                [defaultStorageClass]="defaultStorageClass"
+                [pvcs]="pvcs">
     </app-volume>
 
-    <div class="del-btn">
-      <button
-        mat-icon-button
-        color="warn"
-        (click)="deleteVol(i)"
-        type="button"
-        [disabled]="readonly"
-      >
+    <div class="delete-wrapper">
+      <button mat-icon-button
+              color="warn"
+              type="button"
+              (click)="deleteVol(i)"
+              [disabled]="readonly">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

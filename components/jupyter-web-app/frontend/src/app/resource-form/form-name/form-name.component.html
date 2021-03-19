@@ -1,33 +1,23 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'book']" class="check"></fa-icon>
+    <fa-icon [icon]="['fas', 'book']"></fa-icon>
     Name
   </h3>
   <p>
-    Specify the name of the Notebook Server and the Namespace it will belong to.
+    Specify the name of the Notebook Server.
   </p>
 
   <div class="inputs-wrapper">
     <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
-      <input
-        matInput
-        placeholder="Notebook Server's Name"
-        formControlName="name"
-        #name
-      />
+      <input matInput formControlName="name" required>
       <mat-error>{{ showNameError() }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Namespace</mat-label>
-      <input
-        matInput
-        placeholder="Name of Namespace"
-        formControlName="namespace"
-        readonly
-      />
-      <mat-error>You must enter a value</mat-error>
+      <input matInput formControlName="namespace" readonly>
+      <mat-error>Notebook Server Namespace can't be empty</mat-error>
     </mat-form-field>
   </div>
 </div>

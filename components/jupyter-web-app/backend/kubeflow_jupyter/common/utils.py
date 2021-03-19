@@ -5,7 +5,6 @@ import os
 import sys
 
 import yaml
-from collections import defaultdict
 from flask import request
 from kubernetes import client
 
@@ -27,6 +26,7 @@ EVENT_TYPE_WARNING = "Warning"
 STATUS_ERROR = "error"
 STATUS_WARNING = "warning"
 STATUS_RUNNING = "running"
+STATUS_STOPPED = "stopped"
 STATUS_WAITING = "waiting"
 
 
@@ -116,9 +116,9 @@ def spawner_ui_config():
 
 
 def get_uptime(then):
-    now = dt.datetime.now()
+    now = dt.datetime.utcnow()
     then = dt.datetime.strptime(then, "%Y-%m-%dT%H:%M:%SZ")
-    diff = now - then.replace(tzinfo=None)
+    diff = now - then
 
     days = diff.days
     hours = int(diff.seconds / 3600)
@@ -144,7 +144,7 @@ def get_uptime(then):
             else:
                 age = str(mins) + " mins"
 
-    return age + " ago"
+    return age
 
 
 def handle_storage_class(vol):
@@ -159,7 +159,6 @@ def handle_storage_class(vol):
         return vol["class"]
 
 
-# Volume handling functions
 def volume_from_config(config_vol, notebook):
     """
     Create a Volume Dict from the config.yaml. This dict has the same fields as
@@ -186,7 +185,7 @@ def pvc_from_dict(vol, namespace):
         return None
 
     return client.V1PersistentVolumeClaim(
-        metadata=client.V1ObjectMeta(name=vol["name"], namespace=namespace,),
+        metadata=client.V1ObjectMeta(name=vol["name"], namespace=namespace),
         spec=client.V1PersistentVolumeClaimSpec(
             access_modes=[vol["mode"]],
             storage_class_name=handle_storage_class(vol),
@@ -260,8 +259,7 @@ def process_pvc(rsrc):
 
 
 def process_gpu(cntr):
-    
-    # GPUs may not have been assigned to a pod 
+    # GPUs may not have been assigned to a pod
     gpu = 0
     gpuvendor = 'nvidia'
     try:
@@ -275,32 +273,41 @@ def process_gpu(cntr):
             gpuvendor = ''
 
     return gpu, gpuvendor
-    
+
+
+def process_annotations(rsrc):
+    annotations = rsrc["metadata"].get("annotations", {})
+    stopped = "kubeflow-resource-stopped" in annotations
+    return stopped
+
 
 def process_resource(rsrc, rsrc_events):
     # VAR: change this function according to the main resource
     cntr = rsrc["spec"]["template"]["spec"]["containers"][0]
-    status, reason = process_status(rsrc, rsrc_events)
+    stopped = process_annotations(rsrc)
+
+    status, reason = process_status(rsrc, rsrc_events, stopped)
     gpu, gpuvendor = process_gpu(cntr)
-   
+
     res = {
         "name": rsrc["metadata"]["name"],
         "namespace": rsrc["metadata"]["namespace"],
         "age": get_uptime(rsrc["metadata"]["creationTimestamp"]),
         "image": cntr["image"],
         "shortImage": cntr["image"].split("/")[-1],
-        "cpu": cntr["resources"]["requests"]["cpu"],
+        "cpu": cntr["resources"]["requests"].get("cpu", "N/A"),
         "gpu": gpu,
         "gpuvendor": gpuvendor,
-        "memory": cntr["resources"]["requests"]["memory"],
-        "volumes": [v["name"] for v in cntr["volumeMounts"]],
+        "memory": cntr["resources"]["requests"].get("memory", "N/A"),
+        "volumes": cntr.get("volumeMounts", []),
         "status": status,
         "reason": reason,
+        "stopped": stopped,
     }
     return res
 
 
-def process_status(rsrc, rsrc_events):
+def process_status(rsrc, rsrc_events, stopped):
     """
     Return status and reason. Status may be [running|waiting|warning|error]
     """
@@ -320,14 +327,17 @@ def process_status(rsrc, rsrc_events):
     if "running" in s:
         status, reason = STATUS_RUNNING, "Running"
     elif "terminated" in s:
-        status, reason = STATUS_ERROR, "The Pod has Terminated"
+        if stopped:
+            status, reason = STATUS_STOPPED, "The Notebook is Stopped"
+        else:
+            status, reason = STATUS_ERROR, "The Pod has Terminated"
     else:
         if "waiting" in s:
             reason = s["waiting"]["reason"]
             status = STATUS_ERROR if reason == "ImagePullBackOff" else STATUS_WAITING
         else:
             status, reason = STATUS_WAITING, "Scheduling the Pod"
-        # Provide the user with detailed information (if any) about why the notebook is not starting
+        # get detailed information (if any) about why the notebook is not starting
         status_event, reason_event = find_error_event(rsrc_events)
         if status_event:
             status, reason = status_event, reason_event
@@ -336,7 +346,7 @@ def process_status(rsrc, rsrc_events):
 
 
 def find_error_event(rsrc_events):
-    '''
+    """
     Returns status and reason from the latest event that surfaces the cause
     of why the resource could not be created. For a Notebook, it can be due to:
 
@@ -344,7 +354,7 @@ def find_error_event(rsrc_events):
           Warning         FailedCreate      pods "x" is forbidden: error looking up service account ... (originated in statefulset)
           Warning         FailedScheduling  0/1 nodes are available: 1 Insufficient cpu (originated in pod)
 
-    '''
+    """
     for e in sorted(rsrc_events, key=event_timestamp, reverse=True):
         if e.type == EVENT_TYPE_WARNING:
             return STATUS_WAITING, e.message
@@ -355,59 +365,74 @@ def event_timestamp(event):
     return event.metadata.creation_timestamp.replace(tzinfo=None)
 
 
-# Notebook YAML processing
 def set_notebook_image(notebook, body, defaults):
-    """
-    If the image is set to readOnly, use only the value from the config
-    """
-    if defaults["image"].get("readOnly", False):
-        image = defaults["image"]["value"]
-        logger.info("Using default Image: " + image)
-    elif body.get("customImageCheck", False):
-        image = body["customImage"].strip()
-        logger.info("Using form's custom Image: " + image)
-    elif "image" in body:
-        image = body["image"]
-        logger.info("Using form's Image: " + image)
-    else:
-        image = defaults["image"]["value"]
-        logger.info("Using default Image: " + image)
+    image_configs = defaults.get("image", {})
+    image_default = image_configs.get("value", None)
+    image_options = image_configs.get("options", [])
 
-    notebook["spec"]["template"]["spec"]["containers"][0]["image"] = image
+    # extract the image which the form is proposing to us
+    if body.get("customImageCheck", False):
+        form_image = body.get("customImage", "").strip()
+    else:
+        form_image = body.get("image", "").strip()
+
+    # if readOnly, image must be in `options`
+    if image_configs.get("readOnly", False):
+        if form_image in image_options:
+            image = form_image
+            logger.info("Using form's Image: `{}`".format(image))
+        else:
+            image = image_default
+            logger.info("Using default Image: `{}`".format(image))
+    # if not readOnly, image can be anything
+    else:
+        image = form_image
+        logger.info("Using form's Custom Image: `{}`".format(image))
+
+    notebook_container = notebook["spec"]["template"]["spec"]["containers"][0]
+    notebook_container["image"] = image
 
 
 def set_notebook_cpu(notebook, body, defaults):
-    container = notebook["spec"]["template"]["spec"]["containers"][0]
+    cpu_configs = defaults.get("cpu", {})
+    cpu_default = cpu_configs.get("value", None)
 
-    if defaults["cpu"].get("readOnly", False):
-        cpu = defaults["cpu"]["value"]
-        logger.info("Using default CPU: " + cpu)
-    elif body.get("cpu", ""):
+    if cpu_configs.get("readOnly", False):
+        cpu = cpu_default
+        logger.info("Using default CPU: `{}`".format(cpu))
+    elif body.get("cpu", None) is not None:
         cpu = body["cpu"]
-        logger.info("Using form's CPU: " + cpu)
+        logger.info("Using form's CPU: `{}`".format(cpu))
     else:
-        cpu = defaults["cpu"]["value"]
-        logger.info("Using default CPU: " + cpu)
+        cpu = cpu_default
+        logger.info("Using default CPU: `{}`".format(cpu))
 
-    container["resources"]["requests"]["cpu"] = cpu
-    container["resources"]["limits"]["cpu"] = cpu
+    notebook_container = notebook["spec"]["template"]["spec"]["containers"][0]
+    if cpu is not None:
+        notebook_container["resources"]["requests"]["cpu"] = cpu
+        if cpu_configs.get("setLimit", False):
+            notebook_container["resources"]["limits"]["cpu"] = cpu
 
 
 def set_notebook_memory(notebook, body, defaults):
-    container = notebook["spec"]["template"]["spec"]["containers"][0]
+    memory_configs = defaults.get("memory", {})
+    memory_default = memory_configs.get("value", None)
 
-    if defaults["memory"].get("readOnly", False):
-        memory = defaults["memory"]["value"]
-        logger.info("Using default Memory: " + memory)
-    elif body.get("memory", ""):
+    if memory_configs.get("readOnly", False):
+        memory = memory_default
+        logger.info("Using default Memory: `{}`".format(memory))
+    elif body.get("memory", None) is not None:
         memory = body["memory"]
-        logger.info("Using form's Memory: " + memory)
+        logger.info("Using form's Memory: `{}`".format(memory))
     else:
-        memory = defaults["memory"]["value"]
-        logger.info("Using default Memory: " + memory)
+        memory = memory_default
+        logger.info("Using default Memory: `{}`".format(memory))
 
-    container["resources"]["requests"]["memory"] = memory
-    container["resources"]["limits"]["memory"] = memory
+    notebook_container = notebook["spec"]["template"]["spec"]["containers"][0]
+    if memory is not None:
+        notebook_container["resources"]["requests"]["memory"] = memory
+        if memory_configs.get("setLimit", False):
+            notebook_container["resources"]["limits"]["memory"] = memory
 
 
 def set_notebook_affinity(notebook, body, defaults):
@@ -417,13 +442,13 @@ def set_notebook_affinity(notebook, body, defaults):
 
     if affinity_configs.get("readOnly", False):
         configKey = aff_default
-        logger.info("Using default AffinityConfig: {}".format(configKey))
+        logger.info("Using default AffinityConfig: `{}`".format(configKey))
     elif body.get("affinityConfig", None) is not None:
         configKey = body["affinityConfig"]
-        logger.info("Using form's AffinityConfig: {}".format(configKey))
+        logger.info("Using form's AffinityConfig: `{}`".format(configKey))
     else:
         configKey = aff_default
-        logger.info("Using default AffinityConfig: {}".format(configKey))
+        logger.info("Using default AffinityConfig: `{}`".format(configKey))
 
     aff_group_match = [
         aff_conf for aff_conf in aff_options if aff_conf["configKey"] == configKey
@@ -446,13 +471,13 @@ def set_notebook_tolerations(notebook, body, defaults):
 
     if toleration_configs.get("readOnly", False):
         groupKey = tol_group_default
-        logger.info("Using default TolerationGroup: {}".format(groupKey))
+        logger.info("Using default TolerationGroup: `{}`".format(groupKey))
     elif body.get("tolerationGroup", None) is not None:
         groupKey = body["tolerationGroup"]
-        logger.info("Using form's TolerationGroup: {}".format(groupKey))
+        logger.info("Using form's TolerationGroup: `{}`".format(groupKey))
     else:
         groupKey = tol_group_default
-        logger.info("Using default TolerationGroup: {}".format(groupKey))
+        logger.info("Using default TolerationGroup: `{}`".format(groupKey))
 
     tol_group_match = [
         tol_group for tol_group in tol_group_options if tol_group["groupKey"] == groupKey
@@ -543,6 +568,24 @@ def set_notebook_configurations(notebook, body, defaults):
 
     for l in labels:
         notebook_labels[l] = "true"
+
+
+def set_notebook_ports(notebook, defaults):
+    ports_configs = defaults.get("ports", {})
+    container_port = ports_configs.get("containerPort", None)
+    host_port = ports_configs.get("hostPort", None)
+    notebook_port = {
+        "name": "notebook-port",
+        "containerPort": 8888
+    }
+
+    if container_port:
+        notebook_port["containerPort"] = container_port
+    if host_port:
+        notebook_port["hostPort"] = host_port
+
+    container = notebook["spec"]["template"]["spec"]["containers"][0]
+    container["ports"].append(notebook_port)
 
 
 def set_notebook_extra_resources(notebook, body, defaults):

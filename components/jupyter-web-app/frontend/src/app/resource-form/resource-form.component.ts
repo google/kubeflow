@@ -20,7 +20,7 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
   config: Config;
 
   ephemeral = false;
-  defaultStorageclass = false;
+  defaultStorageClass = false;
   formReady = false;
   pvcs: Volume[] = [];
 
@@ -64,9 +64,9 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
     // Check if a default StorageClass is set
     this.k8s.getDefaultStorageClass().subscribe(defaultClass => {
       if (defaultClass.length === 0) {
-        this.defaultStorageclass = false;
+        this.defaultStorageClass = false;
       } else {
-        this.defaultStorageclass = true;
+        this.defaultStorageClass = true;
       }
     });
   }
@@ -78,7 +78,7 @@ export class ResourceFormComponent implements OnInit, OnDestroy {
 
   public onSubmit() {
     this.k8s
-      .postResource(this.formCtrl.value)
+      .postResource(this.formCtrl.getRawValue())
       .pipe(catchError(_ => of('failed')))
       .subscribe(resp => {
         if (resp === 'posted') {

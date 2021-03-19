@@ -8,10 +8,9 @@ import { SnackType } from "src/app/utils/types";
   styleUrls: ["./snack-bar.component.scss"]
 })
 export class SnackBarComponent {
-  constructor(
-    public snackBarRef: MatSnackBarRef<SnackBarComponent>,
-    @Inject(MAT_SNACK_BAR_DATA) public data: any
-  ) {}
+  constructor(public snackBarRef: MatSnackBarRef<SnackBarComponent>,
+              @Inject(MAT_SNACK_BAR_DATA) public data: any) {
+  }
 
   get icon() {
     switch (this.data.snackType) {

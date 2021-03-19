@@ -10,8 +10,12 @@
   max-width: 20%;
 }
 
-#name {
+#newName {
   max-width: 30%;
+}
+
+#existingName {
+  max-width: 60%;
 }
 
 #path {
@@ -20,12 +24,14 @@
 
 .volume-wrapper {
   display: flex;
+  box-sizing: border-box;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
 }
 
 .volume-wrapper > * {
   flex: 1 1 0px;
-  padding-right: 0.5rem;
+  box-sizing: border-box;
   padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }

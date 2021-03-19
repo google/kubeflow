@@ -1,18 +1,6 @@
-// .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-//   color: rgba(0, 0, 0, 0.15) !important;
-// }
-
-.margin {
-  margin: 8px 8px 8px 0px;
-}
-
-.wide {
-  width: 100%;
-}
-
 .container {
   width: fit-content;
-  margin: 2em auto;
+  margin: 1rem auto;
 }
 
 .card {
@@ -22,11 +10,16 @@
   background: white;
 }
 
-// The Classes bellow are used from the sub-components
-// they are here to reduce code redunduncy since these would appear in each
-// different sub-component
-h3,
-p {
+.margin {
+  margin: 8px 8px 8px 0px;
+}
+
+// Classes used by sub-components
+.wide {
+  width: 100%;
+}
+
+h3, p {
   color: rgba(0, 0, 0, 0.54);
 }
 
@@ -44,12 +37,14 @@ p {
 
 .inputs-wrapper {
   display: flex;
+  box-sizing: border-box;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
 }
 
 .inputs-wrapper > .mat-form-field {
   flex: 1 1 0px;
+  box-sizing: border-box;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }

@@ -6,7 +6,7 @@ import {
 } from "@angular/common/http";
 
 import { environment } from "src/environments/environment";
-import { Resp, SnackType, emptyVolume, Volume } from "src/app/utils/types";
+import { Resp, SnackType, Volume } from "src/app/utils/types";
 import { SnackBarService } from "src/app/services/snack-bar.service";
 import { Observable, throwError } from "rxjs";
 import { tap, map, catchError } from "rxjs/operators";
@@ -14,7 +14,8 @@ import {
   RokToken,
   RokResponse,
   JupyterLab,
-  emptyJupyterLab
+  emptyJupyterLab,
+  emptyVolume
 } from "../utils/types";
 
 @Injectable({

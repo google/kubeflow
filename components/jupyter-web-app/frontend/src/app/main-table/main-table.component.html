@@ -1,13 +1,5 @@
 <!-- Namespaces Selector -->
-<div class="parent spacing" *ngIf="!ns.dashboardConnected()">
-  <div class="spacer"></div>
-  <app-namespace-select></app-namespace-select>
-  <div class="spacer"></div>
-</div>
+<app-namespace-select *ngIf="!ns.dashboardConnected()"></app-namespace-select>
 
-<!-- The Table showing our Resource -->
-<div class="parent" [class.spacing]="ns.dashboardConnected()">
-  <div class="spacer"></div>
-  <app-resource-table></app-resource-table>
-  <div class="spacer"></div>
-</div>
+<!-- Resource Table -->
+<app-resource-table></app-resource-table>

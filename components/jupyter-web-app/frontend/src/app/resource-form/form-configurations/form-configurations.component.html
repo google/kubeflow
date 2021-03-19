@@ -1,18 +1,17 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'sliders-h']" class="check"></fa-icon>
-    Configurations
+    <fa-icon [icon]="['fas', 'sliders-h']"></fa-icon>
+    PodDefaults
   </h3>
   <p>
-    Extra layers of configurations that will be applied to the new Notebook.
-    (e.g. Insert credentials as Secrets, set Environment Variables.)
+    Select <a href="https://github.com/kubeflow/kubeflow/blob/master/components/admission-webhook/README.md" target="_blank">PodDefault</a> configurations which should be applied to the Notebook Server.
   </p>
 
   <mat-form-field class="wide" appearance="outline">
-    <mat-label>Configurations</mat-label>
-    <mat-select [formControl]="parentForm.get('configurations')" multiple>
-      <mat-option *ngFor="let config of podDefaults" [value]="config.label">
-        {{ config.desc }}
+    <mat-label>PodDefaults</mat-label>
+    <mat-select [formControl]="parentForm.controls.configurations" multiple>
+      <mat-option *ngFor="let podDefault of podDefaults" [value]="podDefault.label">
+        {{ podDefault.desc }}
       </mat-option>
     </mat-select>
   </mat-form-field>

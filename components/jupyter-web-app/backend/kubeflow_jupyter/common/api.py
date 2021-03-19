@@ -1,7 +1,9 @@
 import json
+
 from kubernetes import client, config
-from kubernetes.config import ConfigException
 from kubernetes.client.rest import ApiException
+from kubernetes.config import ConfigException
+
 from . import auth
 from . import utils
 
@@ -179,6 +181,7 @@ def create_pvc(pvc, namespace):
         pvc
     )
 
+
 # DELETErs
 @auth.needs_authorization("delete", "kubeflow.org", "v1beta1", "notebooks")
 def delete_notebook(notebook_name, namespace):
@@ -188,8 +191,21 @@ def delete_notebook(notebook_name, namespace):
         "v1beta1",
         namespace,
         "notebooks",
+        notebook_name
+    )
+
+
+# PATCHrs
+@auth.needs_authorization("patch", "kubeflow.org", "v1beta1", "notebooks")
+def patch_notebook(notebook_name, namespace, body):
+    return wrap(
+        custom_api.patch_namespaced_custom_object,
+        "kubeflow.org",
+        "v1beta1",
+        namespace,
+        "notebooks",
         notebook_name,
-        client.V1DeleteOptions(propagation_policy="Foreground")
+        body
     )
 
 

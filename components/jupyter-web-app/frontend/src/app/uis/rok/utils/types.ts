@@ -28,6 +28,17 @@ export interface JupyterLab {
   extra?: string;
 }
 
+export function emptyVolume(): Volume {
+  return {
+    namespace: '',
+    name: '',
+    size: '',
+    path: '',
+    mode: '',
+    extraFields: {},
+  };
+}
+
 export function emptyJupyterLab(): JupyterLab {
   return {
     images: [],
@@ -35,7 +46,7 @@ export function emptyJupyterLab(): JupyterLab {
     cpu: "",
     memory: "",
     wsvolume: {
-      type: "",
+      namespace: "",
       name: "",
       size: "",
       path: "",

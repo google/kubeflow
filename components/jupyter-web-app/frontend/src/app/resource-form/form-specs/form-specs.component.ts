@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
 @Component({
@@ -8,10 +8,15 @@ import { FormGroup } from "@angular/forms";
 })
 export class FormSpecsComponent implements OnInit {
   @Input() parentForm: FormGroup;
+  @Input() setLimitCPU: boolean;
+  @Input() setLimitMemory: boolean;
   @Input() readonlyCPU: boolean;
   @Input() readonlyMemory: boolean;
 
-  constructor() {}
 
-  ngOnInit() {}
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 }

@@ -1,42 +1,33 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fab', 'docker']" class="check"></fa-icon>
+    <fa-icon [icon]="['fab', 'docker']"></fa-icon>
     Image
   </h3>
   <p>
-    A starter Jupyter Docker Image with a baseline deployment and typical ML
-    packages.
+    Specify the container image to be used by the Notebook Server.
   </p>
-  <mat-checkbox *ngIf="!readonly" formControlName="customImageCheck"
-    >Custom Image</mat-checkbox
-  >
+  <mat-checkbox *ngIf="!readonly" formControlName="customImageCheck">
+    Custom Image
+  </mat-checkbox>
 
-  <mat-form-field
-    class="wide"
-    appearance="outline"
-    *ngIf="!parentForm?.value.customImageCheck"
-  >
-    <!-- If readonly, then make it an input element instead of select -->
-    <mat-label>Image</mat-label>
-    <mat-select placeholder="Docker Image" formControlName="image">
-      <mat-option *ngFor="let img of images" [value]="img">
-        {{ img }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="inputs-wrapper">
+    <mat-form-field class="wide"
+                    appearance="outline"
+                    *ngIf="!parentForm?.value.customImageCheck">
+      <mat-label>Container Image</mat-label>
+      <mat-select placeholder="Container Image" formControlName="image">
+        <mat-option *ngFor="let img of images" [value]="img">
+          {{ img }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field
-    class="wide"
-    appearance="outline"
-    *ngIf="parentForm?.value.customImageCheck"
-  >
-    <mat-label>Custom Image</mat-label>
-    <input
-      matInput
-      placeholder="Provide a custom Image"
-      formControlName="customImage"
-      #cstmimg
-    />
-    <mat-error>Please provide and Image to use</mat-error>
-  </mat-form-field>
+    <mat-form-field class="wide"
+                    appearance="outline"
+                    *ngIf="parentForm?.value.customImageCheck">
+      <mat-label>Container Image</mat-label>
+      <input matInput formControlName="customImage" required>
+      <mat-error>Notebook Server image can't be empty</mat-error>
+    </mat-form-field>
+  </div>
 </div>

@@ -1,9 +1,25 @@
-import { createVolumeControl } from 'src/app/utils/common';
 import { ConfigVolume } from 'src/app/utils/types';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+
+const fb = new FormBuilder();
 
 export function createRokVolumeControl(vol: ConfigVolume) {
-  const volCtrl = createVolumeControl(vol);
+  const volCtrl = fb.group({
+    type: [vol.type.value, [Validators.required]],
+    name: [vol.name.value, [Validators.required]],
+    size: [vol.size.value, [Validators.required]],
+    mode: [vol.accessModes.value, [Validators.required]],
+    path: [vol.name.value, [Validators.required]],
+    class: [vol.class.value, [Validators.required]],
+    extraFields: fb.group({}),
+    defaultName: [vol.name.value, []],
+  })
 
   // Set the rokUrl in extraFields
   const extraFields: FormGroup = volCtrl.get('extraFields') as FormGroup;

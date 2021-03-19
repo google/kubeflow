@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { FormGroup, FormArray, Validators, FormBuilder } from "@angular/forms";
-import { Volume } from "src/app/utils/types";
-import { addDataVolume } from "src/app/utils/common";
+import { Component, Input, OnInit } from "@angular/core";
+import { FormArray, FormGroup } from "@angular/forms";
+import { ConfigVolume, Volume } from "src/app/utils/types";
+import { appendDataVolumeControl } from "src/app/utils/common";
 
 @Component({
   selector: "app-form-data-volumes",
@@ -12,27 +12,35 @@ import { addDataVolume } from "src/app/utils/common";
   ]
 })
 export class FormDataVolumesComponent implements OnInit {
+  private _volumeId: number = 0
+
   @Input() parentForm: FormGroup;
-  @Input() readonly: boolean;
   @Input() pvcs: Volume[];
+  @Input() defaultVolumeConfig: ConfigVolume;
   @Input() defaultStorageClass: boolean;
+  @Input() readonly: boolean;
 
   get datavols() {
-    const vols = this.parentForm.get("datavols") as FormArray;
+    const vols = this.parentForm.controls.datavols as FormArray;
     return vols.controls;
   }
 
-  constructor() {}
-
-  ngOnInit() {}
-
   addVol() {
-    addDataVolume(this.parentForm);
+    const vols = this.parentForm.controls.datavols as FormArray;
+    appendDataVolumeControl(vols, this.defaultVolumeConfig, String(this._volumeId));
+    this._volumeId++
   }
 
   deleteVol(idx: number) {
-    const vols = this.parentForm.get("datavols") as FormArray;
+    const vols = this.parentForm.controls.datavols as FormArray;
     vols.removeAt(idx);
     this.parentForm.updateValueAndValidity();
   }
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
+
 }

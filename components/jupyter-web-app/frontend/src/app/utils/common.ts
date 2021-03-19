@@ -1,5 +1,5 @@
-import { ConfigVolume, Config, GPU } from 'src/app/utils/types';
-import { Validators, FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { Config, ConfigGPU, ConfigVolume } from 'src/app/utils/types';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 const fb = new FormBuilder();
 
@@ -20,12 +20,16 @@ export function getFormDefaults(): FormGroup {
     workspace: fb.group({
       type: ['', [Validators.required]],
       name: ['', [Validators.required]],
-      templatedName: ['', []],
       size: ['', [Validators.required]],
-      path: [{ value: '', disabled: true }, [Validators.required]],
+      path: ['', [Validators.required]],
       mode: ['', [Validators.required]],
-      class: ['{none}', [Validators.required]],
+      class: ['', [Validators.required]],
       extraFields: fb.group({}),
+      defaultName: ['', []],
+      defaultSize: ['', []],
+      defaultMode: ['', []],
+      defaultPath: ['', []],
+      defaultClass: ['', []],
     }),
     datavols: fb.array([]),
     shm: [true, []],
@@ -35,135 +39,107 @@ export function getFormDefaults(): FormGroup {
   });
 }
 
-export function createVolumeControl(vol: ConfigVolume, readonly = false) {
-  const ctrl = fb.group({
-    type: [vol.type.value, [Validators.required]],
-    name: [vol.name.value, [Validators.required]],
-    templatedName: [vol.name.value, []],
-    size: [vol.size.value, [Validators.required]],
-    path: [vol.mountPath.value, [Validators.required]],
-    mode: [vol.accessModes.value, [Validators.required]],
-    class: ['{none}', []],
-    extraFields: fb.group({}),
-  });
+export function appendDataVolumeControl(volsArray: FormArray,
+                                        vol: ConfigVolume,
+                                        volumeId: string = "") {
+  const _templatedName = vol.name.value.replace("{volume-id}", volumeId)
+  const _templatedPath = vol.mountPath.value.replace("{volume-id}", volumeId)
 
-  if (readonly) {
-    ctrl.disable();
-  }
-
-  return ctrl;
+  volsArray.push(
+    fb.group({
+      type: [vol.type.value, [Validators.required]],
+      name: [_templatedName, [Validators.required]],
+      size: [vol.size.value, [Validators.required]],
+      mode: [vol.accessModes.value, [Validators.required]],
+      path: [_templatedPath, [Validators.required]],
+      class: [vol.class.value, [Validators.required]],
+      extraFields: fb.group({}),
+      defaultName: [_templatedName, []],
+      defaultSize: [vol.size.value, []],
+      defaultMode: [vol.accessModes.value, []],
+      defaultPath: [_templatedPath, []],
+      defaultClass: [vol.class.value, []],
+    })
+  );
 }
 
-export function updateVolumeControl(
-  volCtrl: FormGroup,
-  vol: ConfigVolume,
-  readonly = false,
-) {
-  volCtrl.get('name').setValue(vol.name.value);
+export function updateWorkspaceVolumeControl(volCtrl: FormGroup, vol: ConfigVolume) {
   volCtrl.get('type').setValue(vol.type.value);
+  volCtrl.get('name').setValue(vol.name.value);
   volCtrl.get('size').setValue(vol.size.value);
   volCtrl.get('mode').setValue(vol.accessModes.value);
   volCtrl.get('path').setValue(vol.mountPath.value);
   volCtrl.get('class').setValue(vol.class.value);
-  volCtrl.get('templatedName').setValue(vol.name.value);
+  volCtrl.get('defaultName').setValue(vol.name.value);
+  volCtrl.get('defaultSize').setValue(vol.size.value);
+  volCtrl.get('defaultMode').setValue(vol.accessModes.value);
+  volCtrl.get('defaultPath').setValue(vol.mountPath.value);
+  volCtrl.get('defaultClass').setValue(vol.class.value);
 
-  if (readonly) {
-    volCtrl.disable();
+  // dont let users change the mount path
+  if (vol.mountPath.readOnly) {
+    volCtrl.controls.path.disable();
   }
 }
 
-export function addDataVolume(
-  formCtrl: FormGroup,
-  vol: ConfigVolume = null,
-  readonly = false,
-) {
-  // If no vol is provided create one with default values
-  if (vol === null) {
-    const l: number = formCtrl.value.datavols.length;
-
-    vol = {
-      type: {
-        value: 'New',
-      },
-      name: {
-        value: '{notebook-name}-vol-' + (l + 1),
-      },
-      size: {
-        value: '10Gi',
-      },
-      mountPath: {
-        value: '/home/jovyan/data-vol-' + (l + 1),
-      },
-      accessModes: {
-        value: 'ReadWriteOnce',
-      },
-      class: {
-        value: '{none}',
-      },
-    };
-  }
-
-  // Push it to the control
-  const ctrl = createVolumeControl(vol, readonly);
-  const vols = formCtrl.get('datavols') as FormArray;
-  vols.push(ctrl);
+export function updateGPUControl(gpuCtrl: FormGroup, gpus: ConfigGPU) {
+  gpuCtrl.get('num').setValue(gpus.num);
+  gpuCtrl.get('vendor').setValue(gpus.vendor);
 }
 
-export function updateGPUControl(formCtrl: FormGroup, gpuConf: any) {
-  // If the backend didn't send the value, default to none
-  if (gpuConf == null) {
-    formCtrl.get('num').setValue('none');
-    return;
-  }
-
-  // Set the values
-  const gpu = gpuConf.value as GPU;
-  formCtrl.get('num').setValue(gpu.num);
-  formCtrl.get('vendor').setValue(gpu.vendor);
-
-  // Don't allow the user to edit them if the admin does not allow it
-  if (gpuConf.readOnly) {
-    formCtrl.get('num').disable();
-    formCtrl.get('vendor').disable();
-  }
-}
-
+// Sets the values from our internal dict
+// This is an initialization step that should be only run once
 export function initFormControls(formCtrl: FormGroup, config: Config) {
-  // Sets the values from our internal dict. This is an initialization step
-  // that should be only run once
+  // Image
+  formCtrl.controls.image.setValue(config.image.value);
+  if (config.image.readOnly) {
+    // we only disable the "Custom Image" checkbox
+    // we want the user to be able to select from the provided list
+    formCtrl.controls.customImageCheck.disable();
+  }
+
+  // CPU
   formCtrl.controls.cpu.setValue(config.cpu.value);
   if (config.cpu.readOnly) {
     formCtrl.controls.cpu.disable();
   }
 
+  // RAM
   formCtrl.controls.memory.setValue(config.memory.value);
   if (config.memory.readOnly) {
     formCtrl.controls.memory.disable();
   }
 
-  formCtrl.controls.image.setValue(config.image.value);
-  if (config.image.readOnly) {
-    formCtrl.controls.image.disable();
+  // GPUs
+  updateGPUControl(
+    formCtrl.controls.gpus as FormGroup,
+    config.gpus.value
+  );
+  if (config.gpus.readOnly) {
+    formCtrl.controls.gpus.disable()
   }
 
-  updateVolumeControl(
-    formCtrl.get('workspace') as FormGroup,
-    config.workspaceVolume.value,
-    config.workspaceVolume.readOnly,
+  // Workspace Volume
+  updateWorkspaceVolumeControl(
+    formCtrl.controls.workspace as FormGroup,
+    config.workspaceVolume.value
   );
+  if (config.workspaceVolume.readOnly) {
+    formCtrl.controls.workspace.disable();
+    formCtrl.controls.noWorkspace.disable();
+  }
 
-  // Disable the mount path by default
-  const ws = formCtrl.controls.workspace as FormGroup;
-  ws.controls.path.disable();
-
-  // Add the data volumes
+  // Data Volumes
   config.dataVolumes.value.forEach(vol => {
-    // Create a new FormControl to append to the array
-    addDataVolume(formCtrl, vol.value, config.dataVolumes.readOnly);
+    // append each default DataVolume to the form
+    appendDataVolumeControl(
+      formCtrl.controls.datavols as FormArray,
+      vol.value
+    );
   });
-
-  // GPUs
-  updateGPUControl(formCtrl.get('gpus') as FormGroup, config.gpus);
+  if (config.dataVolumes.readOnly) {
+    formCtrl.controls.datavols.disable()
+  }
 
   // Affinity
   formCtrl.controls.affinityConfig.setValue(config.affinityConfig.value);
@@ -177,14 +153,15 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
     formCtrl.controls.tolerationGroup.disable();
   }
 
-  formCtrl.controls.shm.setValue(config.shm.value);
-  if (config.shm.readOnly) {
-    formCtrl.controls.shm.disable();
-  }
-
-  // PodDefaults / Configurations. Set the pre selected labels
+  // PodDefaults
   formCtrl.controls.configurations.setValue(config.configurations.value);
   if (config.configurations.readOnly) {
     formCtrl.controls.configurations.disable();
+  }
+
+  // Advanced Options
+  formCtrl.controls.shm.setValue(config.shm.value);
+  if (config.shm.readOnly) {
+    formCtrl.controls.shm.disable();
   }
 }

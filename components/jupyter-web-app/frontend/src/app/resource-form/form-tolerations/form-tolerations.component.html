@@ -1,16 +1,17 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'check-square']" class="check"></fa-icon>
+    <fa-icon [icon]="['fas', 'check-square']"></fa-icon>
     Tolerations
   </h3>
   <p>
-    Select a taint toleration config group.
+    Select a toleration config group.
   </p>
 
   <mat-form-field class="wide" appearance="outline">
     <mat-label>Toleration Group</mat-label>
     <mat-select matNativeControl formControlName="tolerationGroup">
-      <mat-option *ngFor="let tolerationGroup of tolerationGroups" [value]="tolerationGroup.groupKey">
+      <mat-option *ngFor="let tolerationGroup of tolerationGroups"
+                  [value]="tolerationGroup.groupKey">
         {{ tolerationGroup.displayName }}
       </mat-option>
     </mat-select>

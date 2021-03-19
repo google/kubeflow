@@ -1,71 +1,105 @@
+.container {
+  width: fit-content;
+  margin: 1rem auto 1rem auto;
+}
+
 .card {
   width: 900px;
-  padding: 0px;
-  border-radius: 5px;
   background: white;
-}
-
-table {
-  width: 100%;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  padding: 0px 16px 0px 16px;
-  height: 64px;
-}
-
-.header p {
-  font-weight: 400;
-  font-size: 20px;
-}
-
-.cdk-column-actions {
-  text-align: center;
-}
-
-.mat-icon {
-  line-height: 0.85;
-}
-
-td.mat-cell:last-of-type,
-td.mat-footer-cell:last-of-type,
-th.mat-header-cell:last-of-type {
-  padding-right: 0px;
-}
-
-.inline {
-  display: inline-block;
-}
-
-// Status Icons
-.running {
-  color: green;
-}
-
-.warning {
-  color: orange;
-}
-
-.error {
-  color: red;
-}
-
-.status {
-  display: inline-flex;
-  vertical-align: middle;
-}
-
-.delete {
-  color: red;
-}
-
-// Flex
-.parent {
-  display: flex;
 }
 
 .spacer {
   flex-grow: 1;
+}
+
+.mat-list-icon {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+// Header Styling
+.header {
+  display: flex;
+  padding: 1.5rem 1.0rem 0.5rem 1.5rem;
+}
+
+// Table Styling
+table {
+  width: 100%;
+}
+
+.resource-row {
+  cursor: pointer;
+}
+
+.resource-row:hover {
+  background: #fafafa;
+}
+
+.resource-row td {
+  border-bottom-width: 0;
+}
+
+.detail-row {
+  height: 0;
+}
+
+.detail-row-content {
+  overflow: hidden;
+}
+
+// Column Widths
+.mat-column-status {
+  width: 7.5%;
+}
+
+.mat-column-actions {
+  width: 20%;
+}
+
+// ------------
+// Expanded Details
+// ------------
+.cards-wrapper {
+  display: flex;
+  box-sizing: border-box;
+  margin: 0.90rem 0.4rem;
+}
+
+.cards-wrapper > * {
+  flex: 1 1 0px;
+  box-sizing: border-box;
+}
+
+.resources-card {
+  max-width: 30%;
+  padding-right: 0.90rem;
+}
+
+.volumes-card {
+  max-width: 30%;
+  padding-right: 0.90rem;
+}
+
+// ------------
+// Actions
+// ------------
+.actions-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-disabled {
+  background-color: #eeeeee;
+}
+
+.start {
+  color: #4caf50;
+}
+
+.pause {
+  color: #ff9800;
+}
+
+.delete {
+  color: #f44336;
 }

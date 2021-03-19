@@ -1,0 +1,41 @@
+<!-- Unknown -->
+<mat-icon *ngIf="statusUnknown()"
+          [ngClass]="['status-unknown', 'status']"
+          [matTooltip]="statusReason">
+  help
+</mat-icon>
+
+<!-- Running -->
+<mat-icon *ngIf="statusRunning()"
+          [ngClass]="['status-running', 'status']"
+          [matTooltip]="statusReason">
+  check_circle
+</mat-icon>
+
+<!-- Stopped -->
+<mat-icon *ngIf="statusStopped()"
+          [ngClass]="['status-stopped', 'status']"
+          [matTooltip]="statusReason">
+  stop_circle
+</mat-icon>
+
+<!-- Warning -->
+<mat-icon *ngIf="statusWarning()"
+          [ngClass]="['status-warning', 'status']"
+          [matTooltip]="statusReason">
+  warning
+</mat-icon>
+
+<!-- Error -->
+<mat-icon *ngIf="statusError()"
+          [ngClass]="['status-error', 'status']"
+          [matTooltip]="statusReason">
+  error
+</mat-icon>
+
+<!-- Waiting -->
+<mat-spinner *ngIf="statusWaiting()"
+             [ngClass]="['status']"
+             [matTooltip]="statusReason"
+             diameter="24">
+</mat-spinner>

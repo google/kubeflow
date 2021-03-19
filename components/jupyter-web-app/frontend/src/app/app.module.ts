@@ -4,17 +4,18 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { FontAwesomeModule, FaIconLibrary } from "@fortawesome/angular-fontawesome";
+import { FaIconLibrary, FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import {
+  faBook,
+  faBullseye,
+  faCheckSquare,
   faCogs,
   faHdd,
-  faBook,
-  faMicrochip,
   faLaptopCode,
   faLink,
+  faMicrochip,
   faSlidersH,
-  faCheckSquare,
-  faBullseye
+  faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { faDocker } from "@fortawesome/free-brands-svg-icons";
 
@@ -32,6 +33,7 @@ import { ResourceTableComponent } from "./main-table/resource-table/resource-tab
 import { SnackBarComponent } from "./services/snack-bar/snack-bar.component";
 import { ResourceFormComponent } from "./resource-form/resource-form.component";
 import { ConfirmDialogComponent } from "./main-table/resource-table/confirm-dialog/confirm-dialog.component";
+import { NotebookStatusComponent } from "./main-table/resource-table/notebook-status/notebook-status.component";
 import { VolumeComponent } from "./resource-form/volume/volume.component";
 import { FormNameComponent } from "./resource-form/form-name/form-name.component";
 import { FormImageComponent } from "./resource-form/form-image/form-image.component";
@@ -62,6 +64,7 @@ import { FormAffinityComponent } from "./resource-form/form-affinity/form-affini
     SnackBarComponent,
     ResourceFormComponent,
     ConfirmDialogComponent,
+    NotebookStatusComponent,
     VolumeComponent,
     FormNameComponent,
     FormImageComponent,
@@ -91,7 +94,7 @@ import { FormAffinityComponent } from "./resource-form/form-affinity/form-affini
     FontAwesomeModule,
     BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [NamespaceService, KubernetesService, SnackBarService],
   bootstrap: [AppComponent],
@@ -109,7 +112,8 @@ export class AppModule {
       faLink,
       faSlidersH,
       faCheckSquare,
-      faBullseye
+      faBullseye,
+      faTachometerAlt,
     );
   }
 }

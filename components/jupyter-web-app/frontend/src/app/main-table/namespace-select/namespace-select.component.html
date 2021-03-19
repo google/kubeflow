@@ -1,13 +1,12 @@
-<!-- Namespaces Selector -->
-<mat-form-field>
-  <mat-label>Select Namespace</mat-label>
-  <mat-select
-    [(ngModel)]="currNamespace"
-    name="namespacesSelect"
-    (selectionChange)="namespaceChanged($event.value)"
-  >
-    <mat-option *ngFor="let namespace of namespaces" [value]="namespace">
-      {{ namespace }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<div class="container">
+  <mat-form-field>
+    <mat-label>Select Namespace</mat-label>
+    <mat-select [(ngModel)]="currNamespace"
+                name="namespacesSelect"
+                (selectionChange)="namespaceChanged($event.value)">
+      <mat-option *ngFor="let namespace of namespaces" [value]="namespace">
+        {{ namespace }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

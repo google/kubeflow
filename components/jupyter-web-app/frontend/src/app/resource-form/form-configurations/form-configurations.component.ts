@@ -14,8 +14,9 @@ import { KubernetesService } from "src/app/services/kubernetes.service";
   ]
 })
 export class FormConfigurationsComponent implements OnInit {
+  private subscriptions = new Subscription();
+
   podDefaults: PodDefault[];
-  subscriptions = new Subscription();
 
   @Input() parentForm: FormGroup;
 

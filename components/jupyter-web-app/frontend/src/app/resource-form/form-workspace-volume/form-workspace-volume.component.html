@@ -1,23 +1,21 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'laptop-code']" class="check"></fa-icon>
+    <fa-icon [icon]="['fas', 'laptop-code']"></fa-icon>
     Workspace Volume
   </h3>
-  <p>Configure the Volume to be mounted as your personal Workspace.</p>
-  <p *ngIf="readonly">
-    *The Cluster Administrator has disabled editing this Section!
-  </p>
-  <mat-checkbox formControlName="noWorkspace"
-    >Don't use Persistent Storage for User's home</mat-checkbox
-  >
+  <p>Specify a PersistentVolume to mount for your home directory.</p>
 
-  <app-volume
-    [volume]="parentForm.get('workspace')"
-    [notebookName]="parentForm.value.name"
-    [pvcs]="pvcs"
-    [ephemeral]="parentForm.value.noWorkspace"
-    [namespace]="parentForm.value.namespace"
-    [defaultStorageClass]="defaultStorageClass"
-  >
-  </app-volume>
+  <mat-checkbox formControlName="noWorkspace">
+    No Workspace Volume
+  </mat-checkbox>
+
+  <div *ngIf="!parentForm.value.noWorkspace">
+    <app-volume [volumeForm]="parentForm.controls.workspace"
+                [notebookName]="parentForm.value.name"
+                [namespace]="parentForm.value.namespace"
+                [defaultStorageClass]="defaultStorageClass"
+                [pvcs]="pvcs">
+    </app-volume>
+  </div>
+
 </div>

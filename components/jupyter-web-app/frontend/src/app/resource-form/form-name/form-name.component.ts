@@ -1,10 +1,5 @@
-import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import {
-  FormGroup,
-  ValidatorFn,
-  AbstractControl,
-  Validators
-} from "@angular/forms";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { AbstractControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { KubernetesService } from "src/app/services/kubernetes.service";
 import { NamespaceService } from "src/app/services/namespace.service";
 import { Subscription } from "rxjs";
@@ -15,11 +10,31 @@ import { Subscription } from "rxjs";
   styleUrls: ["./form-name.component.scss", "../resource-form.component.scss"]
 })
 export class FormNameComponent implements OnInit, OnDestroy {
-  subscriptions = new Subscription();
-  notebooks: Set<string> = new Set<string>();
+  private subscriptions = new Subscription();
+  private notebooks: Set<string> = new Set<string>();
+
   @Input() parentForm: FormGroup;
 
-  constructor(private k8s: KubernetesService, private ns: NamespaceService) {}
+  showNameError() {
+    const nameCtrl = this.parentForm.get("name");
+
+    if (nameCtrl.hasError("existingName")) {
+      return `Notebook Server "${nameCtrl.value}" already exists`;
+    } else {
+      return "Notebook Server name can't be empty";
+    }
+  }
+
+  private existingName(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+      const exists = this.notebooks.has(control.value);
+      return exists ? {existingName: true} : null;
+    };
+  }
+
+  constructor(private k8s: KubernetesService,
+              private ns: NamespaceService) {
+  }
 
   ngOnInit() {
     // Add the ExistingName validator to the list if it doesn't already exist
@@ -35,28 +50,10 @@ export class FormNameComponent implements OnInit, OnDestroy {
         notebooks.map(nb => this.notebooks.add(nb.name));
       });
     });
-
     this.subscriptions.add(nsSub);
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  showNameError() {
-    const nameCtrl = this.parentForm.get("name");
-
-    if (nameCtrl.hasError("existingName")) {
-      return `Notebook Server "${nameCtrl.value}" already exists`;
-    } else {
-      return "The Notebook Server's name can't be empty";
-    }
-  }
-
-  private existingName(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-      const exists = this.notebooks.has(control.value);
-      return exists ? { existingName: true } : null;
-    };
   }
 }

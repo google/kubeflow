@@ -1,49 +1,67 @@
-<div *ngIf="volume" [formGroup]="volume" class="volume-wrapper">
- 
+<div *ngIf="volumeForm" [formGroup]="volumeForm" class="volume-wrapper">
   <!-- Volume Type Input -->
-    <mat-form-field appearance="outline" id="type">
-      <mat-label>Type</mat-label>
-      <mat-select  (selectionChange)="selectType($event)" formControlName="type">
-        <mat-option *ngFor="let i of types"
-        [disabled]="newTypeIsDisabled()"
-        [matTooltip]="newTypeTooltip()"
-        value="{{i}}">{{i}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  
-    <!-- Volume Name Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="name">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name"/>
-    </mat-form-field>
-    
-    <mat-form-field *ngIf="typeSelected === 'Existing'" class="wide" appearance="outline" id="name">
-      <mat-label>Name</mat-label>
-      <mat-select formControlName="name">
-        <mat-option *ngFor="let i of existingPVCs"
-          value="{{i}}">{{i}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-form-field appearance="outline" id="type">
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="type">
+      <mat-option value="New"
+                  [disabled]="newTypeIsDisabled()"
+                  [matTooltip]="newTypeTooltip()">New
+      </mat-option>
+      <mat-option value="Existing">Existing</mat-option>
+    </mat-select>
+  </mat-form-field>
 
-    <!-- Size Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="size">
-      <mat-label>Size</mat-label>
-      <input matInput formControlName="size" />
-    </mat-form-field>
-  
-    <!-- Mode Input -->
-    <mat-form-field *ngIf="typeSelected === 'New'" class="wide" appearance="outline" id="mode">
-      <mat-label>Mode</mat-label>
-      <mat-select formControlName="mode">
-        <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
-        <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
-        <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
-      </mat-select>
-    </mat-form-field>
-  
-    <!-- Mount Input -->
-    <mat-form-field class="wide" appearance="outline" id="path">
-      <mat-label>Mount Point</mat-label>
-      <input matInput formControlName="path" />
-    </mat-form-field>
-  </div>
+  <!-- Name Input -->
+  <!-- Use text-input for 'New' -->
+  <mat-form-field *ngIf="selectedVolTypeIsNew()"
+                  class="wide"
+                  appearance="outline"
+                  id="newName"
+                  (focusin)="nameIsFocused = true"
+                  (focusout)="nameIsFocused = false; refreshForm()">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name">
+  </mat-form-field>
+
+  <!-- Name Input -->
+  <!-- Use dropdown for 'Existing' -->
+  <mat-form-field *ngIf="!selectedVolTypeIsNew()"
+                  class="wide"
+                  appearance="outline"
+                  id="existingName">
+    <mat-label>Volume</mat-label>
+    <mat-select formControlName="name">
+      <mat-option *ngFor="let pvcName of existingPvcNames" value="{{pvcName}}">
+        {{pvcName}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Size Input -->
+  <mat-form-field class="wide"
+                  appearance="outline"
+                  id="size">
+    <mat-label>Size</mat-label>
+    <input matInput formControlName="size">
+  </mat-form-field>
+
+  <!-- Mode Input -->
+  <mat-form-field class="wide"
+                  appearance="outline"
+                  id="mode">
+    <mat-label>Mode</mat-label>
+    <mat-select formControlName="mode">
+      <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
+      <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
+      <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Mount Input -->
+  <mat-form-field class="wide"
+                  appearance="outline"
+                  id="path">
+    <mat-label>Mount Point</mat-label>
+    <input matInput formControlName="path">
+  </mat-form-field>
+</div>

@@ -2,7 +2,9 @@
   <form novalidate (ngSubmit)="onSubmit()" [formGroup]="formCtrl">
     <!-- Every form Section is an Angular Component -->
     <div class="card mat-elevation-z2">
-      <app-form-name [parentForm]="formCtrl"></app-form-name>
+      <app-form-name
+        [parentForm]="formCtrl"
+      ></app-form-name>
 
       <app-form-image
         [parentForm]="formCtrl"
@@ -12,25 +14,31 @@
 
       <app-form-specs
         [parentForm]="formCtrl"
+        [setLimitCPU]="config?.cpu?.setLimit"
+        [setLimitMemory]="config?.memory?.setLimit"
+        [readonlyCPU]="config?.cpu?.readOnly"
+        [readonlyMemory]="config?.memory?.readOnly"
       ></app-form-specs>
 
       <app-form-gpus
         [parentForm]="formCtrl"
+        [nums]="config?.gpus?.value.nums"
         [vendors]="config?.gpus?.value.vendors"
       ></app-form-gpus>
 
       <app-form-workspace-volume
         [parentForm]="formCtrl"
         [pvcs]="pvcs"
+        [defaultStorageClass]="defaultStorageClass"
         [readonly]="config?.workspaceVolume?.readOnly"
-        [defaultStorageClass]="defaultStorageclass"
       ></app-form-workspace-volume>
 
       <app-form-data-volumes
         [parentForm]="formCtrl"
         [pvcs]="pvcs"
+        [defaultVolumeConfig]="config?.dataVolumes?.default"
+        [defaultStorageClass]="defaultStorageClass"
         [readonly]="config?.dataVolumes?.readOnly"
-        [defaultStorageClass]="defaultStorageclass"
       ></app-form-data-volumes>
 
       <app-form-affinity
@@ -53,18 +61,19 @@
     </div>
 
     <!-- Action Buttons -->
-    <button
-      mat-raised-button
-      color="accent"
-      class="margin"
-      type="submit"
-      [disabled]="formCtrl.invalid"
-    >
-      LAUNCH
+    <button mat-raised-button
+            color="accent"
+            class="margin"
+            type="submit"
+            [disabled]="formCtrl.invalid">
+      <span>LAUNCH</span>
     </button>
 
     <a routerLink="/">
-      <button mat-raised-button class="margin">CANCEL</button>
+      <button mat-raised-button
+              class="margin">
+        <span>CANCEL</span>
+      </button>
     </a>
   </form>
 </div>

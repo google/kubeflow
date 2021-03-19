@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Volume } from 'src/app/utils/types';
 import { Subscription } from 'rxjs';
@@ -10,193 +10,151 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./volume.component.scss'],
 })
 export class VolumeComponent implements OnInit, OnDestroy {
-  private _notebookName = '';
-  private _defaultStorageClass: boolean;
+  private subscriptions = new Subscription();
+  private _notebookName: string;
 
-  currentPVC: Volume;
-  existingPVCs: Set<string> = new Set();
+  existingPvcMap: Map<string, Volume> = new Map();
+  existingPvcNames: Array<string>;
+  nameIsFocused: boolean;
 
-  //New - Existing dropdown
-  types: string[] = ['New', 'Existing'];
-  typeSelected = 'New';
-
-  subscriptions = new Subscription();
-
+  // -----------------------------
   // ----- @Input Parameters -----
-  @Input() volume: FormGroup;
+  // -----------------------------
+  @Input() volumeForm: FormGroup;
   @Input() namespace: string;
+  @Input() defaultStorageClass: boolean;
 
   @Input()
   get notebookName() {
     return this._notebookName;
   }
-  set notebookName(nm: string) {
-    if (!this.volume.disabled) {
-      this.notebookNameChanged(nm);
-    }
+
+  set notebookName(s: string) {
+    this._notebookName = s;
+    // if the user changes the notebook name, reset the volume form to default
+    this.resetForm()
   }
 
   @Input()
-  set ephemeral(b: boolean) {
-    if (!this.volume.disabled) {
-      this.storageOptionChanged(b);
-    }
-  }
-
-  @Input()
-  set pvcs(data) {
-    if (!this.volume.disabled) {
-      this.pvcsChanged(data);
-    }
-  }
-
-  @Input()
-  get defaultStorageClass() {
-    return this._defaultStorageClass;
-  }
-  set defaultStorageClass(s: boolean) {
-    // Update the current pvc type
-    this._defaultStorageClass = s;
-
-    if (!this.volume.disabled) {
-      this.updateVolInputFields();
-    }
-  }
-
-// ----- onChange of the New / Existing Volume -----
-  selectType(event): void {
-    this.typeSelected = event.value;
-    if (this.typeSelected != 'New') return;
-    this.volume.controls.name.setValue(this.currentVolName);
-    
-  }
-
-  // ----- Get macros -----
-  get selectedVolIsExistingType(): boolean {
-    if (this.existingPVCs.has(this.volume.value.name)) {
-      return true;
-    }
-
-    return (
-      this.volume.get('class').value === '{none}' && !this.defaultStorageClass
+  set pvcs(vl: Volume[]) {
+    // store the Volumes in a Map() so we can easily look them up by name
+    this.existingPvcMap.clear();
+    vl.map(v => {
+        this.existingPvcMap.set(v.name, v);
+      }
     );
+
+    // update the array of PVC names (used for dropdown selector)
+    this.existingPvcNames = Array.from(this.existingPvcMap.keys()).sort()
+    this.refreshForm()
   }
 
-  get currentVolName(): string {
-    return this.renderVolName(this.volume.get('templatedName').value);
+  // ----------------------------------
+  // ----- 'New' Volume Functions -----
+  // ----------------------------------
+  selectedVolTypeIsNew(): boolean {
+    return this.volumeForm.value.type === "New";
   }
 
-  // ----- Functions for handling the New volume type -----
   newTypeIsDisabled(): boolean {
-    // This option should only be disabled if the class value is set to
-    // use the default StorageClass, but none is set in the cluster
-    if (this.volume.get('class').value !== '{none}') {
+    // the DefaultStorageClass must exist if class is '{none}'
+    if (this.volumeForm.value.class === '{none}') {
+      return !this.defaultStorageClass;
+    } else {
       return false;
     }
-
-    return !this.defaultStorageClass;
   }
 
   newTypeTooltip(): string {
-    const volClass = this.volume.get('class').value;
-    if (volClass !== '{none}') {
-      return '';
-    }
-
-    if (!this.defaultStorageClass) {
-      return `No default StorageClass is detected in the cluster`;
-    }
-
-    return '';
-  }
-
-  // ----- utility functions -----
-  renderVolName(name: string): string {
-    return name.replace('{notebook-name}', this.notebookName);
-  }
-
-  setVolumeType(type: string) {
-    if (type === 'Existing') {
-      this.volume.controls.size.disable();
-      this.volume.controls.mode.disable();
+    // display a warning if 'New' is disabled
+    if (this.newTypeIsDisabled()) {
+      return `Can't create new PVC: no DefaultStorageClass in cluster`;
     } else {
-      this.volume.controls.size.enable();
-      this.volume.controls.mode.enable();
+      return ''
     }
   }
 
-  updateVolInputFields(): void {
-    // Disable input fields according to volume type
-    if (this.selectedVolIsExistingType) {
-      // Disable all fields
-      this.volume.controls.size.disable();
-      this.volume.controls.mode.disable();
-      this.volume.controls.type.setValue('Existing');
+  // -----------------------------
+  // ----- Utility Functions -----
+  // ------------------------------
+  handleChangeType(newType: string): void {
+    if (newType === "New") {
+      // the volume does not exist, so can be changed
+      this.volumeForm.controls.size.enable();
+      this.volumeForm.controls.mode.enable();
+    } else if (newType === "Existing") {
+      // the volume already exists, so cant be changed
+      this.volumeForm.controls.size.disable();
+      this.volumeForm.controls.mode.disable();
+    }
+  }
+
+  handleChangeName(newName: string): void {
+    // don't interrupt if the user is typing
+    if (this.nameIsFocused) return;
+
+    // if the new volume
+    let _currentVolumeExists = this.existingPvcMap.has(newName)
+    let _currentVolume = this.existingPvcMap.get(newName)
+    if (_currentVolumeExists) {
+      this.volumeForm.controls.type.setValue("Existing");
+
+      // display volume properties to user
+      this.volumeForm.controls.size.setValue(_currentVolume.size)
+      this.volumeForm.controls.mode.setValue(_currentVolume.mode)
+      this.volumeForm.controls.class.setValue(_currentVolume.class)
+
     } else {
-      this.volume.controls.size.enable();
-      this.volume.controls.mode.enable();
-      this.volume.controls.type.setValue('New');
+      this.volumeForm.controls.type.setValue('New');
     }
   }
 
+  resetForm(): void {
+    // set all non-name values first
+    //  - allows handleChangeName() to overwrite our changes if the volume exists
+    this.volumeForm.controls.size.setValue(this.volumeForm.value.defaultSize)
+    this.volumeForm.controls.mode.setValue(this.volumeForm.value.defaultMode)
+    this.volumeForm.controls.path.setValue(this.volumeForm.value.defaultPath)
+    this.volumeForm.controls.class.setValue(this.volumeForm.value.defaultClass)
+
+    let _templateName = this.volumeForm.value.defaultName
+
+    // if the notebook name is "", reset back to the un-templated value
+    if (this.notebookName) {
+      let _templatedName = _templateName.replace("{notebook-name}", this.notebookName)
+      this.volumeForm.controls.name.setValue(_templatedName)
+    } else {
+      this.volumeForm.controls.name.setValue(_templateName)
+    }
+  }
+
+  refreshForm(): void {
+    this.handleChangeName(this.volumeForm.value.name)
+  }
+
+  // -------------------------------
   // ----- Component Functions -----
-  constructor() {}
+  // -------------------------------
+  constructor() {
+  }
 
   ngOnInit() {
-    // type
+    // changes to name
     this.subscriptions.add(
-      this.volume.get('type').valueChanges.subscribe((type: string) => {
-        this.setVolumeType(type);
-      }),
+      this.volumeForm.get('name').valueChanges.subscribe((s: string) => {
+        this.handleChangeName(s);
+      })
     );
 
-    // name
+    // changes to type
     this.subscriptions.add(
-      this.volume.get('name').valueChanges.subscribe((name: string) => {
-        // Update the fields if the volume is an existing one
-        this.volume.get('name').setValue(name, { emitEvent: false });
-        this.updateVolInputFields();
-      }),
+      this.volumeForm.get('type').valueChanges.subscribe((s: string) => {
+        this.handleChangeType(s);
+      })
     );
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  // ----- @Input change handling functions -----
-  notebookNameChanged(nm: string): void {
-    if (this.volume.disabled) {
-      return;
-    }
-
-    this._notebookName = nm;
-    this.volume.controls.name.setValue(this.currentVolName);
-  }
-
-  storageOptionChanged(ephemeral: boolean): void {
-    if (ephemeral) {
-      // Disable all fields
-      this.volume.controls.type.disable();
-      this.volume.controls.name.disable();
-      this.volume.controls.size.disable();
-      this.volume.controls.mode.disable();
-    } else {
-      this.volume.controls.type.enable();
-      this.volume.controls.name.enable();
-      this.updateVolInputFields();
-    }
-  }
-
-  pvcsChanged(pvcs: Volume[]) {
-    this.existingPVCs.clear();
-    pvcs.map(pvc => this.existingPVCs.add(pvc.name));
-
-    if (!this.existingPVCs.has(this.currentVolName)) {
-      this.updateVolInputFields();
-    } else {
-      // Also set the selected volume
-      this.volume.controls.name.setValue(this.currentVolName);
-    }
   }
 }

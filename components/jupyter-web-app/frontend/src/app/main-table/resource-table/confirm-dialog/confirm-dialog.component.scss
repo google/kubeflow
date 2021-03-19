@@ -1,3 +1,14 @@
-.yes {
-  color: red;
+button {
+  min-width: 6rem;
+}
+
+// "yes" classes
+.red {
+  background-color: #f44336;
+  color: white;
+}
+
+.orange {
+  background-color: #ff9800;
+  color: white;
 }

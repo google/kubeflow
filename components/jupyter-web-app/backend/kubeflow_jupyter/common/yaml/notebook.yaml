@@ -16,12 +16,9 @@ spec:
           volumeMounts: []
           env: []
           resources:
-            requests:
-              cpu: "0.1"
-              memory: "0.1Gi"
-            limits:
-              cpu: "0.1"
-              memory: "0.1Gi"
+            requests: {{}}
+            limits: {{}}
+          ports: []
       ttlSecondsAfterFinished: 300
       tolerations: []
       volumes: []

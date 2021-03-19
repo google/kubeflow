@@ -2,6 +2,7 @@ import datetime as dt
 
 from flask import jsonify, request, Blueprint
 from kubernetes import client
+
 from . import api
 from . import utils
 
@@ -162,7 +163,15 @@ def post_pvc(namespace):
 @app.route("/api/namespaces/<namespace>/notebooks/<notebook>",
            methods=["DELETE"])
 def delete_notebook(namespace, notebook):
-    return jsonify(api.delete_notebook(notebook, namespace=namespace))
+    return jsonify(api.delete_notebook(notebook_name=notebook, namespace=namespace))
+
+
+# PATCHrs
+@app.route("/api/namespaces/<namespace>/notebooks/<notebook>",
+           methods=["PATCH"])
+def patch_notebook(namespace, notebook):
+    return jsonify(api.patch_notebook(notebook_name=notebook, namespace=namespace,
+                                      body=request.get_json()))
 
 
 # Liveness/Readiness Probes

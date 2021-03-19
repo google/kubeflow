@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup, Validators } from "@angular/forms";
 import { Volume } from "src/app/utils/types";
 import { Subscription } from "rxjs";
@@ -26,6 +26,7 @@ export class RokVolumeComponent implements OnInit, OnDestroy {
   get notebookName() {
     return this.nbName;
   }
+
   set notebookName(nm: string) {
     if (!this.volume.disabled) {
       this.notebookNameChanged(nm);
@@ -51,7 +52,7 @@ export class RokVolumeComponent implements OnInit, OnDestroy {
 
   get currentVolName(): string {
     return this.volume
-      .get("templatedName")
+      .get("defaultName")
       .value.replace("{notebook-name}", this.notebookName);
   }
 
@@ -88,7 +89,8 @@ export class RokVolumeComponent implements OnInit, OnDestroy {
   }
 
   // ----- Component Functions -----
-  constructor(private rok: RokService) {}
+  constructor(private rok: RokService) {
+  }
 
   ngOnInit() {
     // type

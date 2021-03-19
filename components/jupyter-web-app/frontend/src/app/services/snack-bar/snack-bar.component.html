@@ -1,5 +1,9 @@
 <div *ngIf="data" class="snack-container">
-  <mat-icon [ngClass]="[icon, 'pad']">{{ icon }}</mat-icon>
+  <mat-icon [ngClass]="[icon, 'pad']"></mat-icon>
   <span>{{ data.msg }}</span>
-  <button mat-button color="accent" (click)="dismiss()">DISMISS</button>
+  <button mat-button
+          color="accent"
+          (click)="dismiss()">
+    DISMISS
+  </button>
 </div>

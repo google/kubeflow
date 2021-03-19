@@ -1,25 +1,29 @@
-<!-- Notebook CPU/RAM -->
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'microchip']" class="check"></fa-icon>
+    <fa-icon [icon]="['fas', 'microchip']"></fa-icon>
     CPU / RAM
   </h3>
   <p>
-    Specify the total amount of CPU and RAM reserved by your Notebook Server.
-    For CPU-intensive workloads, you can choose more than 1 CPU (e.g. 1.5).
+    Specify the amount of CPU and RAM to be requested.
   </p>
 
   <div class="inputs-wrapper">
     <mat-form-field appearance="outline">
-      <mat-label>CPU</mat-label>
-      <input matInput placeholder="# of CPU Cores" formControlName="cpu" />
+      <mat-label>CPU Cores</mat-label>
+      <input matInput formControlName="cpu" required>
+      <mat-hint *ngIf="setLimitCPU">
+        *Exceeding this CPU request will cause the Pod to throttle
+      </mat-hint>
       <mat-error>Please provide the CPU requirements</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Memory</mat-label>
-      <input matInput placeholder="Amount of Memory" formControlName="memory" />
-      <mat-error>Please provide the RAM requirements</mat-error>
+      <mat-label>RAM Amount</mat-label>
+      <input matInput formControlName="memory" required>
+      <mat-hint *ngIf="setLimitMemory">
+        *Exceeding this RAM request will cause the Pod to restart
+      </mat-hint>
+      <mat-error>Memory request can't be empty</mat-error>
     </mat-form-field>
   </div>
 </div>

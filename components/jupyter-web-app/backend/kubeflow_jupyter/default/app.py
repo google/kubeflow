@@ -28,6 +28,7 @@ def post_notebook(namespace):
     utils.set_notebook_tolerations(notebook, body, defaults)
     utils.set_notebook_gpus(notebook, body, defaults)
     utils.set_notebook_configurations(notebook, body, defaults)
+    utils.set_notebook_ports(notebook, defaults)
 
     # Workspace Volume
     workspace_vol = utils.get_workspace_vol(body, defaults)
@@ -45,7 +46,7 @@ def post_notebook(namespace):
             notebook,
             workspace_vol["name"],
             workspace_vol["name"],
-            "/home/jovyan",
+            workspace_vol["path"],
         )
 
     # Add the Data Volumes

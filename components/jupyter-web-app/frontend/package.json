@@ -30,7 +30,7 @@
     "fontawesome": "^5.6.3",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.20",
-    "material-icons": "^0.3.1",
+    "material-design-icons-iconfont": "^6.1.0",
     "rxjs": "~6.6.2",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

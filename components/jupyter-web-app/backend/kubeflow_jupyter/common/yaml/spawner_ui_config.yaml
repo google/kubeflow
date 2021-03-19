@@ -1,36 +1,11 @@
-# Configuration file for the Jupyter UI.
+# Configuration file for the Notebook Spawner UI.
 #
-# Each Jupyter UI option is configured by two keys: 'value' and 'readOnly'
-# - The 'value' key contains the default value
-# - The 'readOnly' key determines if the option will be available to users
-#
-# If the 'readOnly' key is present and set to 'true', the respective option
-# will be disabled for users and only set by the admin. Also when a
-# Notebook is POSTED to the API if a necessary field is not present then
-# the value from the config will be used.
-#
-# If the 'readOnly' key is missing (defaults to 'false'), the respective option
-# will be available for users to edit.
-#
-# Note that some values can be templated. Such values are the names of the
-# Volumes as well as their StorageClass
 spawnerFormDefaults:
   image:
-    # The container Image for the user's Jupyter Notebook
-    # If readonly, this value must be a member of the list below
+    # the image to pre-select
     value: gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0
-    # The list of available standard container Images
+    # the list of available images
     options:
-      - gcr.io/kubeflow-images-public/tensorflow-1.5.1-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.5.1-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.6.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.6.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.7.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.7.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.8.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.8.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.9.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.9.0-notebook-gpu:v0.5.0
       - gcr.io/kubeflow-images-public/tensorflow-1.10.1-notebook-cpu:v0.5.0
       - gcr.io/kubeflow-images-public/tensorflow-1.10.1-notebook-gpu:v0.5.0
       - gcr.io/kubeflow-images-public/tensorflow-1.11.0-notebook-cpu:v0.5.0
@@ -41,126 +16,145 @@ spawnerFormDefaults:
       - gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-gpu:v0.5.0
       - gcr.io/kubeflow-images-public/tensorflow-2.0.0a-notebook-cpu:v0.5.0
       - gcr.io/kubeflow-images-public/tensorflow-2.0.0a-notebook-gpu:v0.5.0
-    # By default, custom container Images are allowed
-    # Uncomment the following line to only enable standard container Images
+    # [if: true] user will be able to select from `options`
+    # [if: false] user will be able to provide a custom image
     readOnly: false
   cpu:
-    # CPU for user's Notebook
-    value: '0.5'
+    # the CPU request to pre-fill
+    # [if: null] will NOT be pre-filled
+    value: "0.5"
+    # [if: true] a CPU limit will be set equal to the request
+    setLimit: false
+    # [if: true] you can set `value` to null for NO request
     readOnly: false
   memory:
-    # Memory for user's Notebook
-    value: 1.0Gi
-    readOnly: false
-  workspaceVolume:
-    # Workspace Volume to be attached to user's Notebook
-    # Each Workspace Volume is declared with the following attributes:
-    # Type, Name, Size, MountPath and Access Mode
-    value:
-      type:
-        # The Type of the Workspace Volume
-        # Supported values: 'New', 'Existing'
-        value: New
-      name:
-        # The Name of the Workspace Volume
-        # Note that this is a templated value. Special values:
-        # {notebook-name}: Replaced with the name of the Notebook. The frontend
-        #                  will replace this value as the user types the name
-        value: 'workspace-{notebook-name}'
-      size:
-        # The Size of the Workspace Volume (in Gi)
-        value: '10Gi'
-      mountPath:
-        # The Path that the Workspace Volume will be mounted
-        value: /home/jovyan
-      accessModes:
-        # The Access Mode of the Workspace Volume
-        # Supported values: 'ReadWriteOnce', 'ReadWriteMany', 'ReadOnlyMany'
-        value: ReadWriteOnce
-      class:
-        # The StrageClass the PVC will use if type is New. Special values are:
-        # {none}: default StorageClass
-        # {empty}: empty string ""
-        value: '{none}'
-    readOnly: false
-  dataVolumes:
-    # List of additional Data Volumes to be attached to the user's Notebook
-    value: []
-    # Each Data Volume is declared with the following attributes:
-    # Type, Name, Size, MountPath and Access Mode
-    #
-    # For example, a list with 2 Data Volumes:
-    # value:
-    #   - value:
-    #       type:
-    #         value: New
-    #       name:
-    #         value: '{notebook-name}-vol-1'
-    #       size:
-    #         value: '10Gi'
-    #       class:
-    #         value: standard
-    #       mountPath:
-    #         value: /home/jovyan/vol-1
-    #       accessModes:
-    #         value: ReadWriteOnce
-    #       class:
-    #         value: {none}
-    #   - value:
-    #       type:
-    #         value: New
-    #       name:
-    #         value: '{notebook-name}-vol-2'
-    #       size:
-    #         value: '10Gi'
-    #       mountPath:
-    #         value: /home/jovyan/vol-2
-    #       accessModes:
-    #         value: ReadWriteMany
-    #       class:
-    #         value: {none}
+    # the RAM request to pre-fill
+    # [if: null] will NOT be pre-filled
+    value: "1.0Gi"
+    # [if: true] a RAM limit will be set equal to the request
+    setLimit: false
+    # [if: true] you can set `value` to null for NO request
     readOnly: false
   gpus:
-    # Number of GPUs to be assigned to the Notebook Container
     value:
-      # values: "none", "1", "2", "4", "8"
+      # the number of GPUs to pre-select
       num: "none"
-      # Determines what the UI will show and send to the backend
+      # the list of available `num`
+      nums:
+        - "1"
+        - "2"
+        - "4"
+        - "8"
+      # the `vendors.limitsKey` to pre-populate
+      # [if: ""] will NOT be pre-populated
+      vendor: ""
+      # the list of available vendors
+      # [vendors.limitsKey] the limit key sent to the backend
+      # [vendors.uiName] the value displayed in the UI
       vendors:
         - limitsKey: "nvidia.com/gpu"
           uiName: "NVIDIA"
         - limitsKey: "amd.com/gpu"
           uiName: "AMD"
-      # Values: "" or a `limits-key` from the vendors list
-      vendor: ""
     readOnly: false
-  shm:
-    value: true
+  workspaceVolume:
+    # the Workspace Volume configs to pre-populate
+    value:
+      type:
+        # the volume type to pre-select
+        # values: {"New", "Existing"}
+        value: "New"
+      name:
+        # the PVC name to pre-fill
+        # [templated values]
+        #  - {notebook-name} the name of the Notebook Server
+        value: "workspace-{notebook-name}"
+      size:
+        # the size of the PVC to pre-fill
+        value: "10Gi"
+      mountPath:
+        # the mount-point of the PVC to pre-fill
+        value: "/home/jovyan"
+        # [if: false] use will be able to change the mount point
+        readOnly: true
+      accessModes:
+        # the access-mode of the PVC to pre-select
+        # values: {"ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany}
+        value: "ReadWriteOnce"
+      class:
+        # the storage-class of the PVC to pre-select
+        # [templated values]
+        #  - {none} the cluster's DefaultStorageClass
+        #  - {empty}: empty string ""
+        value: "{none}"
     readOnly: false
-  configurations:
-    # List of labels to be selected, these are the labels from PodDefaults
-    # value:
-    #   - add-gcp-secret
-    #   - default-editor
+  dataVolumes:
+    # the list of Data Volumes to pre-populate
+    # [example]
+    # - value:
+    #     type:
+    #       value: "New"
+    #     name:
+    #       value: "{notebook-name}-data-volume"
+    #     size:
+    #       value: "32Gi"
+    #     mountPath:
+    #       value: "/home/jovyan/data-volume"
+    #     accessModes:
+    #       value: "ReadWriteMany"
+    #     class:
+    #       value: "{none}"
     value: []
+    # the default configs when the user clicks "add volume"
+    default:
+      type:
+        # the volume type to pre-select
+        # values: {"New", "Existing"}
+        value: "New"
+      name:
+        # the PVC name to pre-fill
+        # [templated values]
+        #  - {notebook-name} the name of the Notebook Server
+        #  - {volume-id} replaced with an integer ensure unique names
+        value: "{notebook-name}-data-vol-{volume-id}"
+      size:
+        # the size of the PVC to pre-fill
+        value: "10Gi"
+      mountPath:
+        # the mount-point of the PVC to pre-fill
+        # [templated values]
+        #  - {volume-id} replaced with an integer ensure unique names
+        value: "/home/jovyan/data-vol-{volume-id}"
+      accessModes:
+        # the access-mode of the PVC to pre-select
+        # values: {"ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany}
+        value: "ReadWriteOnce"
+      class:
+        # the storage-class of the PVC to pre-select
+        # [templated values]
+        #  - {none} the cluster's DefaultStorageClass
+        #  - {empty}: empty string ""
+        value: "{none}"
     readOnly: false
   affinityConfig:
-    # The default `configKey` from the options list
-    # If readonly, the default value will be the only option
+    # the `options.configKey` to pre-select
     value: "none"
-    # The list of available affinity configs
+    # the list of available affinity configs
     options:
       - configKey: "none"
         displayName: "None"
         affinity: {}
-    # # (DESC) Pod gets an exclusive "n1-standard-2" Node
-    # # (TIP) set PreferNoSchedule taint on this node-pool
-    # # (TIP) enable cluster-autoscaler on this node-pool
-    # # (TIP) dont let users request more CPU/MEMORY than the size of this node
+    ## (DESC) select "n1-standard-2" node-pool
+    ## (TIP) set `ports.hostPort` to stop Notebooks being on the same Node
+    ## (TIP) set a `PreferNoSchedule` taint on this node-pool
+    ## (TIP) enable cluster-autoscaler on this node-pool
+    ## (TIP) tell users NOT to request more CPU/RAM than the size of the Node,
+    ##       or disable CPU/RAM requests by setting:
+    ##         `cpu.value=null`, `cpu.readOnly=true`
+    ##         `memory.value=null`, `memory.readOnly=true`
     # - configKey: "exclusive__n1-standard-2"
     #   displayName: "Exclusive: n1-standard-2"
     #   affinity:
-    #     # (Require) Node having label: `node_pool=notebook-n1-standard-2`
     #     nodeAffinity:
     #       requiredDuringSchedulingIgnoredDuringExecution:
     #         nodeSelectorTerms:
@@ -169,21 +163,11 @@ spawnerFormDefaults:
     #                 operator: "In"
     #                 values:
     #                   - "notebook-n1-standard-2"
-    #     # (Require) Node WITHOUT existing Pod having label: `notebook-name`
-    #     podAntiAffinity:
-    #       requiredDuringSchedulingIgnoredDuringExecution:
-    #         - labelSelector:
-    #             matchExpressions:
-    #               - key: "notebook-name"
-    #                 operator: "Exists"
-    #           namespaces: []
-    #           topologyKey: "kubernetes.io/hostname"
     readOnly: false
   tolerationGroup:
-    # The default `groupKey` from the options list
-    # If readonly, the default value will be the only option
+    # the `options.groupKey` to pre-select
     value: "none"
-    # The list of available tolerationGroup configs
+    # the list of available tolerationGroup configs
     options:
       - groupKey: "none"
         displayName: "None"
@@ -200,3 +184,17 @@ spawnerFormDefaults:
     #       value: "value2"
     #       effect: "NoSchedule"
     readOnly: false
+  configurations:
+    # the list of PodDefault labels to pre-select
+    value: []
+    readOnly: false
+  shm:
+    # the default state of the "Enable Shared Memory" toggle
+    value: true
+    readOnly: false
+  ports:
+    # the web port exposed by the notebook container
+    containerPort: 8888
+    # the Node hostPort assigned to the notebook container
+    # (TIP) setting this will stop Notebook Pods being assigned to the same Node
+    hostPort: null

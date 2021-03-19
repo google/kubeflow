@@ -1,13 +1,14 @@
 <div class="group-wrapper" [formGroup]="parentForm">
   <h3>
-    <fa-icon [icon]="['fas', 'cogs']" class="check"></fa-icon>
-    Miscellaneous Settings
+    <fa-icon [icon]="['fas', 'cogs']"></fa-icon>
+    Advanced Options
   </h3>
   <p>
-    Other possible settings to be applied to the Notebook Server.
+    Advanced settings for the Notebook Server.
   </p>
 
-  <mat-slide-toggle formControlName="shm">
+  <mat-slide-toggle formControlName="shm"
+                    [matTooltip]="'an emptyDir is mounted at /dev/shm (for PyTorch)'">
     Enable Shared Memory
   </mat-slide-toggle>
 </div>

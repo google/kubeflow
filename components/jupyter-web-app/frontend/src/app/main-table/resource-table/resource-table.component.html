@@ -1,139 +1,201 @@
-<div class="card mat-elevation-z2">
-  <div class="header">
-    <p>Notebook Servers</p>
+<div class="container">
+  <div class="card mat-elevation-z2">
+    <!-- Header -->
+    <div class="header">
+      <h1>Notebook Servers</h1>
+      <div class="spacer"></div>
+      <a routerLink="/new">
+        <button mat-stroked-button
+                color="accent">
+          <mat-icon>add</mat-icon>
+          <span>CREATE SERVER</span>
+        </button>
+      </a>
+    </div>
 
-    <div class="spacer"></div>
+    <mat-divider></mat-divider>
 
-    <a routerLink="/new">
-      <button mat-button id="add-nb" color="accent">
-        <mat-icon>add</mat-icon>NEW SERVER
-      </button>
-    </a>
+    <!-- Notebook Table -->
+    <table mat-table
+           multiTemplateDataRows
+           matSort
+           [dataSource]="dataSource"
+           [trackBy]="trackByFn">
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let resource">
+          <app-notebook-status [statusName]="resource.status"
+                               [statusReason]="resource.reason">
+          </app-notebook-status>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let resource">
+          {{ resource.name }}
+        </td>
+      </ng-container>
+
+      <!-- Age Column -->
+      <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef>Age</th>
+        <td mat-cell *matCellDef="let resource">
+          {{ resource.age }}
+        </td>
+      </ng-container>
+
+      <!-- Image Column -->
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>Image</th>
+        <td mat-cell *matCellDef="let resource">
+        <span [matTooltip]="resource.image">
+          {{ resource.shortImage }}
+        </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let resource">
+          <div class="actions-wrapper">
+            <button mat-stroked-button
+                    color="accent"
+                    [disabled]="resource.status !== 'running'"
+                    (click)="connectResource(resource, $event)">
+              <span>CONNECT</span>
+            </button>
+
+            <button mat-icon-button
+                    [matMenuTriggerFor]="actionsMenu"
+                    (click)="stopPropagation($event)">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #actionsMenu="matMenu"
+                      yPosition="below"
+                      xPosition="before">
+              <!-- Start Notebook -->
+              <button mat-menu-item
+                      [disabled]="!resource.stopped"
+                      [class.start]="resource.stopped"
+                      [class.action-disabled]="!resource.stopped"
+                      (click)="startResource(resource)">
+                <mat-icon>play_arrow</mat-icon>
+                <span>Start</span>
+              </button>
+
+              <!-- Stop Notebook -->
+              <button mat-menu-item
+                      [disabled]="resource.stopped"
+                      [class.pause]="!resource.stopped"
+                      [class.action-disabled]="resource.stopped"
+                      (click)="stopResource(resource)">
+                <mat-icon>stop</mat-icon>
+                <span>Stop</span>
+              </button>
+
+              <!-- Delete Notebook -->
+              <button mat-menu-item
+                      [disabled]="resource.reason === 'Deleting Notebook Server'"
+                      [class.delete]="resource.reason !== 'Deleting Notebook Server'"
+                      [class.action-disabled]="resource.reason === 'Deleting Notebook Server'"
+                      (click)="deleteResource(resource)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Expanded Detail Column -->
+      <!-- The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let resource" [attr.colspan]="displayedColumns.length">
+          <div class="detail-row-content"
+               [@detailExpand]="resourceEqual(resource, expandedResource) ? 'expanded' : 'collapsed'">
+            <mat-divider></mat-divider>
+            <div class="cards-wrapper">
+              <!-- Pod Resources -->
+              <div class="resources-card">
+                <mat-card class="mat-elevation-z3">
+                  <mat-card-title>Resources</mat-card-title>
+                  <mat-card-content>
+                    <mat-list>
+                      <mat-divider inset="true"></mat-divider>
+
+                      <!-- CPU -->
+                      <mat-list-item>
+                        <mat-icon mat-list-icon>calculate</mat-icon>
+                        <div mat-line>CPU</div>
+                        <div mat-line>{{resource.cpu}}</div>
+                      </mat-list-item>
+                      <mat-divider inset="true"></mat-divider>
+
+                      <!-- Memory -->
+                      <mat-list-item>
+                        <mat-icon mat-list-icon>memory</mat-icon>
+                        <div mat-line>Memory</div>
+                        <div mat-line>{{resource.memory}}</div>
+                      </mat-list-item>
+                      <mat-divider inset="true"></mat-divider>
+
+                      <!-- GPU Count -->
+                      <mat-list-item *ngIf="resource.gpuvendor">
+                        <mat-icon mat-list-icon>speed</mat-icon>
+                        <div mat-line>GPU</div>
+                        <div mat-line>
+                          {{resource.gpu}} ({{resource.gpuvendor | uppercase}})
+                        </div>
+                      </mat-list-item>
+                      <mat-divider *ngIf="resource.gpuvendor" inset="true"></mat-divider>
+                    </mat-list>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+
+              <!-- Pod Volumes -->
+              <div class="volumes-card">
+                <mat-card class="mat-elevation-z3">
+                  <mat-card-title>Volumes</mat-card-title>
+                  <mat-card-content>
+                    <mat-list>
+                      <mat-divider inset="true"></mat-divider>
+                      <ng-container *ngFor="let volumeMount of resource.volumes">
+                        <mat-list-item>
+                          <mat-icon mat-list-icon>folder</mat-icon>
+                          <div mat-line [matTooltip]="volumeMount.name">
+                            {{ volumeMount.name }}
+                          </div>
+                          <div mat-line>{{ volumeMount.mountPath }}</div>
+                        </mat-list-item>
+                        <mat-divider inset="true"></mat-divider>
+                      </ng-container>
+                    </mat-list>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Table Header -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <!-- Table Rows -->
+      <tr mat-row *matRowDef="let resource; columns: displayedColumns;"
+          class="resource-row"
+          [class.expanded]="resourceEqual(expandedResource, resource)"
+          (click)="expandedResource = resourceEqual(expandedResource, resource) ? null : resource">
+      </tr>
+      <tr mat-row *matRowDef="let resource; columns: ['expandedDetail']"
+          class="detail-row">
+      </tr>
+    </table>
   </div>
-
-  <mat-divider></mat-divider>
-
-  <table mat-table [dataSource]="dataSource" [trackBy]="trackByFn" matSort>
-    <!-- Status Column -->
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let elem">
-        <!-- Running -->
-        <mat-icon
-          *ngIf="elem.status === 'running'"
-          [ngClass]="['running', 'status']"
-          [matTooltip]="elem.reason"
-          >check_circle
-        </mat-icon>
-
-        <!-- Warning -->
-        <mat-icon
-          *ngIf="elem.status === 'warning'"
-          [ngClass]="['warning', 'status']"
-          [matTooltip]="elem.reason"
-          >warning
-        </mat-icon>
-
-        <!-- Error -->
-        <mat-icon
-          *ngIf="elem.status === 'error'"
-          [ngClass]="['error', 'status']"
-          [matTooltip]="elem.reason"
-          >clear
-        </mat-icon>
-
-        <!-- Waiting -->
-        <mat-spinner
-          *ngIf="elem.status === 'waiting'"
-          [matTooltip]="elem.reason"
-          diameter="24"
-          class="inline"
-        >
-        </mat-spinner>
-      </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let elem">{{ elem.name }}</td>
-    </ng-container>
-
-    <!-- Age Column -->
-    <ng-container matColumnDef="age">
-      <th mat-header-cell *matHeaderCellDef>Age</th>
-      <td mat-cell *matCellDef="let elem">{{ elem.age }}</td>
-    </ng-container>
-
-    <!-- Image Column -->
-    <ng-container matColumnDef="image">
-      <th mat-header-cell *matHeaderCellDef>Image</th>
-      <td mat-cell *matCellDef="let elem">
-        <span [matTooltip]="elem.image">{{ elem.shortImage }}</span>
-      </td>
-    </ng-container>
- 
-    <!-- GPU Column -->
-    <ng-container matColumnDef="gpu">
-      <th mat-header-cell *matHeaderCellDef>GPU</th>
-      <td mat-cell *matCellDef="let elem">
-        <span [matTooltip]="elem.gpuvendor">{{ elem.gpu }}</span>
-      </td>
-    </ng-container>
-
-    <!-- CPU Column -->
-    <ng-container matColumnDef="cpu">
-      <th mat-header-cell *matHeaderCellDef>CPU</th>
-      <td mat-cell *matCellDef="let elem">{{ elem.cpu }}</td>
-    </ng-container>
-
-    <!-- Memory Column -->
-    <ng-container matColumnDef="memory">
-      <th mat-header-cell *matHeaderCellDef>Memory</th>
-      <td mat-cell *matCellDef="let elem">{{ elem.memory }}</td>
-    </ng-container>
-
-    <!-- Volumes Column -->
-    <ng-container matColumnDef="volumes">
-      <th mat-header-cell *matHeaderCellDef>Volumes</th>
-      <td mat-cell *matCellDef="let elem">
-        <button mat-icon-button [matMenuTriggerFor]="volsMenu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #volsMenu="matMenu">
-          <button mat-menu-item *ngFor="let vol of elem.volumes">
-            <mat-icon>storage</mat-icon>
-            <span>{{ vol }}</span>
-          </button>
-        </mat-menu>
-      </td>
-    </ng-container>
-
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let elem">
-        <!-- Connect to Notevook -->
-        <button
-          (click)="connectResource(elem)"
-          mat-button
-          color="accent"
-          [disabled]="elem.status !== 'running'"
-        >
-          CONNECT
-        </button>
-
-        <button
-          mat-icon-button
-          [disabled]="elem.reason === 'Deleting Notebook Server'"
-          (click)="deleteResource(elem)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
 </div>

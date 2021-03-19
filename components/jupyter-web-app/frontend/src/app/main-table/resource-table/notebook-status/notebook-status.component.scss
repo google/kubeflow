@@ -1,0 +1,24 @@
+.status {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.status-unknown {
+  color: #795548;
+}
+
+.status-running {
+  color: #4caf50;
+}
+
+.status-stopped {
+  color: #ff9800;
+}
+
+.status-warning {
+  color: #ff9800;
+}
+
+.status-error {
+  color: #f44336;
+}

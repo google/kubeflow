@@ -11,7 +11,7 @@ import {
   SnackType,
   Volume,
   Config,
-  PodDefault
+  PodDefault,
 } from "../utils/types";
 import { SnackBarService } from "../services/snack-bar.service";
 
@@ -120,6 +120,21 @@ export class KubernetesService {
       catchError(error => this.handleError(error)),
       map(_ => {
         return "deleted";
+      })
+    );
+  }
+
+  // Patch Functions
+  patchResource(ns: string, nm: string, patch: object): Observable<string> {
+    const url =
+      environment.apiUrl +
+      `/api/namespaces/${ns}/${environment.resource}/${nm}`;
+
+    return this.http.patch<Resp>(url, patch).pipe(
+      tap(data => this.handleBackendError(data)),
+      catchError(error => this.handleError(error)),
+      map(_ => {
+        return "patched";
       })
     );
   }

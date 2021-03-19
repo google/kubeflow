@@ -1,71 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
 @import "./kubeflow.css";
-@import "~@angular/material/theming";
 
-// always include only once per project
-@include mat-core();
+// Define typography
+// NOTE: this create `mat-typography` class
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+);
 
-// Loaded from the kubeflow.css
-$kubeflow-accent: (
-  500: var(--accent-color),
+// Include the common styles for Angular Material
+@include mat-core($custom-typography);
+
+// Define the base kubeflow palette
+$mat-kubeflow: (
   100: var(--accent-color-light),
+  500: var(--accent-color),
   700: var(--accent-color-dark),
   contrast: (
     100: $dark-primary-text,
     500: $light-primary-text,
-    700: $light-primary-text
+    700: $light-primary-text,
   )
 );
-$kubeflow-theme-accent: mat-palette($kubeflow-accent);
 
-// Use the accent color as primary
+// Define main theme colors
+$kubeflow-theme-primary: mat-palette($mat-kubeflow);
+$kubeflow-theme-accent: mat-palette($mat-kubeflow);
+$kubeflow-theme-warn: mat-palette($mat-red);
+
+// Create the theme object
 $kubeflow-theme: mat-light-theme(
-  $kubeflow-theme-accent,
-  $kubeflow-theme-accent
+    $kubeflow-theme-primary,
+    $kubeflow-theme-accent,
+    $kubeflow-theme-warn,
 );
 
+// Apply theme to core components
 @include angular-material-theme($kubeflow-theme);
 
-// Use the material icons offline
-$material-icons-font-path: "~material-icons/iconfont/";
-@import "~material-icons/iconfont/material-icons.scss";
+// Include material icons offline
+$material-design-icons-font-directory-path: '~material-design-icons-iconfont/dist/fonts/';
+@import '~material-design-icons-iconfont/src/material-design-icons';
 
-// Custom css
-* {
-  font-family: Roboto, Sans-Serif;
-}
-
-.mat-tooltip {
-  font-size: 14px !important;
-}
-
+// Special CSS
 body {
   margin: 0;
-}
-
-.app-filler {
-  flex: 1 1 auto;
-}
-
-.mat-snack-bar-container {
-  max-width: 100% !important;
-  width: 700px;
-}
-
-// Get the select and input elements have the same height
-mat-form-field {
-  line-height: 0;
-}
-
-// Make the outline grey instead of black
-.mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: rgba(0, 0, 0, 0.16);
-}
-
-.mat-checkbox-layout {
-  margin-bottom: 10px;
-}
-
-.custom-dialog-container .mat-dialog-container {
-  padding: 0px;
+  background: #f1f3f4;
 }

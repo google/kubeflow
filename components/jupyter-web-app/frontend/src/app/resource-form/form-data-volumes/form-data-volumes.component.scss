@@ -1,19 +1,19 @@
 // Data Volumes with the Delete button
 .volume-wrapper {
   display: flex;
-  width: 100%;
+  box-sizing: border-box;
 }
 
 .volume-wrapper > app-volume {
   flex: 1 1 0px;
-  min-width: initial;
-  max-width: 93%;
+  box-sizing: border-box;
+  max-width: 96%;
 }
 
-.volume-wrapper > .del-btn {
+.volume-wrapper > .delete-wrapper {
   flex: 1 1 0px;
-  margin-top: 0.8rem;
-  margin-left: 1.5rem;
-  width: 7%;
-  text-align: center;
+  box-sizing: border-box;
+  max-width: 4%;
+  padding-left: 0.1rem;
+  margin-top: 0.7rem;
 }

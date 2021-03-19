@@ -1,12 +1,16 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
-<div mat-dialog-content>
-  <p>{{ data.message }}</p>
-</div>
-<div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.no" class="no" cdkFocusInitial>
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <p [innerHTML]="data.message"></p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button
+          [mat-dialog-close]="data.no"
+          cdkFocusInitial>
     {{ data.no.toUpperCase() }}
   </button>
-  <button mat-button [mat-dialog-close]="data.yes" class="yes">
+  <button mat-raised-button
+          [mat-dialog-close]="data.yes"
+          [ngClass]="data.yesClass">
     {{ data.yes.toUpperCase() }}
   </button>
-</div>
+</mat-dialog-actions>
