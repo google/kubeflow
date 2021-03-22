@@ -48,6 +48,10 @@ spawnerFormDefaults:
     # Supported values: Always, IfNotPresent, Never
     value: IfNotPresent
     readOnly: false
+  containerPort:
+    # Port exposed in the container image
+    value: '8888'
+    readOnly: false
   cpu:
     # CPU for user's Notebook
     value: '0.5'

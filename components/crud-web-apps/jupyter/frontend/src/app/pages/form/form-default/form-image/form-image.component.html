@@ -45,13 +45,21 @@
   </mat-form-field>
 
   <lib-advanced-options>
-    <mat-form-field class="wide" appearance="outline">
-      <mat-label>Image pull policy</mat-label>
-      <mat-select [formControl]="parentForm.get('imagePullPolicy')">
-        <mat-option value="Always">Always</mat-option>
-        <mat-option value="IfNotPresent">IfNotPresent</mat-option>
-        <mat-option value="Never">Never</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="row">
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>Image pull policy</mat-label>
+        <mat-select [formControl]="parentForm.get('imagePullPolicy')">
+          <mat-option value="Always">Always</mat-option>
+          <mat-option value="IfNotPresent">IfNotPresent</mat-option>
+          <mat-option value="Never">Never</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <lib-positive-number-input class="column" appearance="outline"
+        min="80"
+        step="1"
+        label="Provide a container port"
+        [sizeControl]="parentForm.get('containerPort')"
+      ></lib-positive-number-input>
+    </div>
   </lib-advanced-options>
 </lib-form-section>

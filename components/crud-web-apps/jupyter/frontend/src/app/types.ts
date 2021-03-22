@@ -37,6 +37,7 @@ export interface NotebookFormObject {
   namespace: string;
   image: string;
   imagePullPolicy: string;
+  containerPort: number;
   customImage?: string;
   customImageCheck: boolean;
   cpu: number | string;
@@ -138,6 +139,11 @@ export interface Config {
 
   imagePullPolicy?: {
     value: string;
+    readOnly?: boolean;
+  };
+
+  containerPort?: {
+    value: number;
     readOnly?: boolean;
   };
 

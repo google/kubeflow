@@ -14,6 +14,10 @@ spec:
           image: ""
           volumeMounts: []
           env: []
+          ports:
+          - name: notebook-port
+            containerPort: 
+            protocol: TCP
           resources:
             requests:
               cpu: "0.1"

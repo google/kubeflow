@@ -151,6 +151,14 @@ def set_notebook_memory(notebook, body, defaults):
     container["resources"]["requests"]["memory"] = memory
 
 
+def set_notebook_port(notebook, body, defaults):
+    container = notebook["spec"]["template"]["spec"]["containers"][0]
+
+    containerPort = get_form_value(body, defaults, "containerPort")
+
+    container["ports"][0]["containerPort"] = containerPort
+
+
 def set_notebook_tolerations(notebook, body, defaults):
     tolerations_group_key = get_form_value(body, defaults, "tolerationGroup")
 

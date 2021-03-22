@@ -109,6 +109,13 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
       notebook.image = notebook.customImage;
     }
 
+    if (typeof notebook.containerPort === 'number') {
+    } else {
+      notebook.containerPort = parseInt(notebook.containerPort, 10);
+    }
+
+    notebook.cpu = notebook.cpu.toString()
+
     // Add Gi to all sizes
     notebook.memory = notebook.memory.toString() + 'Gi';
 

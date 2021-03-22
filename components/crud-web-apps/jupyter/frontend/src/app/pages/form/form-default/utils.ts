@@ -12,6 +12,7 @@ export function getFormDefaults(): FormGroup {
     imagePullPolicy: ['IfNotPresent', [Validators.required]],
     customImage: ['', []],
     customImageCheck: [false, []],
+    containerPort: ['', [Validators.required]],
     cpu: [1, [Validators.required]],
     memory: [1, [Validators.required]],
     gpus: fb.group({
@@ -148,6 +149,11 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   formCtrl.controls.image.setValue(config.image.value);
   if (config.image.readOnly) {
     formCtrl.controls.image.disable();
+  }
+
+  formCtrl.controls.containerPort.setValue(config.containerPort.value);
+  if (config.containerPort.readOnly) {
+    formCtrl.controls.containerPort.disable();
   }
 
   formCtrl.controls.imagePullPolicy.setValue(config.imagePullPolicy.value);
