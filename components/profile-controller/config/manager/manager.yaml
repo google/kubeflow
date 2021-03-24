@@ -16,6 +16,12 @@ spec:
       annotations:
         sidecar.istio.io/inject: "false"
     spec:
+      volumes:
+        - name: namespace-labels
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: namespace-labels-data
       containers:
       - command:
         - /manager
@@ -28,6 +34,10 @@ spec:
         envFrom:
           - configMapRef:
               name: config
+        volumeMounts:
+        - name: namespace-labels
+          mountPath: /etc/config/labels
+          readOnly: true
         image: gcr.io/kubeflow-images-public/profile-controller:vmaster-ga49f658f
         imagePullPolicy: Always
         name: manager

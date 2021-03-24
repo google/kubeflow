@@ -24,3 +24,8 @@ vars:
     name: profiles-kfam
     kind: Service
     apiVersion: v1
+
+configMapGenerator:
+- name: namespace-labels-data
+  files:
+  - namespace-labels.properties

@@ -17,9 +17,12 @@ limitations under the License.
 package controllers
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"os"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/ghodss/yaml"
@@ -54,6 +57,9 @@ const PROFILEFINALIZER = "profile-finalizer"
 const USER = "user"
 const ROLE = "role"
 const ADMIN = "admin"
+
+// External input for labels to be added to namespace.
+const NAMESPACE_LABELS_PROPERTIES = "/etc/config/labels/namespace-labels.properties"
 
 // Kubeflow default role names
 // TODO: Make kubeflow roles configurable (krishnadurai)
@@ -133,7 +139,9 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			Name: instance.Name,
 		},
 	}
+	mergeLabelPropertiesToMap(logger)
 	updateNamespaceLabels(ns)
+	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
 		logger.Error(err, "error setting ControllerReference")
@@ -616,15 +624,59 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
+func mergeLabelPropertiesToMap(logger logr.Logger) {
+	file, err := os.Open(NAMESPACE_LABELS_PROPERTIES)
+	if err != nil {
+		logger.Info("namespace labels properties file doesn't exist, using default value")
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		label := scanner.Text()
+		arr := strings.Split(label, "=")
+		if len(arr) > 2 || len(arr) == 0 {
+			logger.Info("label config format incorrect, should be {key}={value}", "label", label)
+		} else {
+			if arr[0] == "" {
+				logger.Info("label key should not be empty", "label", label)
+			} else if len(arr) == 2 {
+				// Add or overwrite label map if value exists.
+				kubeflowNamespaceLabels[arr[0]] = arr[1]
+			} else {
+				// Set value to be empty if nothing exists after "=".
+				// It means this label needs to be removed.
+				kubeflowNamespaceLabels[arr[0]] = ""
+			}
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		logger.Error(err, "Error reading namespace labels properties file")
+	}
+}
+
 func updateNamespaceLabels(ns *corev1.Namespace) bool {
 	updated := false
+
 	if ns.Labels == nil {
 		ns.Labels = make(map[string]string)
 	}
+
 	for k, v := range kubeflowNamespaceLabels {
-		if _, ok := ns.Labels[k]; !ok {
-			ns.Labels[k] = v
-			updated = true
+		_, ok := ns.Labels[k]
+		if len(v) == 0 {
+			// When there is an empty value, k should be removed.
+			if ok {
+				delete(ns.Labels, k)
+				updated = true
+			}
+		} else {
+			if !ok {
+				// Add label if not exist, otherwise skipping update.
+				ns.Labels[k] = v
+				updated = true
+			}
 		}
 	}
 	return updated

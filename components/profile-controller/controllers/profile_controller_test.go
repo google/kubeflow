@@ -54,7 +54,36 @@ func TestUpdateNamespaceLabels(t *testing.T) {
 	for _, test := range tests {
 		updateNamespaceLabels(test["current"])
 		if !reflect.DeepEqual(test["expected"], test["current"]) {
-			t.Errorf("Expect:\n%v; Output:\n%v", test["current"], test["expected"])
+			t.Errorf("Expect:\n%v; Output:\n%v", test["expected"], test["current"])
 		}
+	}
+}
+
+func TestUpdateNamespaceLabels_withLabelRemoval(t *testing.T) {
+	name := "test-namespace"
+	kubeflowNamespaceLabels["removal-label"] = ""
+	current := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				"user-name":     "Jim",
+				"removal-label": "enabled",
+			},
+			Name: name,
+		},
+	}
+	expected := &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Labels: map[string]string{
+				"user-name":                             "Jim",
+				"katib-metricscollector-injection":      "enabled",
+				"serving.kubeflow.org/inferenceservice": "enabled",
+				"app.kubernetes.io/part-of":             "kubeflow-profile",
+			},
+			Name: name,
+		},
+	}
+	updateNamespaceLabels(current)
+	if !reflect.DeepEqual(expected, current) {
+		t.Errorf("Expect:\n%v; Output:\n%v", expected, current)
 	}
 }
