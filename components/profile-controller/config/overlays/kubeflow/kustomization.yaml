@@ -12,6 +12,7 @@ commonLabels:
 patchesStrategicMerge:
 - patches/kfam.yaml
 - patches/remove-namespace.yaml
+- patches/manager.yaml
 
 configurations:
 - params.yaml
