@@ -17,12 +17,10 @@ limitations under the License.
 package controllers
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"os"
+	"io/ioutil"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/ghodss/yaml"
@@ -58,9 +56,6 @@ const USER = "user"
 const ROLE = "role"
 const ADMIN = "admin"
 
-// External input for labels to be added to namespace.
-const NAMESPACE_LABELS_PROPERTIES = "/etc/config/labels/namespace-labels.properties"
-
 // Kubeflow default role names
 // TODO: Make kubeflow roles configurable (krishnadurai)
 // This will enable customization of roles.
@@ -77,6 +72,8 @@ var kubeflowNamespaceLabels = map[string]string{
 	"app.kubernetes.io/part-of":             "kubeflow-profile",
 }
 
+var enforcedKubeflowNamespaceLabels = map[string]string{}
+
 const DEFAULT_EDITOR = "default-editor"
 const DEFAULT_VIEWER = "default-viewer"
 
@@ -91,11 +88,12 @@ type Plugin interface {
 // ProfileReconciler reconciles a Profile object
 type ProfileReconciler struct {
 	client.Client
-	Scheme           *runtime.Scheme
-	Log              logr.Logger
-	UserIdHeader     string
-	UserIdPrefix     string
-	WorkloadIdentity string
+	Scheme                     *runtime.Scheme
+	Log                        logr.Logger
+	UserIdHeader               string
+	UserIdPrefix               string
+	WorkloadIdentity           string
+	EnforceNamespaceLabelsPath string
 }
 
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs="*"
@@ -139,8 +137,8 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			Name: instance.Name,
 		},
 	}
-	mergeLabelPropertiesToMap(logger)
 	updateNamespaceLabels(ns)
+	enforceNamespaceLabelsFromConfig(ns, r.EnforceNamespaceLabelsPath, logger)
 	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
@@ -180,7 +178,14 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 		// Check exising namespace ownership before move forward
 		owner, ok := foundNs.Annotations["owner"]
 		if ok && owner == instance.Spec.Owner.Name {
-			if updated := updateNamespaceLabels(foundNs); updated {
+			oldLabels := map[string]string{}
+			for k, v := range foundNs.Labels {
+				oldLabels[k] = v
+			}
+			updateNamespaceLabels(foundNs)
+			enforceNamespaceLabelsFromConfig(foundNs, r.EnforceNamespaceLabelsPath, logger)
+			eq := reflect.DeepEqual(oldLabels, foundNs.Labels)
+			if !eq {
 				err = r.Update(ctx, foundNs)
 				if err != nil {
 					IncRequestErrorCounter("error updating namespace label", SEVERITY_MAJOR)
@@ -624,35 +629,38 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
-func mergeLabelPropertiesToMap(logger logr.Logger) {
-	file, err := os.Open(NAMESPACE_LABELS_PROPERTIES)
-	if err != nil {
-		logger.Info("namespace labels properties file doesn't exist, using default value")
-	}
-	defer file.Close()
+func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, path string, logger logr.Logger) {
+	readEnforcedLabels(path, logger)
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		label := scanner.Text()
-		arr := strings.Split(label, "=")
-		if len(arr) > 2 || len(arr) == 0 {
-			logger.Info("label config format incorrect, should be {key}={value}", "label", label)
+	if ns.Labels == nil {
+		ns.Labels = make(map[string]string)
+	}
+
+	for k, v := range enforcedKubeflowNamespaceLabels {
+		existingValue, ok := ns.Labels[k]
+		if len(v) == 0 {
+			// When there is an empty value, k should be removed.
+			if ok {
+				delete(ns.Labels, k)
+			}
 		} else {
-			if arr[0] == "" {
-				logger.Info("label key should not be empty", "label", label)
-			} else if len(arr) == 2 {
-				// Add or overwrite label map if value exists.
-				kubeflowNamespaceLabels[arr[0]] = arr[1]
-			} else {
-				// Set value to be empty if nothing exists after "=".
-				// It means this label needs to be removed.
-				kubeflowNamespaceLabels[arr[0]] = ""
+			if !ok || existingValue != v {
+				// Add or overwrite value for label.
+				ns.Labels[k] = v
 			}
 		}
 	}
+}
 
-	if err := scanner.Err(); err != nil {
-		logger.Error(err, "Error reading namespace labels properties file")
+func readEnforcedLabels(path string, logger logr.Logger) {
+	dat, err := ioutil.ReadFile(path)
+	if err != nil {
+		logger.Info("namespace labels properties file doesn't exist, using default value")
+	}
+
+	errYaml := yaml.Unmarshal(dat, &enforcedKubeflowNamespaceLabels)
+	if errYaml != nil {
+		logger.Error(errYaml, "Unable to parse enforced namespace labels.")
 	}
 }
 

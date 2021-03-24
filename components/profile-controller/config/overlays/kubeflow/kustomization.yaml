@@ -28,4 +28,4 @@ vars:
 configMapGenerator:
 - name: namespace-labels-data
   files:
-  - namespace-labels.properties
+  - namespace-labels.yaml
