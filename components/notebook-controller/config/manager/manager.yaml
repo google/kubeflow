@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: manager
-        image: gcr.io/kubeflow-images-public/notebook-controller:vmaster-g6eb007d0
+        image: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
         command:
           - /manager
         env:

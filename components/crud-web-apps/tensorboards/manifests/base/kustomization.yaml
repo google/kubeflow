@@ -14,7 +14,7 @@ commonLabels:
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app
   newName: public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app
-  newTag: master-24bcb8e8
+  newTag: master-1831e436
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:
@@ -57,5 +57,3 @@ vars:
     apiVersion: v1
     kind: ConfigMap
     name: parameters
-configurations:
-- params.yaml

@@ -17,16 +17,29 @@
 spawnerFormDefaults:
   image:
     # The container Image for the user's Jupyter Notebook
-    # If readonly, this value must be a member of the list below
-    value: gcr.io/kubeflow-images-public/tensorflow-1.15.2-notebook-cpu:1.0.0
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
     # The list of available standard container Images
     options:
-      - gcr.io/kubeflow-images-public/tensorflow-1.15.2-notebook-cpu:1.0.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.15.2-notebook-gpu:1.0.0
-      - gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-cpu:1.0.0
-      - gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-gpu:1.0.0
-    # By default, custom container Images are allowed
-    # Uncomment the following line to only enable standard container Images
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:master-1831e436
+  imageVSCode:
+    # The container Image for the user's VS-Code Server
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
+    # The list of available standard container Images
+    options:
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
+  imageRStudio:
+    # The container Image for the user's RStudio Server
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
+    # The list of available standard container Images
+    options:
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
+  allowCustomImage: true
+  imagePullPolicy:
+    value: IfNotPresent
     readOnly: false
   cpu:
     # CPU for user's Notebook
@@ -133,10 +146,7 @@ spawnerFormDefaults:
     # If readonly, the default value will be the only option
     value: "none"
     # The list of available affinity configs
-    options:
-      - configKey: "none"
-        displayName: "None"
-        affinity: {}
+    options: []
     # # (DESC) Pod gets an exclusive "n1-standard-2" Node
     # # (TIP) set PreferNoSchedule taint on this node-pool
     # # (TIP) enable cluster-autoscaler on this node-pool
@@ -168,10 +178,7 @@ spawnerFormDefaults:
     # If readonly, the default value will be the only option
     value: "none"
     # The list of available tolerationGroup configs
-    options:
-      - groupKey: "none"
-        displayName: "None"
-        tolerations: []
+    options: []
     # - groupKey: "group_1"
     #   displayName: "Group 1: description"
     #   tolerations:

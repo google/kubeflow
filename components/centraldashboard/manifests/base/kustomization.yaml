@@ -10,16 +10,15 @@ resources:
 - service-account.yaml
 - service.yaml
 - configmap.yaml
-namespace: kubeflow
 commonLabels:
   kustomize.component: centraldashboard
   app: centraldashboard
   app.kubernetes.io/component: centraldashboard
   app.kubernetes.io/name: centraldashboard
 images:
-- name: gcr.io/kubeflow-images-public/centraldashboard
-  newName: gcr.io/kubeflow-images-public/centraldashboard
-  newTag: vmaster-g8097cfeb
+- name: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
+  newName: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
+  newTag: master-1831e436
 configMapGenerator:
 - envs:
   - params.env
@@ -69,5 +68,3 @@ vars:
     apiVersion: v1
     kind: ConfigMap
     name: centraldashboard-config
-configurations:
-- params.yaml

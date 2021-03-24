@@ -17,7 +17,7 @@ spec:
         envFrom:
           - configMapRef:
               name: config
-        image: gcr.io/kubeflow-images-public/kfam:vmaster-g9f3bfd00
+        image: public.ecr.aws/j1r0q0g6/notebooks/access-management
         imagePullPolicy: Always
         name: kfam
         livenessProbe:

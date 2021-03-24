@@ -1,5 +1,0 @@
-varReference:
-- path: spec/template/spec/containers/0/env/0/value
-  kind: Deployment
-- path: spec/template/spec/containers/0/env/1/value
-  kind: Deployment

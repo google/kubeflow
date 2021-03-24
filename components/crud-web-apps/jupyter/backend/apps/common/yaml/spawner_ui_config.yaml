@@ -17,26 +17,26 @@
 spawnerFormDefaults:
   image:
     # The container Image for the user's Jupyter Notebook
-    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-28af7716
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
     # The list of available standard container Images
     options:
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-28af7716
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:master-28af7716
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:master-28af7716
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:master-28af7716
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:master-28af7716
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:master-1831e436
   imageVSCode:
     # The container Image for the user's VS-Code Server
-    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-28af7716
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
     # The list of available standard container Images
     options:
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-28af7716
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
   imageRStudio:
     # The container Image for the user's RStudio Server
-    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-87b7d015
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
     # The list of available standard container Images
     options:
-      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-87b7d015
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
   allowCustomImage: true
   # If true, users can input custom images
   # If false, users can only select from the images in this config

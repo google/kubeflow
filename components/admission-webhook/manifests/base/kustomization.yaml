@@ -14,9 +14,9 @@ commonLabels:
   app.kubernetes.io/component: poddefaults
   app.kubernetes.io/name: poddefaults
 images:
-- name: gcr.io/kubeflow-images-public/admission-webhook
-  newName: gcr.io/kubeflow-images-public/admission-webhook
-  newTag: vmaster-ge5452b6f
+- name: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+  newName: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+  newTag: master-1831e436
 namespace: kubeflow
 generatorOptions:
   disableNameSuffixHash: true

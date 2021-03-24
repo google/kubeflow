@@ -38,7 +38,7 @@ spec:
         - name: namespace-labels
           mountPath: /etc/config/labels
           readOnly: true
-        image: gcr.io/kubeflow-images-public/profile-controller:vmaster-ga49f658f
+        image: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
         imagePullPolicy: Always
         name: manager
         livenessProbe:

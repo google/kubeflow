@@ -1,5 +1,9 @@
 apiVersion: v1
 data:
+  settings: |-
+    {
+      "DASHBOARD_FORCE_IFRAME": true
+    }
   links: |-
     {
       "menuLinks": [
@@ -8,6 +12,18 @@ data:
           "link": "/jupyter/",
           "text": "Notebooks",
           "icon": "book"
+        },
+        {
+          "type": "item",
+          "link": "/tensorboards/",
+          "text": "Tensorboards",
+          "icon": "assessment"
+        },
+        {
+          "type": "item",
+          "link": "/volumes/",
+          "text": "Volumes",
+          "icon": "device:storage"
         },
         {
           "type": "item",

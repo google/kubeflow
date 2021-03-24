@@ -11,15 +11,15 @@ spec:
     spec:
       containers:
       - name: jupyter-web-app
-        image: gcr.io/kubeflow-images-public/jupyter-web-app
+        image: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
         ports:
         - containerPort: 5000
         volumeMounts:
         - mountPath: /etc/config
           name: config-volume
         env:
-        - name: ROK_SECRET_NAME
-          value: $(JWA_ROK_SECRET_NAME)
+        - name: APP_PREFIX
+          value: $(JWA_PREFIX)
         - name: UI
           value: $(JWA_UI)
         - name: USERID_HEADER
@@ -29,5 +29,5 @@ spec:
       serviceAccountName: service-account
       volumes:
       - configMap:
-          name: jupyter-web-app-config
+          name: config
         name: config-volume

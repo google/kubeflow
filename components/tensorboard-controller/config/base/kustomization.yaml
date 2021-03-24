@@ -19,7 +19,6 @@ patches:
     subjects:
     - kind: ServiceAccount
       name: tensorboard-controller
-      namespace: system
   target:
     kind: "RoleBinding"
     group: "rbac.authorization.k8s.io"
@@ -31,11 +30,10 @@ patches:
     subjects:
     - kind: ServiceAccount
       name: tensorboard-controller
-      namespace: system
   target:
     kind: "ClusterRoleBinding"
     group: "rbac.authorization.k8s.io"
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller
   newName: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller
-  newTag: master-9d688f73
+  newTag: master-f779f93b

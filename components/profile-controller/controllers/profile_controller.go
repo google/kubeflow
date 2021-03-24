@@ -69,6 +69,7 @@ const (
 var kubeflowNamespaceLabels = map[string]string{
 	"katib-metricscollector-injection":      "enabled",
 	"serving.kubeflow.org/inferenceservice": "enabled",
+	"pipelines.kubeflow.org/enabled":        "true",
 	"app.kubernetes.io/part-of":             "kubeflow-profile",
 }
 

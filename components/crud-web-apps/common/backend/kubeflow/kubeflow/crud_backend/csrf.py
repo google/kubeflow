@@ -42,7 +42,7 @@ import secrets
 from flask import Blueprint, current_app, request
 from werkzeug.exceptions import Forbidden
 
-from . import config
+from . import settings
 
 bp = Blueprint("csrf", __name__)
 log = logging.getLogger(__name__)
@@ -69,10 +69,9 @@ def set_cookie(resp):
     """
     cookie = secrets.token_urlsafe(32)
 
-    secure = True
-    if config.dev_mode_enabled():
-        log.info("Allowing the cookie to be sent through http for dev mode")
-        secure = False
+    secure = settings.SECURE_COOKIES
+    if not secure:
+        log.info("Not setting Secure in CSRF cookie.")
 
     samesite = os.getenv("CSRF_SAMESITE", "Strict")
     if samesite not in SAMESITE_VALUES:
@@ -95,13 +94,13 @@ def check_endpoint():
         return
 
     log.debug("Ensuring endpoint is CSRF protected: %s", request.path)
-    if CSRF_HEADER not in request.headers:
-        raise Forbidden("Could not detect CSRF protection header %s."
-                        % CSRF_HEADER)
-
     if CSRF_COOKIE not in request.cookies:
         raise Forbidden("Could not find CSRF cookie %s in the request."
                         % CSRF_COOKIE)
+
+    if CSRF_HEADER not in request.headers:
+        raise Forbidden("Could not detect CSRF protection header %s."
+                        % CSRF_HEADER)
 
     header_token = request.headers[CSRF_HEADER]
     cookie_token = request.cookies[CSRF_COOKIE]

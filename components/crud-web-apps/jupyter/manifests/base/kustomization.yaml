@@ -20,9 +20,9 @@ commonLabels:
   app: jupyter-web-app
   kustomize.component: jupyter-web-app
 images:
-- name: gcr.io/kubeflow-images-public/jupyter-web-app
-  newName: gcr.io/kubeflow-images-public/jupyter-web-app
-  newTag: vmaster-ge4456300
+- name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+  newName: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+  newTag: master-05ba7a65
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:
@@ -31,7 +31,7 @@ configMapGenerator:
   name: parameters
 - files:
   - configs/spawner_ui_config.yaml
-  name: jupyter-web-app-config
+  name: config
 vars:
 - fieldref:
     fieldPath: data.JWA_CLUSTER_DOMAIN
@@ -62,18 +62,16 @@ vars:
     kind: ConfigMap
     name: parameters
 - fieldref:
-    fieldPath: data.JWA_ROK_SECRET_NAME
-  name: JWA_ROK_SECRET_NAME
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: parameters
-- fieldref:
     fieldPath: data.JWA_UI
   name: JWA_UI
   objref:
     apiVersion: v1
     kind: ConfigMap
     name: parameters
-configurations:
-- params.yaml
+- fieldref:
+    fieldPath: data.JWA_PREFIX
+  name: JWA_PREFIX
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters
