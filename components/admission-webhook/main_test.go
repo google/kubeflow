@@ -130,45 +130,51 @@ func TestApplyPodDefaultsOnPod(t *testing.T) {
 			"Add tolerations",
 			&corev1.Pod{
 				Spec: corev1.PodSpec{
-					Tolerations: []*corev1.Toleration{
+					Tolerations: []corev1.Toleration{
 						{
-							Key: "oldToleration",
+							Key:      "oldToleration",
 							Operator: "Exists",
-							Effect: "NoSchedule",
+							Effect:   "NoSchedule",
 						},
-					}
-				}
+					},
+				},
 			},
 			[]*settingsapi.PodDefault{
 				{
 					Spec: settingsapi.PodDefaultSpec{
-						Tolerations: []*corev1.Toleration{
+						Tolerations: []corev1.Toleration{
 							{
-								Key: "newToleration",
+								Key:      "newToleration",
 								Operator: "Equal",
-								Value: "foo",
-								"Effect": "NoSchedule",
+								Value:    "foo",
+								Effect:   "NoSchedule",
 							},
 						},
 					},
 				},
 			},
 			&corev1.Pod{
+				ObjectMeta: metav1.ObjectMeta{
+					Annotations: map[string]string{
+						"poddefault.admission.kubeflow.org/poddefault-": "",
+					},
+					Labels: map[string]string{},
+				},
 				Spec: corev1.PodSpec{
-					Tolerations: []*corev1.Toleration{
+					Tolerations: []corev1.Toleration{
 						{
-							Key: "oldToleration",
+							Key:      "oldToleration",
 							Operator: "Exists",
-							Effect: "NoSchedule",
+							Effect:   "NoSchedule",
 						},
 						{
-							Key: "newToleration",
+							Key:      "newToleration",
 							Operator: "Equal",
-							Value: "foo",
-							"Effect": "NoSchedule",
+							Value:    "foo",
+							Effect:   "NoSchedule",
 						},
-					}
-				}
+					},
+				},
 			},
 		},
 	} {

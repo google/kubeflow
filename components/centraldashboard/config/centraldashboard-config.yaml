@@ -8,14 +8,24 @@ data:
     {
       "menuLinks": [
         {
+          "link": "/jupyter/",
+          "text": "Notebooks",
+          "icon": "book"
+        },
+        {
+          "link": "/tensorboards/",
+          "text": "Tensorboards",
+          "icon": "assessment"
+        },
+        {
+          "link": "/volumes/",
+          "text": "Volumes",
+          "icon": "device:storage"
+        },
+        {
           "link": "/pipeline/",
           "text": "Pipelines",
           "icon": "kubeflow:pipeline-centered"
-        },
-        {
-          "link": "/jupyter/",
-          "text": "Notebook Servers",
-          "icon": "book"
         },
         {
           "link": "/katib/",

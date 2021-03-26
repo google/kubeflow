@@ -9,8 +9,10 @@ namespace: notebook-controller-system
 namePrefix: notebook-controller-
 
 # Labels to add to all resources and selectors.
-#commonLabels:
-#  someName: someValue
+commonLabels:
+  app: notebook-controller
+  kustomize.component: notebook-controller
+
 
 bases:
 - ../crd

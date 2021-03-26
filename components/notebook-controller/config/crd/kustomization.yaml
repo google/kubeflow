@@ -7,6 +7,17 @@ resources:
 
 patchesStrategicMerge:
 - patches/trivial_conversion_patch.yaml
+
+patchesJson6902:
+# Remove once the following issue is resolved:
+# https://github.com/kubeflow/kubeflow/issues/5722
+- path: patches/old_crd.yaml
+  target:
+    group: apiextensions.k8s.io
+    version: v1beta1
+    kind: CustomResourceDefinition
+    name: notebooks.kubeflow.org
+
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 #- patches/webhook_in_notebooks.yaml

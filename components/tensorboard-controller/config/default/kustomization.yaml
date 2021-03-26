@@ -9,8 +9,9 @@ namespace: tensorboard-controller-system
 namePrefix: tensorboard-controller-
 
 # Labels to add to all resources and selectors.
-#commonLabels:
-#  someName: someValue
+commonLabels:
+  app: tensorboard-controller
+  kustomize.component: tensorboard-controller
 
 bases:
 - ../crd

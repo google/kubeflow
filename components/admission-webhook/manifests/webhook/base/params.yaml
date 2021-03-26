@@ -1,7 +1,0 @@
-varReference:
-- path: webhooks/clientConfig/service/namespace
-  kind: MutatingWebhookConfiguration
-- path: webhooks/clientConfig/service/name
-  kind: MutatingWebhookConfiguration
-- path: webhooks/name
-  kind: MutatingWebhookConfiguration

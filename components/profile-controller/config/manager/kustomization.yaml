@@ -1,2 +1,11 @@
 resources:
 - manager.yaml
+- service-account.yaml
+
+configMapGenerator:
+- name: config
+  literals:
+  - ADMIN=
+  - WORKLOAD_IDENTITY=
+  - USERID_HEADER="kubeflow-userid"
+  - USERID_PREFIX=

@@ -15,6 +15,39 @@ const TEMPLATE = `
 </test-fixture>
 `;
 
+const MENU_LINKS = [
+    {
+        link: '/jupyter/',
+        text: 'Notebooks',
+    },
+    {
+        link: '/pipeline/#/pipelines',
+        text: 'Pipelines',
+    },
+    {
+        link: '/katib/trials',
+        text: 'Katib Trials',
+    },
+    {
+        type: 'section',
+        text: 'Experiments',
+        items: [
+            {
+                link: '/pipeline/#/experiments',
+                text: 'Pipelines',
+            },
+            {
+                link: '/katib/experiments',
+                text: 'Katib Experiments',
+            },
+        ],
+    },
+    {
+        link: '/pipeline/#/runs',
+        text: 'Runs',
+    },
+];
+
 describe('Main Page', () => {
     let mainPage;
     let beforeHash;
@@ -241,5 +274,60 @@ describe('Main Page', () => {
             flush();
 
             expect(mainPage.iframeSrc).toBe('about:blank');
+        });
+
+    function getSelectedMenuItem() {
+        return mainPage.shadowRoot.querySelectorAll(
+            '.menu-item.iron-selected');
+    }
+
+    it('Sets active menu item from simple URL',
+        () => {
+            mainPage.menuLinks = MENU_LINKS;
+            flush();
+            mainPage._setActiveMenuLink('/jupyter/', '');
+            flush();
+            const activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe('/jupyter/');
+        });
+
+    it('Sets active menu item from hash-based URL with common prefix',
+        () => {
+            mainPage.menuLinks = MENU_LINKS;
+            flush();
+            mainPage._setActiveMenuLink('/pipeline/',
+                '/experiments/details/12345');
+            flush();
+            let activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe(
+                '/pipeline/#/experiments');
+
+            mainPage._setActiveMenuLink('/pipeline/',
+                '/runs/details/12345');
+            flush();
+            activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe(
+                '/pipeline/#/runs');
+        });
+
+    it('Sets active menu item from path-based URL with common prefix ',
+        () => {
+            mainPage.menuLinks = MENU_LINKS;
+            flush();
+            mainPage._setActiveMenuLink('/katib/experiments/id/12345', '');
+            flush();
+            let activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe(
+                '/katib/experiments');
+
+            mainPage._setActiveMenuLink('/katib/trials/id/12345', '');
+            flush();
+            activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe('/katib/trials');
         });
 });

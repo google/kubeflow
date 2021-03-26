@@ -1,0 +1,47 @@
+# This overlay uses CertManager to provision a certificate for the
+# PodDefaults admission controller. This is preferred over the old
+# way of using "bootstrap" which was running a shell script to create
+# the certificate.
+# TODO(jlewi): We should eventually refactor the manifests to delete
+# bootstrap and use certmanager by default.
+bases:
+- ../../base
+
+resources:
+- certificate.yaml
+
+namespace: kubeflow
+
+namePrefix: admission-webhook-
+
+commonLabels:
+  app: poddefaults
+  kustomize.component: poddefaults
+  app.kubernetes.io/component: poddefaults
+  app.kubernetes.io/name: poddefaults
+
+patchesStrategicMerge:
+- mutating-webhook-configuration.yaml
+- deployment.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+vars:
+# These vars are used to substitute in the namespace, service name and
+# deployment name into the mutating WebHookConfiguration.
+# Since its a CR kustomize isn't aware of those fields and won't
+# transform them.
+# We need the var names to be relatively unique so that when we
+# compose with other applications they won't conflict.
+- name: podDefaultsCertName
+  objref:
+      kind: Certificate
+      group: cert-manager.io
+      version: v1alpha2
+      name: cert
+  fieldref:
+    fieldpath: metadata.name
+
+configurations:
+- params.yaml

@@ -1,0 +1,77 @@
+# TODO(https://github.com/kubeflow/manifests/issues/774):
+# This is a legacy package. Hopefully we can get rid of it once
+# 774 is complete.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# TODO(jlewi): We can't depend on base because of the deployment_patch.
+# but maybe if we changed that to use ConfigMapRef then the patch would correctly
+# override the patch applied in base_v3
+resources:
+- cluster-role-binding.yaml
+- cluster-role.yaml
+- deployment.yaml
+- role-binding.yaml
+- role.yaml
+- service-account.yaml
+- service.yaml
+namePrefix: jupyter-web-app-
+namespace: kubeflow
+commonLabels:
+  app: jupyter-web-app
+  kustomize.component: jupyter-web-app
+images:
+- name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+  newName: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+  newTag: master-05ba7a65
+# We need the name to be unique without the suffix because the original name is what
+# gets used with patches
+configMapGenerator:
+- envs:
+  - params.env
+  name: parameters
+- files:
+  - configs/spawner_ui_config.yaml
+  name: config
+vars:
+- fieldref:
+    fieldPath: data.JWA_CLUSTER_DOMAIN
+  name: JWA_CLUSTER_DOMAIN
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters
+- fieldref:
+    fieldPath: metadata.namespace
+  name: JWA_NAMESPACE
+  objref:
+    apiVersion: v1
+    kind: Service
+    name: service
+- fieldref:
+    fieldPath: data.JWA_USERID_HEADER
+  name: JWA_USERID_HEADER
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters
+- fieldref:
+    fieldPath: data.JWA_USERID_PREFIX
+  name: JWA_USERID_PREFIX
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters
+- fieldref:
+    fieldPath: data.JWA_UI
+  name: JWA_UI
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters
+- fieldref:
+    fieldPath: data.JWA_PREFIX
+  name: JWA_PREFIX
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: parameters

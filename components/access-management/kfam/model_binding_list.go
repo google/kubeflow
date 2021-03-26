@@ -11,6 +11,5 @@
 package kfam
 
 type BindingEntries struct {
-
 	Bindings []Binding `json:"bindings,omitempty"`
 }

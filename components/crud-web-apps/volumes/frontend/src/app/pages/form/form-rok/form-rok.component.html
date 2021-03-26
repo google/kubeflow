@@ -1,0 +1,95 @@
+<div class="form--container" mat-dialog-content>
+  <form novalidate (ngSubmit)="onSubmit()" [formGroup]="formCtrl">
+    <lib-form-section
+      title="New Volume"
+      text="Create a new empty Volume or clone an existing snapshot."
+      icon="fa:fas:hdd"
+    >
+    </lib-form-section>
+
+    <!--Volume Type-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Volume Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option [value]="TYPE_EMPTY">Empty Volume</mat-option>
+        <mat-option [value]="TYPE_ROK_SNAPSHOT">
+          Clone an existing Rok snapshot
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!--Name / Namespace-->
+    <lib-form-name-namespace-inputs
+      [nameControl]="formCtrl.get('name')"
+      [namespaceControl]="formCtrl.get('namespace')"
+      resourceName="Volume"
+      [existingNames]="pvcNames"
+    >
+    </lib-form-name-namespace-inputs>
+
+    <!--Snapshot Chooser-->
+    <lib-rok-url-input
+      *ngIf="formCtrl.get('type').value === TYPE_ROK_SNAPSHOT"
+      [control]="formCtrl.controls.snapshot"
+      [mode]="'file'"
+      (urlEntered)="rokUrlChanged($event)"
+    ></lib-rok-url-input>
+
+    <!--Size-->
+    <lib-positive-number-input
+      [sizeControl]="formCtrl.get('size')"
+      min="1"
+      step="1"
+      label="Volume size in Gi"
+    ></lib-positive-number-input>
+
+    <!--Storage Class-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Storage Class</mat-label>
+      <mat-select formControlName="class">
+        <mat-option
+          value="{none}"
+          [disabled]="classIsDisabled('{none}')"
+          [matTooltip]="classTooltip('{none}')"
+        >
+          None</mat-option
+        >
+        <mat-option
+          *ngFor="let sc of storageClasses"
+          [value]="sc"
+          [disabled]="classIsDisabled(sc)"
+          [matTooltip]="classTooltip(sc)"
+        >
+          {{ sc }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formCtrl.controls.class.hasError('notRokClass')">
+        Must use a Rok provided Storage Class when cloning a snapshot from Rok
+      </mat-error>
+    </mat-form-field>
+
+    <!--Access Mode-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Access Mode</mat-label>
+      <mat-select formControlName="mode">
+        <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
+        <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
+        <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="form--button-margin"
+      type="submit"
+      [disabled]="!formCtrl.valid || blockSubmit"
+    >
+      CREATE
+    </button>
+
+    <button mat-raised-button type="button" (click)="onCancel()">
+      CANCEL
+    </button>
+  </form>
+</div>

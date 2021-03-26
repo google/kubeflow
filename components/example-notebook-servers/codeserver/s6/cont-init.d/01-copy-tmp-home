@@ -1,0 +1,2 @@
+#!/usr/bin/with-contenv bash
+cp -r -n /tmp_home/* /home/

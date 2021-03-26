@@ -1,6 +1,0 @@
-{
-  "BASE_IMAGE": "tensorflow/tensorflow:1.15.2-gpu-py3-jupyter",
-  "TFMA_VERSION": "0.13.0",
-  "TFDV_VERSION": "0.13.1"
-}
-

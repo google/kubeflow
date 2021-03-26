@@ -1,0 +1,24 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: tensorboards-web-app-tensorboards-web-app
+spec:
+  gateways:
+  - kubeflow-gateway
+  hosts:
+  - '*'
+  http:
+  - headers:
+      request:
+        add:
+          x-forwarded-prefix: /tensorboards
+    match:
+    - uri:
+        prefix: /tensorboards/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: tensorboards-web-app-service.$(TWA_NAMESPACE).svc.$(TWA_CLUSTER_DOMAIN)
+        port:
+          number: 80

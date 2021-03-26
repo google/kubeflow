@@ -13,7 +13,9 @@
         <app-form-image
           [parentForm]="formCtrl"
           [images]="config?.image?.options"
-          [readonly]="config?.image?.readOnly"
+          [imagesVSCode]="config?.imageVSCode?.options"
+          [imagesRStudio]="config?.imageRStudio?.options"
+          [allowCustomImage]="config?.allowCustomImage"
         ></app-form-image>
 
         <app-form-cpu-ram [parentForm]="formCtrl"></app-form-cpu-ram>

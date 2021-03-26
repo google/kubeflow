@@ -4,18 +4,19 @@ Kubeflow Profile CRD is designed to solve access management within multi-user ku
 
 Profile access management provides namespace level isolation based on:
 
-- k8s rbac access control
-- Istio rbac access control
+- Kubernetes RBAC
+- Istio AuthorizationPolicy
 
 **Resources managed by profile CRD:**
 
-Each profile CRD will manage one namespace (with same name as profile CRD), and will have one owner.
+Each profile CRD will manage one namespace (with same name as profile CRD) and
+will have one owner.
 Specifically, each profile CRD will manage following resources:
 
 - Namespace reserved for profile owner.
-- K8s rbac Rolebinding `namespaceAdmin`: make profile owner the namespace admin, allow access to above namespace via k8s API (kubectl).
+- K8s RBAC RoleBinding `namespaceAdmin`: make profile owner the namespace admin, allow access to above namespace via k8s API (kubectl).
 - Istio namespace-scoped ServiceRole `ns-access-istio`: allow access to all services in target namespace via Istio routing.
-- Istio namespace-scoped ServiceRoleBinding `owner-binding-istio`: bind ServiceRole `ns-access-istio` to profile owner. 
+- Istio namespace-scoped ServiceRoleBinding `owner-binding-istio`: bind ServiceRole `ns-access-istio` to profile owner.
 So profile owner can access services in above namespace via Istio (browser).
 - Setup namespace-scoped service-accounts `editor` and `viewer` to be used by user-created pods in above namespace.
 - Resource Quota (since v1beta1)
@@ -49,7 +50,7 @@ kubectl create -f /path/to/profile/config
 kubectl delete profile kubeflow-user1
 ```
 
-### Self-serve kfam UI 
+### Self-serve kfam UI
 
 Users with access to cluster API server should be able to register and use kubeflow cluster without admin manual approve.
 
@@ -84,23 +85,10 @@ Plugin owners have full control over plugin spec struct and implementation.
 - [WorkloadIdentity](controllers/plugin_workload_identity.go)
   - Platform: GKE
   - Type: credential binding
-  - WorkloadIdentity plugin will bind k8s service account to GCP service account, 
+  - WorkloadIdentity plugin will bind k8s service account to GCP service account,
   so pods in profile namespace can talk to GCP APIs as GCP service account identity.
 - [IAMForServiceAccount](controllers/plugin_iam.go)
   - Platform: EKS
   - Type: credential binding
   - IAM For Service Account plugin will grant k8s service account permission of IAM role,
   so pods in profile namespace can authenticate AWS services as IAM role.
-
-## Dev Instruction
-
-##### How to generate Istio rbac CRD types
-
-- We use kube builder https://book.kubebuilder.io/quick_start.html
-```
-kubebuilder init --domain istio.io --license apache2 --owner "The Kubernetes Authors"
-kubebuilder create api --group rbac --version v1alpha1 --kind ServiceRole
-kubebuilder create api --group rbac --version v1alpha1 --kind ServiceRoleBinding
-```
-- Then copy ServiceRole / ServiceRoleBinding schema from Istio release version https://github.com/istio/istio/releases/tag/1.1.6 to `pkg/apis/istiorbac/v1alpha1/*_types.go`
-- Run `make` to update code.

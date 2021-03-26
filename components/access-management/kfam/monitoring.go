@@ -10,11 +10,12 @@ import (
 const KFAM = "kfam"
 const COMPONENT = "component"
 const KIND = "kind"
+
 // User that make the request
 const REQUSER = "user"
 const ACTION = "action"
 const PATH = "path"
-const SEVERITY  = "severity"
+const SEVERITY = "severity"
 const SEVERITY_MINOR = "minor"
 const SEVERITY_MAJOR = "major"
 const SEVERITY_CRITICAL = "critical"
@@ -58,18 +59,18 @@ func init() {
 }
 
 func IncRequestCounter(kind string, user string, action string, path string) {
-	if len(kind) > MAX_TAG_LEN{
+	if len(kind) > MAX_TAG_LEN {
 		kind = kind[0:MAX_TAG_LEN]
 	}
-	labels := prometheus.Labels{COMPONENT: KFAM, KIND: kind, REQUSER: user,  ACTION: action, PATH: path}
+	labels := prometheus.Labels{COMPONENT: KFAM, KIND: kind, REQUSER: user, ACTION: action, PATH: path}
 	requestCounter.With(labels).Inc()
 }
 
 func IncRequestErrorCounter(kind string, user string, action string, path string, severity string) {
-	if len(kind) > MAX_TAG_LEN{
+	if len(kind) > MAX_TAG_LEN {
 		kind = kind[0:MAX_TAG_LEN]
 	}
-	labels := prometheus.Labels{COMPONENT: KFAM, KIND: kind, REQUSER: user,  ACTION: action, PATH: path,
+	labels := prometheus.Labels{COMPONENT: KFAM, KIND: kind, REQUSER: user, ACTION: action, PATH: path,
 		SEVERITY: severity}
 	log.Errorf("Failed request with action: %v, path: %v, kind: %v", action, path, kind)
 	requestErrorCounter.With(labels).Inc()

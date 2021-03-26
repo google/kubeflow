@@ -133,7 +133,7 @@ func (r *TensorboardReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 			instance.Status.ReadyReplicas = foundDeployment.Status.ReadyReplicas
 		}
 
-		_err = r.Update(ctx, instance)
+		_err = r.Status().Update(ctx, instance)
 		if _err != nil {
 			return ctrl.Result{}, _err
 		}

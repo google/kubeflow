@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: volumes-web-app
+        image: public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app
+        ports:
+        - containerPort: 5000
+        env:
+        - name: APP_PREFIX
+          value: $(VWA_PREFIX)
+        - name: USERID_HEADER
+          value: $(VWA_USERID_HEADER)
+        - name: USERID_PREFIX
+          value: $(VWA_USERID_PREFIX)
+      serviceAccountName: service-account

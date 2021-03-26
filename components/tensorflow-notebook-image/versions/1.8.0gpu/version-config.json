@@ -1,7 +1,0 @@
-{
-  "BASE_IMAGE": "nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04",
-  "TF_PACKAGE": "https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.8.0-cp36-cp36m-linux_x86_64.whl",
-  "TF_PACKAGE_PY_27": "https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.8.0-cp27-none-linux_x86_64.whl",
-  "TFMA_VERSION": "0.6.0",
-  "TF_SERVING_VERSION": "1.8.0"
-}

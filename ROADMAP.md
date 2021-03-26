@@ -141,13 +141,12 @@ Here is a preliminary list of limitations and requirements that will be part of 
 * Users can consume Kubeflow in their own, isolated namespace
 * Upgrades will require downtime
 
-## Kubeflow 1.1 Features, Target release: Late June 2020
+## Kubeflow 1.1 Features, Release Date: Late June 2020
 
 Kubeflow 1.1 will continue to enhance enterprise grade functionality for secure operations and upgrades.   1.1 will also simplify ML workflows to improve data scientist productivity.
 
-The following features are under design review:
+The following features were delivered in Kubeflow 1.1:
 
-* Process and tools for upgrades from Release N-1 to N i.e. 1.0.x to 1.1, [#304](https://github.com/kubeflow/kfctl/issues/304)
 * Additional security use cases for GCP users (including support for private GKE & Anthos Service Mesh),[design doc](https://cloud.google.com/service-mesh/docs); [#1705](https://github.com/kubeflow/website/issues/1705)
 * A CVE scanning report and mitigation process, [4590](https://github.com/kubeflow/kubeflow/issues/4590)
 * Improved workflow automation tools (fairing and kale) to simplify and mature the Core and EcoSystem supported CUJs
@@ -159,3 +158,79 @@ The following features are under design review:
 * Multi-User Authorization: Add support for K8s RBAC via SubjectAccessReview [#3513](https://github.com/kubeflow/pipelines/issues/3513)
 
 The 1.1 features are tracked in this [Kanban board](https://github.com/orgs/kubeflow/projects/36) 
+
+## Kubeflow 1.2 Features, Release Date: November 2020
+
+Kubeflow 1.2 provides valuable enhancements to HyperParameter Tuning, Pipelines, KFServing, Notebooks and the Training Operators, which improve Kubeflow operations and data scientist productivity.
+
+1.2 includes the following features:
+
+* Katib 0.10 with the new v1beta1 API 
+* Katib support for early stopping.
+* Katib support for custom CRD in the new Trial template.
+* Katib support to resume experiments
+* Katib support for multiple ways to extract metrics
+* KFServing support to add batcher module as sidecar 
+* KFServing for the Alibi explainer upgrade to 0.4.0 
+* KFServing for Triton inference server rename and integrations  
+* Pipelines support for a Tekton backend option.
+* Kubeflow Pipelines 1.0.4, Changelog includes ~20 fixes and ~5 minor features.
+* Notebooks support for Affinity/Toleration configs 
+* Update mxnet-operator manifest to v1
+* Correct XGBoostJob CRD group name and add singular name
+* Fix XGBoost Operator manifest issue
+* Move Pytorch operator e2e tests to AWS Prow
+* Support BytePS in MXNet Operator
+* Fix error when conditions is empty in tf-operator
+* Fix success Policy logic in MXNet Operator
+
+For more details please see this post: https://blog.kubeflow.org/release/official/2020/11/18/kubeflow-1.2-blog-post.html
+
+## Kubeflow 1.3 Features, Target release: March 2021
+
+The Kubeflow 1.3 roadmap includes many User Interface (UI) improvements and core Kubeflow component upgrades to improve installation, management, and authentication.  It also includes support the latest Istio versions.
+
+The 1.3 release plan includes the following features:
+
+User Interface (UI) & Working Group enhancements to improve user experience and simplify workflows & operations
+
+* Completely new UIs for KFServing, Katib, Tensorboard & Volumes Manager
+* Notebooks
+  * Important backend updates to Notebooks (i.e. to improve interop with Tensorboard)
+  * New and expanded Jupyter Notebook stack along with easy to customize common base images - this is a stretch feature for 1.3
+  * Addition of R-Studio and Code-Server (VS-Code) support
+* Kubeflow Pipelines (KFP) 
+  * UI reorganization for better User Experience
+  * Manage recurring Runs via new “Jobs” page (exact name on UI is TBD)
+  * Simplified view of dependency graphs 
+  * Multi-user feature enhancements in Kubeflow Pipelines
+* KFServing v0.5
+   * [Multi-model Serving](https://github.com/yuzliu/kfserving/blob/master/docs/MULTIMODELSERVING_GUIDE.md) 
+   * Ability to specify container fields on ML Framework spec such as env variable, liveness/readiness probes etc.
+   * Ability to specify pod template fields on component spec such as NodeAffinity etc.
+   * gRPC support Tensorflow Serving.
+   * Triton Inference server V2 inference REST/gRPC protocol support
+   * TorchServe predict integration
+   * PyTorch Captum explain integration
+   * SKLearn/XGBoost V2 inference REST/gRPC protocol support with MLServer
+   * PMMLServer support
+   * LightGBM support
+   * Allow specifying timeouts on component spec
+   * Simplified canary rollout, traffic split at knative revisions level instead of services level
+   * Transformer to predictor call is now made async
+
+Core improvements to Kubeflow Installation, Management, Authentication, and Istio
+
+* Support for latest Istio versions across Kubeflow applications:
+    * KFP, Profile-Controller and KFAM will support the new AuthorizationPolicy API
+* Manifests refactor:
+    * Easy installation of Kubeflow applications and common services
+    * Easy creation of Kubeflow distributions
+    * Moving manifest development to upstream application repositories
+      - This allows separation of responsibilities between Application Owners and Distribution Owners. 
+      - These will be sync'ed on a regular basis.
+      - This will result in a reduction of tech debt from old or duplicate manifests.
+
+
+
+

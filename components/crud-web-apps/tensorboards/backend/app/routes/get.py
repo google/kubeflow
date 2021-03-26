@@ -19,10 +19,11 @@ def get_tensorboards(namespace):
 
     return api.success_response("tensorboards", content)
 
+
 @bp.route("/api/namespaces/<namespace>/pvcs")
 def get_pvcs(namespace):
     # Return the list of PVCs and the corresponding Viewer's state
     pvcs = api.list_pvcs(namespace)
-    content = [utils.getPVCName(pvc) for pvc in pvcs.items]
+    content = [pvc.metadata.name for pvc in pvcs.items]
 
     return api.success_response("pvcs", content)

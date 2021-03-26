@@ -7,7 +7,9 @@ import {
   TRUNCATE_TEXT_SIZE,
   MenuValue,
   DialogConfig,
+  ComponentValue,
 } from 'kubeflow';
+import { ServerTypeComponent } from './server-type/server-type.component';
 
 // --- Configs for the Confirm Dialogs ---
 export function getDeleteDialogConfig(name: string): DialogConfig {
@@ -57,6 +59,13 @@ export const defaultConfig = {
         field: 'name',
         truncate: TRUNCATE_TEXT_SIZE.SMALL,
         tooltipField: 'name',
+      }),
+    },
+    {
+      matHeaderCellDef: 'Type',
+      matColumnDef: 'type',
+      value: new ComponentValue({
+        component: ServerTypeComponent
       }),
     },
     {

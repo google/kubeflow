@@ -1,7 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 resources:
+- ../../base
 - virtual-service.yaml
+
+namespace: kubeflow
+
+commonLabels:
+  kustomize.component: centraldashboard
+  app: centraldashboard
+  app.kubernetes.io/component: centraldashboard
+  app.kubernetes.io/name: centraldashboard
+
 configurations:
 - params.yaml
-

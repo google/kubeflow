@@ -1,0 +1,3 @@
+varReference:
+- path: spec/http/route/destination/host
+  kind: VirtualService

@@ -1,0 +1,134 @@
+apiVersion: v1
+data:
+  settings: |-
+    {
+      "DASHBOARD_FORCE_IFRAME": true
+    }
+  links: |-
+    {
+      "menuLinks": [
+        {
+          "type": "item",
+          "link": "/jupyter/",
+          "text": "Notebooks",
+          "icon": "book"
+        },
+        {
+          "type": "item",
+          "link": "/tensorboards/",
+          "text": "Tensorboards",
+          "icon": "assessment"
+        },
+        {
+          "type": "item",
+          "link": "/volumes/",
+          "text": "Volumes",
+          "icon": "device:storage"
+        },
+        {
+          "type": "item",
+          "link": "/katib/",
+          "text": "Experiments (AutoML)",
+          "icon": "kubeflow:katib"
+        },
+        {
+          "type": "item",
+          "text": "Experiments (KFP)",
+          "link": "/pipeline/#/experiments",
+          "icon": "done-all"
+        },
+        {
+          "type": "item",
+          "link": "/pipeline/#/pipelines",
+          "text": "Pipelines",
+          "icon": "kubeflow:pipeline-centered"
+        },
+        {
+          "type": "item",
+          "link": "/pipeline/#/runs",
+          "text": "Runs",
+          "icon": "maps:directions-run"
+        },
+        {
+          "type": "item",
+          "link": "/pipeline/#/recurringruns",
+          "text": "Recurring Runs",
+          "icon": "device:access-alarm"
+        },
+        {
+          "type": "item",
+          "link": "/pipeline/#/artifacts",
+          "text": "Artifacts",
+          "icon": "editor:bubble-chart"
+        },
+        {
+          "type": "item",
+          "link": "/pipeline/#/executions",
+          "text": "Executions",
+          "icon": "av:play-arrow"
+        }
+      ],
+      "externalLinks": [ ],
+        "quickLinks": [
+          {
+            "text": "Upload a pipeline",
+            "desc": "Pipelines",
+            "link": "/pipeline/"
+          },
+          {
+            "text": "View all pipeline runs",
+            "desc": "Pipelines",
+            "link": "/pipeline/#/runs"
+          },
+          {
+            "text": "Create a new Notebook server",
+            "desc": "Notebook Servers",
+            "link": "/jupyter/new?namespace=kubeflow"
+          },
+          {
+            "text": "View Katib Experiments",
+            "desc": "Katib",
+            "link": "/katib/"
+          }
+        ],
+        "documentationItems": [
+          {
+            "text": "Getting Started with Kubeflow",
+            "desc": "Get your machine-learning workflow up and running on Kubeflow",
+            "link": "https://www.kubeflow.org/docs/started/getting-started/"
+          },
+          {
+            "text": "MiniKF",
+            "desc": "A fast and easy way to deploy Kubeflow locally",
+            "link": "https://www.kubeflow.org/docs/started/getting-started-minikf/"
+          },
+          {
+            "text": "Microk8s for Kubeflow",
+            "desc": "Quickly get Kubeflow running locally on native hypervisors",
+            "link": "https://www.kubeflow.org/docs/started/getting-started-multipass/"
+          },
+          {
+            "text": "Minikube for Kubeflow",
+            "desc": "Quickly get Kubeflow running locally",
+            "link": "https://www.kubeflow.org/docs/started/getting-started-minikube/"
+          },
+          {
+            "text": "Kubeflow on GCP",
+            "desc": "Running Kubeflow on Kubernetes Engine and Google Cloud Platform",
+            "link": "https://www.kubeflow.org/docs/gke/"
+          },
+          {
+            "text": "Kubeflow on AWS",
+            "desc": "Running Kubeflow on Elastic Container Service and Amazon Web Services",
+            "link": "https://www.kubeflow.org/docs/aws/"
+          },
+          {
+            "text": "Requirements for Kubeflow",
+            "desc": "Get more detailed information about using Kubeflow and its components",
+            "link": "https://www.kubeflow.org/docs/started/requirements/"
+          }
+        ]
+    }
+kind: ConfigMap
+metadata:
+  name: centraldashboard-config

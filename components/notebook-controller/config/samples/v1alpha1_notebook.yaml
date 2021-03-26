@@ -1,7 +1,0 @@
-apiVersion: kubeflow.org/v1alpha1
-kind: Notebook
-metadata:
-  name: notebook-sample
-spec:
-  # Add fields here
-  foo: bar

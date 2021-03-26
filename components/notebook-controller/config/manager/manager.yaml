@@ -8,32 +8,37 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
-  labels:
-    control-plane: controller-manager
+  name: deployment
 spec:
-  selector:
-    matchLabels:
-      control-plane: controller-manager
-  replicas: 1
   template:
     metadata:
       labels:
-        control-plane: controller-manager
+        app: notebook-controller
+        kustomize.component: notebook-controller
+      annotations:
+        sidecar.istio.io/inject: "false"
     spec:
       containers:
-      - command:
-        - /manager
-        args:
-        - --enable-leader-election
-        image: controller:latest
-        name: manager
-        resources:
-          limits:
-            cpu: 100m
-            memory: 30Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
-      terminationGracePeriodSeconds: 10
+      - name: manager
+        image: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
+        command:
+          - /manager
+        env:
+          - name: USE_ISTIO
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: USE_ISTIO
+          - name: ISTIO_GATEWAY
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: ISTIO_GATEWAY
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+      serviceAccountName: service-account

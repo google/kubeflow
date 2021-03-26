@@ -17,7 +17,8 @@ spec:
         sidecar.istio.io/inject: "false"
     spec:
       containers:
-      - image: gcr.io/kubeflow-images-public/centraldashboard
+      - name: centraldashboard
+        image: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -25,8 +26,18 @@ spec:
             port: 8082
           initialDelaySeconds: 30
           periodSeconds: 30
-        name: centraldashboard
         ports:
         - containerPort: 8082
           protocol: TCP
+        env:
+        - name: USERID_HEADER
+          value: $(CD_USERID_HEADER)
+        - name: USERID_PREFIX
+          value: $(CD_USERID_PREFIX)
+        - name: PROFILES_KFAM_SERVICE_HOST
+          value: profiles-kfam.kubeflow
+        - name: REGISTRATION_FLOW
+          value: $(CD_REGISTRATION_FLOW)
+        - name: DASHBOARD_LINKS_CONFIGMAP
+          value: $(CD_CONFIGMAP_NAME)
       serviceAccountName: centraldashboard

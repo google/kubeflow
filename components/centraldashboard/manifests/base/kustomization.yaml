@@ -9,56 +9,62 @@ resources:
 - role.yaml
 - service-account.yaml
 - service.yaml
-patchesStrategicMerge:
-- deployment_patch.yaml
-namespace: kubeflow
+- configmap.yaml
 commonLabels:
   kustomize.component: centraldashboard
+  app: centraldashboard
+  app.kubernetes.io/component: centraldashboard
+  app.kubernetes.io/name: centraldashboard
 images:
-- name: gcr.io/kubeflow-images-public/centraldashboard
-  newName: gcr.io/kubeflow-images-public/centraldashboard
-  newTag: vmaster-g8097cfeb
+- name: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
+  newName: public.ecr.aws/j1r0q0g6/notebooks/central-dashboard
+  newTag: master-1831e436
 configMapGenerator:
 - envs:
   - params.env
-  name: parameters
+  name: centraldashboard-parameters
 generatorOptions:
   disableNameSuffixHash: true
 vars:
 - fieldref:
     fieldPath: metadata.namespace
-  name: namespace
+  name: CD_NAMESPACE
   objref:
     apiVersion: v1
     kind: Service
     name: centraldashboard
 - fieldref:
-    fieldPath: data.clusterDomain
-  name: clusterDomain
+    fieldPath: data.CD_CLUSTER_DOMAIN
+  name: CD_CLUSTER_DOMAIN
   objref:
     apiVersion: v1
     kind: ConfigMap
-    name: parameters
+    name: centraldashboard-parameters
 - fieldref:
-    fieldPath: data.userid-header
-  name: userid-header
+    fieldPath: data.CD_USERID_HEADER
+  name: CD_USERID_HEADER
   objref:
     apiVersion: v1
     kind: ConfigMap
-    name: parameters
+    name: centraldashboard-parameters
 - fieldref:
-    fieldPath: data.userid-prefix
-  name: userid-prefix
+    fieldPath: data.CD_USERID_PREFIX
+  name: CD_USERID_PREFIX
   objref:
     apiVersion: v1
     kind: ConfigMap
-    name: parameters
+    name: centraldashboard-parameters
 - fieldref:
-    fieldPath: data.registration-flow
-  name: registration-flow
+    fieldPath: data.CD_REGISTRATION_FLOW
+  name: CD_REGISTRATION_FLOW
   objref:
     apiVersion: v1
     kind: ConfigMap
-    name: parameters
-configurations:
-- params.yaml
+    name: centraldashboard-parameters
+- fieldref:
+    fieldPath: metadata.name
+  name: CD_CONFIGMAP_NAME
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: centraldashboard-config

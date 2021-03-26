@@ -3,8 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
+  name: deployment
 spec:
   template:
     spec:

@@ -17,6 +17,7 @@ package controllers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -46,6 +47,8 @@ import (
 
 const DefaultContainerPort = 8888
 const DefaultServingPort = 80
+const AnnotationRewriteURI = "notebooks.kubeflow.org/http-rewrite-uri"
+const AnnotationHeadersRequestSet = "notebooks.kubeflow.org/http-headers-request-set"
 
 // The default fsGroup of PodSecurityContext.
 // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.11/#podsecuritycontext-v1-core
@@ -72,12 +75,12 @@ type NotebookReconciler struct {
 	EventRecorder record.EventRecorder
 }
 
-// +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=apps,resources=statefulsets/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=core,resources=services,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=core,resources=services/status,verbs=get;update;patch
-// +kubebuilder:rbac:groups=kubeflow.org,resources=notebooks,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=kubeflow.org,resources=notebooks/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+// +kubebuilder:rbac:groups=core,resources=events,verbs=get;list;watch;create
+// +kubebuilder:rbac:groups=core,resources=services,verbs="*"
+// +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs="*"
+// +kubebuilder:rbac:groups=kubeflow.org,resources=notebooks;notebooks/status;notebooks/finalizers,verbs="*"
+// +kubebuilder:rbac:groups="networking.istio.io",resources=virtualservices,verbs="*"
 
 func (r *NotebookReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
@@ -400,7 +403,19 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 	namespace := instance.Namespace
 	clusterDomain := "cluster.local"
 	prefix := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
+
+	// unpack annotations from Notebook resource
+	annotations := make(map[string]string)
+	for k, v := range instance.ObjectMeta.Annotations {
+		annotations[k] = v
+	}
+
 	rewrite := fmt.Sprintf("/notebook/%s/%s/", namespace, name)
+	// If AnnotationRewriteURI is present, use this value for "rewrite"
+	if _, ok := annotations[AnnotationRewriteURI]; ok && len(annotations[AnnotationRewriteURI]) > 0 {
+		rewrite = annotations[AnnotationRewriteURI]
+	}
+
 	if clusterDomainFromEnv, ok := os.LookupEnv("CLUSTER_DOMAIN"); ok {
 		clusterDomain = clusterDomainFromEnv
 	}
@@ -424,8 +439,29 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 		return nil, fmt.Errorf("Set .spec.gateways error: %v", err)
 	}
 
+	headersRequestSet := make(map[string]string)
+	// If AnnotationHeadersRequestSet is present, use its values in "headers.request.set"
+	if _, ok := annotations[AnnotationHeadersRequestSet]; ok && len(annotations[AnnotationHeadersRequestSet]) > 0 {
+		requestHeadersBytes := []byte(annotations[AnnotationHeadersRequestSet])
+		if err := json.Unmarshal(requestHeadersBytes, &headersRequestSet); err != nil {
+			// if JSON decoding fails, set an empty map
+			headersRequestSet = make(map[string]string)
+		}
+	}
+	// cast from map[string]string, as SetNestedSlice needs map[string]interface{}
+	headersRequestSetInterface := make(map[string]interface{})
+	for key, element := range headersRequestSet {
+		headersRequestSetInterface[key] = element
+	}
+
+	// the http section of the istio VirtualService spec
 	http := []interface{}{
 		map[string]interface{}{
+			"headers": map[string]interface{}{
+				"request": map[string]interface{}{
+					"set": headersRequestSetInterface,
+				},
+			},
 			"match": []interface{}{
 				map[string]interface{}{
 					"uri": map[string]interface{}{
@@ -449,6 +485,8 @@ func generateVirtualService(instance *v1beta1.Notebook) (*unstructured.Unstructu
 			"timeout": "300s",
 		},
 	}
+
+	// add http section to istio VirtualService spec
 	if err := unstructured.SetNestedSlice(vsvc.Object, http, "spec", "http"); err != nil {
 		return nil, fmt.Errorf("Set .spec.http error: %v", err)
 	}

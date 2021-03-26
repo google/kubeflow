@@ -1,0 +1,11 @@
+# See: https://github.com/moby/moby/issues/12886#issuecomment-480575928
+# Ignore everything and node_modules
+**
+#
+# Don't ignore the necessary files for the app
+!common/
+!volumes/
+
+# Ignore node_modules and pycache inside accepted dirs
+**/node_modules/*
+**/__pycache__/*

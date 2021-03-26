@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - image: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+        name: admission-webhook
+        volumeMounts:
+        - mountPath: /etc/webhook/certs
+          name: webhook-cert
+          readOnly: true
+        ports:
+        - name: https-webhook
+          containerPort: 4443
+      volumes:
+      - name: webhook-cert
+        secret:
+          secretName: webhook-certs
+      serviceAccountName: service-account

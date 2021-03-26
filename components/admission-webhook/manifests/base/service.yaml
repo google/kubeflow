@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+spec:
+  ports:
+  - name: https-webhook
+    port: 443
+    targetPort: https-webhook

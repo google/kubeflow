@@ -5,6 +5,8 @@ metadata:
   namespace: {namespace}
   labels:
     app: {name}
+  annotations:
+    notebooks.kubeflow.org/server-type: ""
 spec:
   template:
     spec:

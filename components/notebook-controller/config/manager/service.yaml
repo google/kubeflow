@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: notebook-controller
+    kustomize.component: notebook-controller
+  name: service
+spec:
+  ports:
+  - port: 443
+  selector:
+    app: notebook-controller
+    kustomize.component: notebook-controller

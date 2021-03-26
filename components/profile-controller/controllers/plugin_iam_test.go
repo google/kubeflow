@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 type AWSTestCase struct {
@@ -78,7 +79,7 @@ func TestAddServiceAccountInAssumeRolePolicy(t *testing.T) {
 					  "Action": "sts:AssumeRoleWithWebIdentity",
 					  "Condition": {
 						"StringEquals": {
-						  "oidc.beta.us-west-2.wesley.amazonaws.com/id/50D94CFC65139194EDC21891B611EF72:aud": ["sts.amazonaws.com"],
+						  "oidc.beta.us-west-2.wesley.amazonaws.com/id/50D94CFC65139194EDC21891B611EF72:aud": ["sts.amazonaws.com"]
 						}
 					  }
 					}

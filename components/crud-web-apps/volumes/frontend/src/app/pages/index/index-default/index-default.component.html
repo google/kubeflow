@@ -1,0 +1,8 @@
+<lib-namespace-select *ngIf="!env.production"></lib-namespace-select>
+
+<lib-resource-table
+  [config]="config"
+  [data]="processedData"
+  [trackByFn]="pvcTrackByFn"
+  (actionsEmitter)="reactToAction($event)"
+></lib-resource-table>

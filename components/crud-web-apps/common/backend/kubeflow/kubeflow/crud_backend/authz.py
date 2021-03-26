@@ -7,7 +7,7 @@ from kubernetes.client.rest import ApiException
 from kubernetes.config import ConfigException
 from werkzeug.exceptions import Forbidden, Unauthorized
 
-from . import authn, config
+from . import authn, config, settings
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +52,11 @@ def is_authorized(user, verb, group, version, resource, namespace=None,
     # Skip authz check if in dev mode
     if config.dev_mode_enabled():
         log.debug("Skipping authorization check in development mode")
+        return True
+
+    # Skip authz check if admin explicitly requested it
+    if settings.DISABLE_AUTH:
+        log.info("APP_DISABLE_AUTH set to True. Skipping authorization check")
         return True
 
     if user is None:

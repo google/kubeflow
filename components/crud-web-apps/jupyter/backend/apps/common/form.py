@@ -135,6 +135,26 @@ def set_notebook_image_pull_policy(notebook, body, defaults):
     )
 
 
+def set_server_type(notebook, body, defaults):
+    valid_server_types = ["jupyter", "vs-code", "rstudio"]
+    notebook_annotations = notebook["metadata"]["annotations"]
+    server_type = get_form_value(body, defaults, "serverType")
+    if server_type == "" :
+        server_type == "jupyter"
+    if server_type not in valid_server_types:
+        raise BadRequest("'%s' is not a valid server type" % server_type) 
+
+    nb_name = get_form_value(body, defaults, "name")
+    nb_ns = get_form_value(body, defaults, "namespace")
+    rstudio_header = ('{"X-RStudio-Root-Path":"/notebook/%s/%s/"}' % (nb_ns, nb_name))
+
+    notebook_annotations["notebooks.kubeflow.org/server-type"] = server_type
+    if server_type == "vs-code" or server_type == "rstudio":
+        notebook_annotations["notebooks.kubeflow.org/http-rewrite-uri"] = "/"
+    if server_type == "rstudio":
+        notebook_annotations["notebooks.kubeflow.org/http-headers-request-set"] = rstudio_header
+
+
 def set_notebook_cpu(notebook, body, defaults):
     container = notebook["spec"]["template"]["spec"]["containers"][0]
 

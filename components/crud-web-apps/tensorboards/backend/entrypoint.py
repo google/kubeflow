@@ -13,12 +13,6 @@ BACKEND_MODE = os.environ.get("BACKEND_MODE",
 cfg = config.get_config(BACKEND_MODE)
 cfg.PREFIX = PREFIX
 
-# Load the Dev config based on BACKEND_MODE env var
-if BACKEND_MODE == "dev":
-    cfg = config.DevConfig
-else:
-    cfg = config.Config
-
 app = app.create_app(APP_NAME, cfg)
 
 if __name__ == "__main__":

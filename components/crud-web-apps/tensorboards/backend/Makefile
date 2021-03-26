@@ -6,4 +6,5 @@ run:
 
 run-dev:
 	BACKEND_MODE=dev \
+	APP_SECURE_COOKIES=False \
 	python entrypoint.py

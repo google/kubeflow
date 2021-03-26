@@ -1,0 +1,72 @@
+<div class="form--container" mat-dialog-content>
+  <form novalidate (ngSubmit)="onSubmit()" [formGroup]="formCtrl">
+    <lib-form-section
+      title="New Volume"
+      text="Create a new empty Volume."
+      icon="fa:fas:hdd"
+    >
+    </lib-form-section>
+
+    <!--Name / Namespace-->
+    <lib-form-name-namespace-inputs
+      [nameControl]="formCtrl.get('name')"
+      [namespaceControl]="formCtrl.get('namespace')"
+      resourceName="Volume"
+      [existingNames]="pvcNames"
+    >
+    </lib-form-name-namespace-inputs>
+
+    <!--Snapshot Chooser-->
+    <mat-form-field
+      *ngIf="formCtrl.get('type').value === 'snapshot'"
+      appearance="outline"
+      class="wide"
+    >
+      <mat-label>Snapshot</mat-label>
+      <mat-select formControlName="snapshot"> </mat-select>
+    </mat-form-field>
+
+    <!--Size-->
+    <lib-positive-number-input
+      [sizeControl]="formCtrl.get('size')"
+      min="1"
+      step="1"
+      label="Volume size in Gi"
+    ></lib-positive-number-input>
+
+    <!--Storage Class-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Storage Class</mat-label>
+      <mat-select formControlName="class">
+        <mat-option value="{none}">None</mat-option>
+        <mat-option *ngFor="let sc of storageClasses" [value]="sc">
+          {{ sc }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!--Access Mode-->
+    <mat-form-field appearance="outline" class="wide">
+      <mat-label>Access Mode</mat-label>
+      <mat-select formControlName="mode">
+        <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
+        <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
+        <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="form--button-margin"
+      type="submit"
+      [disabled]="!formCtrl.valid || blockSubmit"
+    >
+      CREATE
+    </button>
+
+    <button mat-raised-button type="button" (click)="onCancel()">
+      CANCEL
+    </button>
+  </form>
+</div>

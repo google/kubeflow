@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { FormDefaultComponent } from './form-default.component';
 import { FormNameComponent } from './form-name/form-name.component';
@@ -42,6 +43,7 @@ import { FormAffinityTolerationsComponent } from './form-affinity-tolerations/fo
     MatCheckboxModule,
     MatSlideToggleModule,
     MatIconModule,
+    MatButtonToggleModule,
   ],
   exports: [
     FormDefaultComponent,

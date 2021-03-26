@@ -1,0 +1,52 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- cluster-role-binding.yaml
+- cluster-role.yaml
+- deployment.yaml
+- mutating-webhook-configuration.yaml
+- service-account.yaml
+- service.yaml
+- crd.yaml
+commonLabels:
+  app: poddefaults
+  kustomize.component: poddefaults
+  app.kubernetes.io/component: poddefaults
+  app.kubernetes.io/name: poddefaults
+images:
+- name: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+  newName: public.ecr.aws/j1r0q0g6/notebooks/admission-webhook
+  newTag: master-1831e436
+namespace: kubeflow
+generatorOptions:
+  disableNameSuffixHash: true
+vars:
+# These vars are used to substitute in the namespace, service name and
+# deployment name into the mutating WebHookConfiguration.
+# Since its a CR kustomize isn't aware of those fields and won't
+# transform them.
+# We need the var names to be relatively unique so that when we
+# compose with other applications they won't conflict.
+- fieldref:
+    fieldPath: metadata.namespace
+  name: podDefaultsNamespace
+  objref:
+    apiVersion: v1
+    kind: Service
+    name: service
+- fieldref:
+    fieldPath: metadata.name
+  name: podDefaultsServiceName
+  objref:
+    apiVersion: v1
+    kind: Service
+    name: service
+- fieldref:
+    fieldPath: metadata.name
+  name: podDefaultsDeploymentName
+  objref:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: deployment
+configurations:
+- params.yaml

@@ -1,43 +1,8 @@
-# TODO(https://github.com/kubeflow/manifests/issues/1052): Cleanup this up
-# once kustomize_v3 migration is done.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- cluster-role-binding.yaml
-- cluster-role.yaml
-- crd.yaml
-- deployment.yaml
-- service-account.yaml
-- service.yaml
-namePrefix: notebook-controller-
-namespace: kubeflow
-patchesStrategicMerge:
-- deployment_patch.yaml
-commonLabels:
-  app: notebook-controller
-  kustomize.component: notebook-controller
+- ../default
 images:
-- name: gcr.io/kubeflow-images-public/notebook-controller
-  newName: gcr.io/kubeflow-images-public/notebook-controller
-  newTag: vmaster-g6eb007d0
-configMapGenerator:
-- envs:
-  - params.env
-  name: parameters
-generatorOptions:
-  disableNameSuffixHash: true
-vars:
-- fieldref:
-    fieldPath: data.USE_ISTIO
-  name: USE_ISTIO
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: parameters
-- fieldref:
-    fieldPath: data.ISTIO_GATEWAY
-  name: ISTIO_GATEWAY
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: parameters
+- name: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
+  newName: public.ecr.aws/j1r0q0g6/notebooks/notebook-controller
+  newTag: master-1831e436

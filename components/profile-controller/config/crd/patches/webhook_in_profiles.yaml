@@ -1,6 +1,6 @@
 # The following patch enables conversion webhook for CRD
 # CRD conversion requires k8s 1.13 or later.
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: profiles.kubeflow.org

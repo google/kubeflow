@@ -5,61 +5,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- cluster-role-binding.yaml
-- crd.yaml
-- deployment.yaml
-- service.yaml
-- service-account.yaml
-namePrefix: profiles-
-namespace: kubeflow
-commonLabels:
-  kustomize.component: profiles
-configMapGenerator:
-- envs:
-  - params.env
-  name: profiles-parameters
+- ../default
 images:
-- name: gcr.io/kubeflow-images-public/kfam
-  newName: gcr.io/kubeflow-images-public/kfam
-  newTag: vmaster-g9f3bfd00
-- name: gcr.io/kubeflow-images-public/profile-controller
-  newName: gcr.io/kubeflow-images-public/profile-controller
-  newTag: vmaster-ga49f658f
-vars:
-- fieldref:
-    fieldPath: data.admin
-  name: admin
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: profiles-parameters
-- fieldref:
-    fieldPath: data.gcp-sa
-  name: gcp-sa
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: profiles-parameters
-- fieldref:
-    fieldPath: data.userid-header
-  name: userid-header
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: profiles-parameters
-- fieldref:
-    fieldPath: data.userid-prefix
-  name: userid-prefix
-  objref:
-    apiVersion: v1
-    kind: ConfigMap
-    name: profiles-parameters
-- fieldref:
-    fieldPath: metadata.namespace
-  name: namespace
-  objref:
-    apiVersion: v1
-    kind: Service
-    name: kfam
-configurations:
-- params.yaml
+- name: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
+  newName: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
+  newTag: master-1831e436

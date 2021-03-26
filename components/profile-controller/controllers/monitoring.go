@@ -11,11 +11,12 @@ import (
 const PROFILE = "profile_controller"
 const COMPONENT = "component"
 const KIND = "kind"
+
 // User that make the request
 const REQUSER = "user"
 const ACTION = "action"
 const PATH = "path"
-const SEVERITY  = "severity"
+const SEVERITY = "severity"
 const SEVERITY_MINOR = "minor"
 const SEVERITY_MAJOR = "major"
 const SEVERITY_CRITICAL = "critical"
@@ -59,7 +60,7 @@ func init() {
 }
 
 func IncRequestCounter(kind string) {
-	if len(kind) > MAX_TAG_LEN{
+	if len(kind) > MAX_TAG_LEN {
 		kind = kind[0:MAX_TAG_LEN]
 	}
 	labels := prometheus.Labels{COMPONENT: PROFILE, KIND: kind}
@@ -67,7 +68,7 @@ func IncRequestCounter(kind string) {
 }
 
 func IncRequestErrorCounter(kind string, severity string) {
-	if len(kind) > MAX_TAG_LEN{
+	if len(kind) > MAX_TAG_LEN {
 		kind = kind[0:MAX_TAG_LEN]
 	}
 	labels := prometheus.Labels{COMPONENT: PROFILE, KIND: kind, SEVERITY: severity}

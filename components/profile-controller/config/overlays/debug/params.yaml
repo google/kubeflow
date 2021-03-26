@@ -1,3 +1,0 @@
-varReference:
-- path: spec/template/spec/containers/image
-  kind: Deployment

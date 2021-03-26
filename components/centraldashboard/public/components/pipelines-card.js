@@ -137,7 +137,7 @@ export class PipelinesCard extends utilitiesMixin(PolymerElement) {
                 created: date.toLocaleString(),
                 href: this.buildHref(
                     `/pipeline/#/${this.artifactType}/details/${p.id}`,
-                    { ns: this.namespace }
+                    {ns: this.namespace}
                 ),
                 name: p.name,
                 icon,

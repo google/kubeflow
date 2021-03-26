@@ -1,0 +1,64 @@
+# Use the old CRD because of the quantity validation issue:
+# https://github.com/kubeflow/kubeflow/issues/5722
+- op: replace
+  path: /spec
+  value:
+    group: kubeflow.org
+    names:
+      kind: Notebook
+      plural: notebooks
+      singular: notebook
+    scope: Namespaced
+    subresources:
+      status: {}
+    versions:
+    - name: v1alpha1
+      served: true
+      storage: false
+    - name: v1beta1
+      served: true
+      storage: false
+    - name: v1
+      served: true
+      storage: true
+    validation:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              template:
+                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+                  Important: Run "make" to regenerate code after modifying this file'
+                properties:
+                  spec:
+                    type: object
+                type: object
+            type: object
+          status:
+            properties:
+              conditions:
+                description: Conditions is an array of current conditions
+                items:
+                  properties:
+                    type:
+                      description: Type of the confition/
+                      type: string
+                  required:
+                  - type
+                  type: object
+                type: array
+            required:
+            - conditions
+            type: object

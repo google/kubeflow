@@ -27,11 +27,8 @@ spec:
         - /manager
         args:
         - --enable-leader-election
-        image: controller:latest
+        image: public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller
         name: manager
-        env:
-          - name: RWO_PVC_SCHEDULING
-            value: "false"
         resources:
           limits:
             cpu: 100m

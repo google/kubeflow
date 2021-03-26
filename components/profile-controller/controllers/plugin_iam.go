@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
+	"strings"
+
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/iam"
@@ -12,8 +15,6 @@ import (
 	"github.com/tidwall/gjson"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"net/url"
-	"strings"
 )
 
 const (
@@ -126,7 +127,10 @@ func removeIAMRoleAnnotation(sa *corev1.ServiceAccount, iamRoleArn string) {
 // add serviceAccountNamespace/serviceAccountName in assumeRolePolicy
 func addServiceAccountInAssumeRolePolicy(policyDocument, serviceAccountNamespace, serviceAccountName string) (string, error) {
 	var oldDoc MapOfInterfaces
-	json.Unmarshal([]byte(policyDocument), &oldDoc)
+	err := json.Unmarshal([]byte(policyDocument), &oldDoc)
+	if err != nil {
+		return "", err
+	}
 	var statements []MapOfInterfaces
 	statementInBytes, err := json.Marshal(oldDoc["Statement"])
 	if err != nil {

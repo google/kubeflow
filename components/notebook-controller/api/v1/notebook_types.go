@@ -60,7 +60,8 @@ type NotebookCondition struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-
+// +kubebuilder:storageversion
+// +kubebuilder:resource:path=notebooks,singular=notebook,scope=Namespaced
 // Notebook is the Schema for the notebooks API
 type Notebook struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -71,7 +72,6 @@ type Notebook struct {
 }
 
 // +kubebuilder:object:root=true
-
 // NotebookList contains a list of Notebook
 type NotebookList struct {
 	metav1.TypeMeta `json:",inline"`

@@ -1,9 +1,0 @@
-varReference:
-- path: metadata/annotations/getambassador.io\/config
-  kind: Service
-- path: spec/http/route/destination/host
-  kind: VirtualService
-- path: spec/template/spec/containers/0/env/0/value
-  kind: Deployment
-- path: spec/template/spec/containers/0/env/1/value
-  kind: Deployment

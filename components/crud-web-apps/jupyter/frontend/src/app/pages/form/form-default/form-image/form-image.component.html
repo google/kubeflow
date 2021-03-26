@@ -4,17 +4,32 @@
   ML packages"
   icon="fa:fab:docker"
 >
-  <mat-checkbox
-    *ngIf="!readonly"
+
+  <div class="flex-column">
+    <mat-checkbox
+    *ngIf="allowCustomImage"
     [formControl]="parentForm.get('customImageCheck')"
-  >
-    Custom Image
-  </mat-checkbox>
+    >
+      Custom Image
+    </mat-checkbox>
+
+    <mat-button-toggle-group [formControl]="parentForm.get('serverType')" class="server-type-wrapper" aria-label="Server Type">
+      <mat-button-toggle value="jupyter" aria-label="Use JupyterLab based server">
+        <mat-icon class="server-type" svgIcon="jupyterlab"></mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="vs-code" aria-label="Use VS-Code based server">
+        <mat-icon class="server-type" svgIcon="vs-code"></mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="rstudio" aria-label="Use RStudio based server" matTooltip="RStudio® and the RStudio logo are registered trademarks of RStudio, PBC" matTooltipPosition="after">
+        <mat-icon class="server-type" svgIcon="rstudio"></mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
   <mat-form-field
     class="wide"
     appearance="outline"
-    *ngIf="!parentForm?.value.customImageCheck"
+    *ngIf="!parentForm?.value.customImageCheck && parentForm?.value.serverType === 'jupyter'"
   >
     <!-- If readonly, then make it an input element instead of select -->
     <mat-label>Image</mat-label>
@@ -28,6 +43,42 @@
     </mat-select>
     <mat-error>Please provide and Image to use</mat-error>
   </mat-form-field>
+
+  <mat-form-field
+  class="wide"
+  appearance="outline"
+  *ngIf="!parentForm?.value.customImageCheck && parentForm?.value.serverType === 'vs-code'"
+>
+  <!-- If readonly, then make it an input element instead of select -->
+  <mat-label>Image</mat-label>
+  <mat-select
+    placeholder="Docker Image"
+    [formControl]="parentForm.get('imageVSCode')"
+  >
+    <mat-option *ngFor="let img of imagesVSCode" [value]="img">
+      {{ img }}
+    </mat-option>
+  </mat-select>
+  <mat-error>Please provide and Image to use</mat-error>
+</mat-form-field>
+
+<mat-form-field
+class="wide"
+appearance="outline"
+*ngIf="!parentForm?.value.customImageCheck && parentForm?.value.serverType === 'rstudio'"
+>
+<!-- If readonly, then make it an input element instead of select -->
+<mat-label>Image</mat-label>
+<mat-select
+  placeholder="Docker Image"
+  [formControl]="parentForm.get('imageRStudio')"
+>
+  <mat-option *ngFor="let img of imagesRStudio" [value]="img">
+    {{ img }}
+  </mat-option>
+</mat-select>
+<mat-error>Please provide and Image to use</mat-error>
+</mat-form-field>
 
   <mat-form-field
     class="wide"
@@ -45,13 +96,15 @@
   </mat-form-field>
 
   <lib-advanced-options>
-    <mat-form-field class="wide" appearance="outline">
-      <mat-label>Image pull policy</mat-label>
-      <mat-select [formControl]="parentForm.get('imagePullPolicy')">
-        <mat-option value="Always">Always</mat-option>
-        <mat-option value="IfNotPresent">IfNotPresent</mat-option>
-        <mat-option value="Never">Never</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="row">
+      <mat-form-field class="column" appearance="outline">
+        <mat-label>Image pull policy</mat-label>
+        <mat-select [formControl]="parentForm.get('imagePullPolicy')">
+          <mat-option value="Always">Always</mat-option>
+          <mat-option value="IfNotPresent">IfNotPresent</mat-option>
+          <mat-option value="Never">Never</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </lib-advanced-options>
 </lib-form-section>

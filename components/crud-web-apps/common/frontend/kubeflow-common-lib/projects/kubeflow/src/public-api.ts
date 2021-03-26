@@ -57,6 +57,8 @@ export * from './lib/form/validators';
 export * from './lib/form/utils';
 export * from './lib/form/error-state-matcher';
 
+export * from './lib/enums/dashboard';
+
 export * from './lib/utils/kubernetes';
 export * from './lib/utils/kubernetes.model';
 

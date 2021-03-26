@@ -8,32 +8,37 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-manager
-  namespace: system
-  labels:
-    control-plane: controller-manager
+  name: deployment
 spec:
-  selector:
-    matchLabels:
-      control-plane: controller-manager
   replicas: 1
   template:
     metadata:
-      labels:
-        control-plane: controller-manager
+      annotations:
+        sidecar.istio.io/inject: "false"
     spec:
       containers:
       - command:
         - /manager
-        args:
-        - --enable-leader-election
-        image: controller:latest
+        - "-userid-header"
+        - $(USERID_HEADER)
+        - "-userid-prefix"
+        - $(USERID_PREFIX)
+        - "-workload-identity"
+        - $(WORKLOAD_IDENTITY)
+        envFrom:
+          - configMapRef:
+              name: config
+        image: public.ecr.aws/j1r0q0g6/notebooks/profile-controller
+        imagePullPolicy: Always
         name: manager
-        resources:
-          limits:
-            cpu: 100m
-            memory: 30Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
-      terminationGracePeriodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        ports:
+        - containerPort: 8080
+          name: manager-http
+          protocol: TCP
+      serviceAccountName: controller-service-account

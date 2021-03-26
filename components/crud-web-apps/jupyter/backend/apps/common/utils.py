@@ -118,10 +118,15 @@ def pvc_dict_from_k8s_obj(pvc):
 
 def notebook_dict_from_k8s_obj(notebook):
     cntr = notebook["spec"]["template"]["spec"]["containers"][0]
+    server_type = None
+    if notebook["metadata"].get("annotations"):
+        annotations = notebook["metadata"]["annotations"]
+        server_type = annotations.get("notebooks.kubeflow.org/server-type")
 
     return {
         "name": notebook["metadata"]["name"],
         "namespace": notebook["metadata"]["namespace"],
+        "serverType": server_type,
         "age": helpers.get_uptime(notebook["metadata"]["creationTimestamp"]),
         "image": cntr["image"],
         "shortImage": cntr["image"].split("/")[-1],

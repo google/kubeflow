@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      containers:
+      - name: jupyter-web-app
+        image: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config-volume
+        env:
+        - name: APP_PREFIX
+          value: $(JWA_PREFIX)
+        - name: UI
+          value: $(JWA_UI)
+        - name: USERID_HEADER
+          value: $(JWA_USERID_HEADER)
+        - name: USERID_PREFIX
+          value: $(JWA_USERID_PREFIX)
+      serviceAccountName: service-account
+      volumes:
+      - configMap:
+          name: config
+        name: config-volume

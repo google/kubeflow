@@ -17,35 +17,31 @@
 spawnerFormDefaults:
   image:
     # The container Image for the user's Jupyter Notebook
-    # If readonly, this value must be a member of the list below
-    value: gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
     # The list of available standard container Images
     options:
-      - gcr.io/kubeflow-images-public/tensorflow-1.5.1-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.5.1-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.6.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.6.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.7.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.7.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.8.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.8.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.9.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.9.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.10.1-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.10.1-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.11.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.11.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.12.0-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-1.13.1-notebook-gpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-2.0.0a-notebook-cpu:v0.5.0
-      - gcr.io/kubeflow-images-public/tensorflow-2.0.0a-notebook-gpu:v0.5.0
-    # By default, custom container Images are allowed
-    # Uncomment the following line to only enable standard container Images
-    readOnly: false
-    hideRegistry: false
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-scipy:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-pytorch-cuda-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-full:master-1831e436
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/jupyter-tensorflow-cuda-full:master-1831e436
+    hideRegistry: true
     hideTag: false
+  imageVSCode:
+    # The container Image for the user's VS-Code Server
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
+    # The list of available standard container Images
+    options:
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/codeserver-python:master-1831e436
+  imageRStudio:
+    # The container Image for the user's RStudio Server
+    value: public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
+    # The list of available standard container Images
+    options:
+      - public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio-tidyverse:master-164fa2ea
+  allowCustomImage: true
+  # If true, users can input custom images
+  # If false, users can only select from the images in this config
   imagePullPolicy:
     # Supported values: Always, IfNotPresent, Never
     value: IfNotPresent

@@ -103,6 +103,11 @@ func safeToApplyPodDefaultsOnPod(pod *corev1.Pod, podDefaults []*settingsapi.Pod
 	if _, err := mergeVolumes(pod.Spec.Volumes, podDefaults); err != nil {
 		errs = append(errs, err)
 	}
+
+	if _, err := mergeTolerations(pod.Spec.Tolerations, podDefaults); err != nil {
+		errs = append(errs, err)
+	}
+
 	for _, ctr := range pod.Spec.Containers {
 		if err := safeToApplyPodDefaultsOnContainer(&ctr, podDefaults); err != nil {
 			errs = append(errs, err)
@@ -112,20 +117,15 @@ func safeToApplyPodDefaultsOnPod(pod *corev1.Pod, podDefaults []*settingsapi.Pod
 	var (
 		defaultAnnotations = make([]*map[string]string, len(podDefaults))
 		defaultLabels      = make([]*map[string]string, len(podDefaults))
-		defaultTolerations = make([]*corev1.Toleration, len(podDefaults))
 	)
 	for i, pd := range podDefaults {
 		defaultAnnotations[i] = &pd.Spec.Annotations
 		defaultLabels[i] = &pd.Spec.Labels
-		defaultTolerations[i] = &pd.Spec.Tolerations
 	}
 	if _, err := mergeMap(pod.Annotations, defaultAnnotations); err != nil {
 		errs = append(errs, err)
 	}
 	if _, err := mergeMap(pod.Labels, defaultLabels); err != nil {
-		errs = append(errs, err)
-	}
-	if _, err := mergeTolerations(pod.Spec.Tolerations, defaultTolerations); err != nil {
 		errs = append(errs, err)
 	}
 	return utilerrors.NewAggregate(errs)
@@ -295,7 +295,6 @@ func mergeVolumes(volumes []corev1.Volume, podDefaults []*settingsapi.PodDefault
 	return mergedVolumes, err
 }
 
-
 // mergeTolerations merges given list of Tolerations with the tolerations injected by given
 // podDefaults. It returns an error if it detects any conflict during the merge.
 func mergeTolerations(tolerations []corev1.Toleration, podDefaults []*settingsapi.PodDefault) ([]corev1.Toleration, error) {
@@ -339,7 +338,6 @@ func mergeTolerations(tolerations []corev1.Toleration, podDefaults []*settingsap
 	return mergedTolerations, err
 }
 
-
 // mergeMap copies the existing map and adds the keys in defaults. It returns
 // an error if it detects any conflict during the merge.
 func mergeMap(existing map[string]string, defaults []*map[string]string) (map[string]string, error) {
@@ -381,15 +379,19 @@ func applyPodDefaultsOnPod(pod *corev1.Pod, podDefaults []*settingsapi.PodDefaul
 	}
 	pod.Spec.Volumes = volumes
 
+	tolerations, err := mergeTolerations(pod.Spec.Tolerations, podDefaults)
+	if err != nil {
+		klog.Error(err)
+	}
+	pod.Spec.Tolerations = tolerations
+
 	var (
 		defaultAnnotations = make([]*map[string]string, len(podDefaults))
 		defaultLabels      = make([]*map[string]string, len(podDefaults))
-		defaultTolerations = make([]*corev1.Toleration, len(podDefaults))
 	)
 	for i, pd := range podDefaults {
 		defaultAnnotations[i] = &pd.Spec.Annotations
 		defaultLabels[i] = &pd.Spec.Labels
-		defaultTolerations = &pd.Spec.Tolerations
 	}
 	annotations, err := mergeMap(pod.Annotations, defaultAnnotations)
 	if err != nil {
@@ -402,12 +404,6 @@ func applyPodDefaultsOnPod(pod *corev1.Pod, podDefaults []*settingsapi.PodDefaul
 		klog.Error(err)
 	}
 	pod.ObjectMeta.Labels = labels
-
-	tolerations, err := mergeTolerations(pod.Spec.Tolerations, defaultTolerations)
-	if err != nil {
-		klog.Error(err)
-	}
-	pod.Spec.Tolerations = tolerations
 
 	for i, ctr := range pod.Spec.Containers {
 		applyPodDefaultsOnContainer(&ctr, podDefaults)
@@ -604,7 +600,7 @@ func main() {
 	http.HandleFunc("/apply-poddefault", serveMutatePods)
 
 	server := &http.Server{
-		Addr:      ":443",
+		Addr:      ":4443",
 		TLSConfig: configTLS(config),
 	}
 	klog.Info(fmt.Sprintf("About to start serving webhooks: %#v", server))

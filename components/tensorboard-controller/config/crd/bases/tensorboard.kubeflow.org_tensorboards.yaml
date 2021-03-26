@@ -3,8 +3,6 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-  annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
   name: tensorboards.tensorboard.kubeflow.org
 spec:
@@ -14,7 +12,9 @@ spec:
     listKind: TensorboardList
     plural: tensorboards
     singular: tensorboard
-  scope: Namespaced
+  scope: ""
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       description: Tensorboard is the Schema for the tensorboards API

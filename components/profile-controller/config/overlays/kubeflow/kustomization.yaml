@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kubeflow
+resources:
+- ../../base
+- service.yaml
+- virtual-service.yaml
+
+commonLabels:
+  kustomize.component: profiles
+
+patchesStrategicMerge:
+- patches/kfam.yaml
+- patches/remove-namespace.yaml
+
+configurations:
+- params.yaml
+
+vars:
+- name: PROFILES_NAMESPACE
+  fieldref:
+    fieldpath: metadata.namespace
+  objref:
+    name: profiles-kfam
+    kind: Service
+    apiVersion: v1
+
+images:
+- name: public.ecr.aws/j1r0q0g6/notebooks/access-management
+  newName: public.ecr.aws/j1r0q0g6/notebooks/access-management
+  newTag: master-1831e436

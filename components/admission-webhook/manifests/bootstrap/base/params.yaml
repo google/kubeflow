@@ -1,3 +1,0 @@
-varReference:
-- path: data/create_ca.sh
-  kind: ConfigMap

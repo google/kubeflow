@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+        - /access-management
+        - "-cluster-admin"
+        - $(ADMIN)
+        - "-userid-header"
+        - $(USERID_HEADER)
+        - "-userid-prefix"
+        - $(USERID_PREFIX)
+        envFrom:
+          - configMapRef:
+              name: config
+        image: public.ecr.aws/j1r0q0g6/notebooks/access-management
+        imagePullPolicy: Always
+        name: kfam
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        ports:
+        - containerPort: 8081
+          name: kfam-http
+          protocol: TCP
+      serviceAccountName: controller-service-account

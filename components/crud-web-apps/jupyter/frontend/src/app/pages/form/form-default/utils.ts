@@ -9,9 +9,13 @@ export function getFormDefaults(): FormGroup {
     name: ['', [Validators.required]],
     namespace: ['', [Validators.required]],
     image: ['', [Validators.required]],
+    imageVSCode: ['', [Validators.required]],
+    imageRStudio: ['', [Validators.required]],
+    allowCustomImage: [true, []],
     imagePullPolicy: ['IfNotPresent', [Validators.required]],
     customImage: ['', []],
     customImageCheck: [false, []],
+    serverType: ['jupyter', [Validators.required]],
     cpu: [1, [Validators.required]],
     memory: [1, [Validators.required]],
     gpus: fb.group({
@@ -146,9 +150,10 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   }
 
   formCtrl.controls.image.setValue(config.image.value);
-  if (config.image.readOnly) {
-    formCtrl.controls.image.disable();
-  }
+
+  formCtrl.controls.imageVSCode.setValue(config.imageVSCode.value);
+
+  formCtrl.controls.imageRStudio.setValue(config.imageRStudio.value);
 
   formCtrl.controls.imagePullPolicy.setValue(config.imagePullPolicy.value);
   if (config.imagePullPolicy.readOnly) {
