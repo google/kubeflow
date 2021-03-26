@@ -11,6 +11,8 @@ export class FormImageComponent implements OnInit, OnDestroy {
   @Input() parentForm: FormGroup;
   @Input() images: string[];
   @Input() readonly: boolean;
+  @Input() hideRegistry: boolean;
+  @Input() hideTag: boolean;
 
   subs = new Subscription();
 
@@ -37,4 +39,21 @@ export class FormImageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.unsubscribe();
   }
+  imageDisplayName(image: string): string {
+    const [name, tag = null] = image.split(':');
+    let tokens = name.split('/')
+
+    if (this.hideRegistry && tokens.length > 1 && tokens[0].includes('.')) {
+      tokens.shift();
+    }
+
+    let displayName = tokens.join('/');
+
+    if (!this.hideTag && tag !== null) {
+      displayName = `${displayName}:${tag}`;
+    }
+
+    return displayName;
+  }
+
 }

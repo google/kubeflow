@@ -23,7 +23,7 @@
       [formControl]="parentForm.get('image')"
     >
       <mat-option *ngFor="let img of images" [value]="img">
-        {{ img }}
+        {{ imageDisplayName(img) }}
       </mat-option>
     </mat-select>
     <mat-error>Please provide and Image to use</mat-error>

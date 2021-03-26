@@ -134,6 +134,8 @@ export interface Config {
     value: string;
     options: string[];
     readOnly?: boolean;
+    hideRegistry?: boolean;
+    hideTag?: boolean;
   };
 
   imagePullPolicy?: {

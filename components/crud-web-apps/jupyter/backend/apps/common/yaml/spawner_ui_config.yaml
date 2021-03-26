@@ -44,6 +44,8 @@ spawnerFormDefaults:
     # By default, custom container Images are allowed
     # Uncomment the following line to only enable standard container Images
     readOnly: false
+    hideRegistry: false
+    hideTag: false
   imagePullPolicy:
     # Supported values: Always, IfNotPresent, Never
     value: IfNotPresent

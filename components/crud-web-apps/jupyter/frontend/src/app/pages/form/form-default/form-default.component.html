@@ -10,6 +10,8 @@
           [parentForm]="formCtrl"
           [images]="config?.image?.options"
           [readonly]="config?.image?.readOnly"
+          [hideRegistry]="config?.image?.hideRegistry"
+          [hideTag]="config?.image?.hideTag"
         ></app-form-image>
 
         <app-form-cpu-ram [parentForm]="formCtrl"></app-form-cpu-ram>
