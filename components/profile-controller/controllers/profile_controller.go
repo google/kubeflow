@@ -19,7 +19,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"reflect"
 	"time"
 
@@ -89,12 +88,12 @@ type Plugin interface {
 // ProfileReconciler reconciles a Profile object
 type ProfileReconciler struct {
 	client.Client
-	Scheme                     *runtime.Scheme
-	Log                        logr.Logger
-	UserIdHeader               string
-	UserIdPrefix               string
-	WorkloadIdentity           string
-	EnforceNamespaceLabelsPath string
+	Scheme                 *runtime.Scheme
+	Log                    logr.Logger
+	UserIdHeader           string
+	UserIdPrefix           string
+	WorkloadIdentity       string
+	EnforceNamespaceLabels map[string]string
 }
 
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs="*"
@@ -109,6 +108,7 @@ type ProfileReconciler struct {
 func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	logger := r.Log.WithValues("profile", request.NamespacedName)
+	enforcedKubeflowNamespaceLabels = r.EnforceNamespaceLabels
 
 	// Fetch the Profile instance
 	instance := &profilev1.Profile{}
@@ -139,7 +139,7 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 		},
 	}
 	updateNamespaceLabels(ns)
-	enforceNamespaceLabelsFromConfig(ns, r.EnforceNamespaceLabelsPath, logger)
+	enforceNamespaceLabelsFromConfig(ns, logger)
 	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
@@ -184,7 +184,7 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 				oldLabels[k] = v
 			}
 			updateNamespaceLabels(foundNs)
-			enforceNamespaceLabelsFromConfig(foundNs, r.EnforceNamespaceLabelsPath, logger)
+			enforceNamespaceLabelsFromConfig(foundNs, logger)
 			eq := reflect.DeepEqual(oldLabels, foundNs.Labels)
 			if !eq {
 				err = r.Update(ctx, foundNs)
@@ -630,9 +630,7 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
-func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, path string, logger logr.Logger) {
-	readEnforcedLabels(path, logger)
-
+func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, logger logr.Logger) {
 	if ns.Labels == nil {
 		ns.Labels = make(map[string]string)
 	}
@@ -650,18 +648,6 @@ func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, path string, logger 
 				ns.Labels[k] = v
 			}
 		}
-	}
-}
-
-func readEnforcedLabels(path string, logger logr.Logger) {
-	dat, err := ioutil.ReadFile(path)
-	if err != nil {
-		logger.Info("namespace labels properties file doesn't exist, using default value")
-	}
-
-	errYaml := yaml.Unmarshal(dat, &enforcedKubeflowNamespaceLabels)
-	if errYaml != nil {
-		logger.Error(errYaml, "Unable to parse enforced namespace labels.")
 	}
 }
 

@@ -17,8 +17,10 @@ package main
 
 import (
 	"flag"
+	"io/ioutil"
 	"os"
 
+	"github.com/ghodss/yaml"
 	profilev1 "github.com/kubeflow/kubeflow/components/profile-controller/api/v1"
 	"github.com/kubeflow/kubeflow/components/profile-controller/controllers"
 	istioSecurityClient "istio.io/client-go/pkg/apis/security/v1beta1"
@@ -82,14 +84,19 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Read namespace labels from file.
+	var enforcedKubeflowNamespaceLabels = readEnforcedLabelsFromFile(
+		enforceNamespaceLabelsPath,
+	)
+
 	if err = (&controllers.ProfileReconciler{
-		Client:                     mgr.GetClient(),
-		Scheme:                     mgr.GetScheme(),
-		Log:                        ctrl.Log.WithName("controllers").WithName("Profile"),
-		UserIdHeader:               userIdHeader,
-		UserIdPrefix:               userIdPrefix,
-		WorkloadIdentity:           workloadIdentity,
-		EnforceNamespaceLabelsPath: enforceNamespaceLabelsPath,
+		Client:                 mgr.GetClient(),
+		Scheme:                 mgr.GetScheme(),
+		Log:                    ctrl.Log.WithName("controllers").WithName("Profile"),
+		UserIdHeader:           userIdHeader,
+		UserIdPrefix:           userIdPrefix,
+		WorkloadIdentity:       workloadIdentity,
+		EnforceNamespaceLabels: enforcedKubeflowNamespaceLabels,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Profile")
 		os.Exit(1)
@@ -101,4 +108,19 @@ func main() {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}
+}
+
+func readEnforcedLabelsFromFile(path string) (labels map[string]string) {
+	dat, err := ioutil.ReadFile(path)
+	if err != nil {
+		setupLog.Info("namespace labels properties file doesn't exist, using default value")
+	}
+
+	errYaml := yaml.Unmarshal(dat, &labels)
+	if errYaml != nil {
+		setupLog.Error(errYaml, "Unable to parse enforced namespace labels.")
+		os.Exit(1)
+	}
+
+	return
 }
