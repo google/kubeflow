@@ -636,7 +636,7 @@ func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, logger logr.Logger) 
 	}
 
 	for k, v := range enforcedKubeflowNamespaceLabels {
-		existingValue, ok := ns.Labels[k]
+		_, ok := ns.Labels[k]
 		if len(v) == 0 {
 			// When there is an empty value, k should be removed.
 			if ok {
