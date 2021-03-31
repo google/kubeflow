@@ -1,3 +1,3 @@
 # Below is a list of labels to be enforced.
-istio-injection: ''
-istio.io/rev: 'asm-191-1'
+# istio-injection: ''
+# istio.io/rev: 'asm-191-1'

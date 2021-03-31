@@ -643,10 +643,8 @@ func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, logger logr.Logger) 
 				delete(ns.Labels, k)
 			}
 		} else {
-			if !ok || existingValue != v {
-				// Add or overwrite value for label.
-				ns.Labels[k] = v
-			}
+			// Add or overwrite value for label.
+			ns.Labels[k] = v
 		}
 	}
 }
