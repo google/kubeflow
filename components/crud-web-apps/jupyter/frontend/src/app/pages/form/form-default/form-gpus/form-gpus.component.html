@@ -7,7 +7,7 @@
   <div class="row" [formGroup]="parentForm.get('gpus')">
     <!--GPUs Number-->
     <mat-form-field class="column" appearance="outline">
-      <mat-label>Number of GPUs</mat-label>
+      <mat-label>{{ "formGpus.lblNumGpu" | translate }}</mat-label>
       <mat-select matNativeControl formControlName="num">
         <mat-option value="none">None</mat-option>
         <mat-option *ngFor="let v of gpusCount" [value]="v">

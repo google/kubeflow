@@ -29,6 +29,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-brands-svg-icons": "^5.12.0",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@ngx-translate/core": "^12.0.0",
+    "@ngx-translate/http-loader": "^4.0.0",
     "@kubernetes/client-node": "^0.12.2",
     "hammerjs": "^2.0.8",
     "date-fns": "^1.29.0",

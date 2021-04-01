@@ -1,0 +1,145 @@
+{
+  "costTable": {
+    "title": "Cost",
+    "txtCost": "Approximate cost of notebook server resources over the last 24 hours – summed values may not match total due to rounding",
+    "thCompute": "Compute",
+    "thGpus": "GPUs",
+    "thStorage": "Storage",
+    "thTotal": "Total",
+    "errMessage": "Failed to retrieve cost information"
+  },
+  "namespaceSelect": {
+    "lblSelectNamespace": "Select Namespace",
+    "btnUpdate": "Update"
+  },
+  "resourceTable": {
+    "title": "Notebook Servers",
+    "btnNewServer": "NEW SERVER",
+    "thStatus": "Status",
+    "thName": "Name",
+    "thAge": "Age",
+    "thImage": "Image",
+    "thCpu": "CPU",
+    "thMemory": "Memory",
+    "thVolumes": "Volumes",
+    "btnConnect": "Connect",
+    "deleteDialogTitle": "You are about to delete Notebook Server: ",
+    "deleteDialogMessage": "Are you sure you want to delete this Notebook Server? Your data might be lost if the Server is not backed by persistent storage.",
+    "deleteDialogYes": "Delete",
+    "deleteDialogNo": "Cancel",
+    "tooltipRunning": "Running",
+    "tooltipWarning": "Warning: a process has failed, trying again… (check 'kubectl describe pod' for more information).",
+    "tooltipError": "An error has occurred, pod creation failed. Check 'kubectl describe pod' for more information.",
+    "tooltipWaiting": "In progress..."
+  },
+  "volumeTable": {
+    "title": "Notebook Volumes",
+    "thStatus": "Status",
+    "toolTipAttached": "Attached",
+    "toolTipUnattached": "Unattached",
+    "toolTipDeleting": "Deleting",
+    "thName": "Name",
+    "thSize": "Size",
+    "thUsedBy": "Used By",
+    "lblNone": "(none)",
+    "deleteDialogTitle": "You are about to delete the volume: ",
+    "deleteDialogMessage": "Are you sure you want to delete this volume? This action can't be undone.",
+    "deleteDialogYes": "Delete",
+    "deleteDialogNo": "Cancel"
+  },
+  "formAdvancedOptions": {
+    "h3AdvancedSettings": "Advanced Settings",
+    "toggleSharedMemory": "Enable Shared Memory",
+    "lblSystemLanguage":"System language",
+    "lblEnglish": "English",
+    "lblFrench": "Français"
+  },
+  "formConfiguration": {
+    "h3Configuration": "Configurations",
+    "txtConfiguration": "Extra layers of configurations that will be applied to the new Notebook. (e.g. Insert credentials as Secrets, set Environment Variables.)",
+    "lblConfigurations": "Configurations"
+  },
+  "formDataVolumes": {
+    "h3DataVolumes": "Data Volumes",
+    "txtDataVolumes": "Configure the Volumes to be mounted as your Datasets.",
+    "txtDataVolumesIf": " *The Cluster Administrator has disabled editing this Section!",
+    "btnAddVolume": "ADD VOLUME"
+  },
+  "formGpus": {
+    "h3Gpu": "GPUs",
+    "txtGpu": "Specify the number and Vendor of GPUs that will be assigned to the Notebook Server's Container.",
+    "lblNumGpu": "Number of GPUs",
+    "optNone": "None",
+    "lblGpuVendor": "GPU Vendor",
+    "errorGpuVendorRequired": "You must also specify the GPU Vendor for the assigned GPUs",
+    "specsWarningMessage": "Selecting 1 GPU will automatically set 4 CPUs and 96Gi of memory."
+  },
+  "formImage": {
+    "h3Image": "Image",
+    "txtImage": "Select the base software you want installed in your server. If you choose a custom image, it must be available in the DAaaS container registry.",
+    "ckbImage": "Custom Image",
+    "lblImage": "Image",
+    "plhImage": "Docker Image",
+    "lblCustomImage": "Custom Image",
+    "plhCustomImage": "Provide a custom Image",
+    "errorImageRequired": "Please provide and Image to use"
+  },
+  "formName": {
+    "h3Name": "Name",
+    "txtName": "Specify the name of the Notebook Server and the Namespace it will belong to.",
+    "lblName": "Name",
+    "plhName": "Notebook Server's Name",
+    "errorNameRequired": "The Notebook Server's name can't be empty",
+    "errorNameExists": "Notebook Server {{existingName}} already exists",
+    "errorNamePattern": "The Notebook Server's name can only contain lowercase alphanumeric characters or '-' and must start and end with an alphanumeric character",
+    "errorNameMaxLenght": "The Notebook Server's name can't be more than 52 characters",
+    "lblNamespace": "Namespace",
+    "plhNamespace": "Name of Namespace",
+    "errorNamespaceRequired": "You must enter a value"
+  },
+  "formSpecs": {
+    "titleCpuRam": "CPU / RAM",
+    "lblCpu": "CPU",
+    "plhCpu": "# of CPU Cores",
+    "txtCpu": "Specify the total amount of CPU and RAM reserved by your Notebook Server. For CPU-intensive workloads, you can choose more than 1 CPU (e.g. 1.5).",
+    "errorCpuRequired": "Specify number of CPUs",
+    "errorCpuNumber": "Must be a number",
+    "errorCpuMin": "Specify at least {{min}} CPUs",
+    "errorCpuMax": "Can't exceed {{max}} CPUs",
+    "errorCpuMaxLimit": " with {{gpu}} GPU(s) selected",
+    "lblMemory": "Memory",
+    "plhMemory": "Amount of Memory",
+    "errorRamRequired": "Specify amount of memory (e.g. 2Gi)",
+    "errorRamMin": "Specify at least {{min}}Gi of memory",
+    "errorRamMax": "Can't exceed {{max}}Gi of memory",
+    "errorRamMaxLimit": " with {{gpu}} GPU(s) selected"
+  },
+  "formWorkspaceVolume": {
+    "h3WorkspaceVolume": "Workspace Volume",
+    "txtWorkspaceVolume": "Configure the Volume to be mounted as your personal Workspace.",
+    "txtWorkspaceVolumeIf": "*The Cluster Administrator has disabled editing this Section!",
+    "ckbNoPersistent": "Don't use Persistent Storage for User's home",
+    "msgNoPersistent": "Your workspace will not be persistent. You will lose all data in it, if your notebook is terminated for any reason."
+  },
+  "volume": {
+    "lblType": "Type",
+    "optNew": "New",
+    "optExisting": "Existing",
+    "lblName": "Name",
+    "errorNameRequired": "The volume name can't be empty",
+    "errorNamePattern": "The volume name can only contain lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character",
+    "errorMountedVolume":"The volume is already mounted to another notebook and cannot be currently selected",
+    "lblSize": "Size",
+    "lblMode": "Mode",
+    "optReadWriteOnce": "ReadWriteOnce",
+    "lblMountPoint": "Mount Point"
+  },
+  "resourceForm": {
+    "btnLaunch": "LAUNCH",
+    "btnCancel": "CANCEL",
+    "msgDefaultStorageClass": "No default Storage Class is set. Can't create new Disks for the new Notebook. Please use an Existing Disk."
+  },
+  "snackBar": {
+    "btnDismiss": "DISMISS"
+  }
+}
