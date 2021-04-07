@@ -74,6 +74,6 @@ export class FormDefaultModule {}
 
 // AOT compilation support
 export function httpTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, "../jupyter/assets/i18n/", ".json");
+  return new TranslateHttpLoader(http, "../static/assets/i18n/", ".json");
 }
 

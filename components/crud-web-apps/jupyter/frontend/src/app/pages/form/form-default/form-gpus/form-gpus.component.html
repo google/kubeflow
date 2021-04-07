@@ -1,7 +1,6 @@
 <lib-form-section
-  title="GPUs"
-  text="Specify the number and vendor of GPUs that will be assigned to the
-  Notebook Server's container."
+  title="{{ 'formGpus.h3Gpu' | translate }}"
+  text="{{ 'formGpus.txtGpu' | translate }}"
   icon="custom:gpuSectionIcon"
 >
   <div class="row" [formGroup]="parentForm.get('gpus')">
@@ -9,7 +8,7 @@
     <mat-form-field class="column" appearance="outline">
       <mat-label>{{ "formGpus.lblNumGpu" | translate }}</mat-label>
       <mat-select matNativeControl formControlName="num">
-        <mat-option value="none">None</mat-option>
+        <mat-option value="none">{{ "formGpus.optNone" | translate }}</mat-option>
         <mat-option *ngFor="let v of gpusCount" [value]="v">
           {{ v }}
         </mat-option>
@@ -18,7 +17,7 @@
 
     <!--GPUs Vendor-->
     <mat-form-field class="column" appearance="outline">
-      <mat-label>GPU Vendor</mat-label>
+      <mat-label>{{ "formGpus.lblGpuVendor" | translate }}</mat-label>
       <mat-select matNativeControl formControlName="vendor" id="gpu-vendor">
         <mat-option
           *ngFor="let v of vendors"
