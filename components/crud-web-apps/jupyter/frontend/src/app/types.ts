@@ -140,6 +140,8 @@ export interface Config {
   image?: {
     value: string;
     options: string[];
+    hideRegistry?: boolean;
+    hideTag?: boolean;
   };
 
   imageVSCode?: {

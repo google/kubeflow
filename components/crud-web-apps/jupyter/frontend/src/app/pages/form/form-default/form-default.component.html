@@ -9,6 +9,8 @@
         <app-form-image
           [parentForm]="formCtrl"
           [images]="config?.image?.options"
+          [hideRegistry]="config?.image?.hideRegistry"
+          [hideTag]="config?.image?.hideTag"
           [imagesVSCode]="config?.imageVSCode?.options"
           [imagesRStudio]="config?.imageRStudio?.options"
           [allowCustomImage]="config?.allowCustomImage"
