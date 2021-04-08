@@ -1,4 +1,9 @@
-import { ActionListValue, ActionIconValue, TableColumn, TableConfig } from 'kubeflow';
+import {
+  ActionListValue,
+  ActionIconValue,
+  TableColumn,
+  TableConfig,
+} from 'kubeflow';
 import { tableConfig } from '../config';
 
 const actionsCol: TableColumn = {
