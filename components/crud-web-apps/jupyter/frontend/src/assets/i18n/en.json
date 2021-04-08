@@ -79,7 +79,7 @@
   },
   "formImage": {
     "h3Image": "Image",
-    "txtImage": "Select the base software you want installed in your server. If you choose a custom image, it must be available in the DAaaS container registry.",
+    "txtImage": "A started Jupyter Docker Image with a baseline deployment and typical ML packages",
     "ckbImage": "Custom Image",
     "lblImage": "Image",
     "plhImage": "Docker Image",
@@ -132,9 +132,11 @@
     "errorNameRequired": "The volume name can't be empty",
     "errorNamePattern": "The volume name can only contain lowercase alphanumeric characters, '-' or '.', and must start and end with an alphanumeric character",
     "errorMountedVolume":"The volume is already mounted to another notebook and cannot be currently selected",
-    "lblSize": "Size",
+    "lblSize": "Size in Gi",
     "lblMode": "Mode",
     "optReadWriteOnce": "ReadWriteOnce",
+    "optReadOnlyMany": "ReadOnlyMany",
+    "optReadWriteMany": "ReadWriteMany",
     "lblMountPoint": "Mount Point"
   },
   "resourceForm": {

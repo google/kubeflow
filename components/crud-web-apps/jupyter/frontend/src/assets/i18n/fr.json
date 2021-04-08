@@ -80,7 +80,7 @@
   },
   "formImage": {
     "h3Image": "Image",
-    "txtImage": "Sélectionner les logiciels de base désirés sur votre serveur. Si vous choisissez une image personnallisée, elle doit être disponible dans le registre des conteneurs DAaaS.",
+    "txtImage": "Une image Jupyter Docker démarrée avec un déploiement de base et des packages ML typiques.",
     "ckbImage": "Image personnalisée",
     "lblImage": "Image",
     "plhImage": "Image Docker",
@@ -133,9 +133,11 @@
     "errorNameRequired": "Le nom du volume ne peut pas être vide",
     "errorNamePattern": "Le nom du volume ne peut contenir que des caractères alphanumériques en minuscule, '-' ou '.', et doit commencer et se terminer par un caractères alphanumériques",
     "errorMountedVolume":"Le volume est déjà monté sur un autre bloc-notes et ne peut être sélectionné actuellement",
-    "lblSize": "Taille",
+    "lblSize": "Taille en Gi",
     "lblMode": "Mode",
     "optReadWriteOnce": "ReadWriteOnce",
+    "optReadOnlyMany": "ReadOnlyMany",
+    "optReadWriteMany": "ReadWriteMany",
     "lblMountPoint": "Point de montage"
   },
   "resourceForm": {

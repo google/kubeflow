@@ -1,13 +1,11 @@
 <lib-form-section
-  title="Workspace Volume"
-  text="
-  Configure the Volume to be mounted as your personal Workspace.
-  "
+  title="{{ 'formWorkspaceVolume.h3WorkspaceVolume' | translate }}"
+  text="{{ 'formWorkspaceVolume.txtWorkspaceVolume' | translate }}"
   icon="fa:fas:laptop-code"
 >
   <div [formGroup]="parentForm">
     <mat-checkbox formControlName="noWorkspace"
-      >Don't use Persistent Storage for User's home</mat-checkbox
+      >{{ "formWorkspaceVolume.ckbNoPersistent" | translate }}</mat-checkbox
     >
 
     <app-volume

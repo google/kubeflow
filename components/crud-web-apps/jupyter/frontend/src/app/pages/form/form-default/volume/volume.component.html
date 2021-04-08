@@ -1,9 +1,9 @@
 <div *ngIf="volume" [formGroup]="volume" class="row">
   <mat-form-field class="column" appearance="outline" id="type">
-    <mat-label>Type</mat-label>
+    <mat-label>{{ "volume.lblType" | translate }}</mat-label>
     <mat-select formControlName="type">
-      <mat-option *ngIf="defaultStorageClass" value="New">New</mat-option>
-      <mat-option value="Existing">Existing</mat-option>
+      <mat-option *ngIf="defaultStorageClass" value="New">{{ "volume.optNew" | translate }}</mat-option>
+      <mat-option value="Existing">{{ "volume.optExisting" | translate }}</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -21,22 +21,22 @@
     min="1"
     step="1"
     [sizeControl]="volume.get('size')"
-    label="Size in Gi"
+    label="{{ 'volume.lblSize' | translate }}"
   ></lib-positive-number-input>
 
   <!-- Mode Input -->
   <mat-form-field class="column" appearance="outline" id="mode">
-    <mat-label>Mode</mat-label>
+    <mat-label>{{ "volume.lblMode" | translate }}</mat-label>
     <mat-select formControlName="mode">
-      <mat-option value="ReadWriteOnce">ReadWriteOnce</mat-option>
-      <mat-option value="ReadOnlyMany">ReadOnlyMany</mat-option>
-      <mat-option value="ReadWriteMany">ReadWriteMany</mat-option>
+      <mat-option value="ReadWriteOnce">{{ "volume.optReadWriteOnce" | translate }}</mat-option>
+      <mat-option value="ReadOnlyMany">{{ "volume.optReadOnlyMany" | translate }}</mat-option>
+      <mat-option value="ReadWriteMany">{{ "volume.optReadWriteMany" | translate }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <!-- Mount Input -->
   <mat-form-field class="column" appearance="outline" id="path">
-    <mat-label>Mount Point</mat-label>
+    <mat-label>{{ "volume.lblMountPoint" | translate }}</mat-label>
     <input matInput formControlName="path" />
   </mat-form-field>
 </div>

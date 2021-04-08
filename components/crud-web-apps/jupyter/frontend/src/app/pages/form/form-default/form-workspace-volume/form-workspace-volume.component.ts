@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { SnackBarService, SnackType } from 'kubeflow';
 import { Volume } from 'src/app/types';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-form-workspace-volume',
@@ -25,7 +26,9 @@ export class FormWorkspaceVolumeComponent implements OnInit, OnDestroy {
     this.readOnlyPrv = b;
   }
 
-  constructor(private snackBar: SnackBarService) {}
+  constructor(
+    private snackBar: SnackBarService, 
+    private translate: TranslateService) {}
 
   ngOnInit() {
     // Show a warning if no persistent storage is provided
@@ -37,9 +40,8 @@ export class FormWorkspaceVolumeComponent implements OnInit, OnDestroy {
           if (!b) {
             this.snackBar.close();
           } else {
-            const msg =
-              'Your workspace will not be persistent. You will lose all ' +
-              'data in it, if your notebook is terminated for any reason.';
+            const msg = this.translate.instant("formWorkspaceVolume.msgNoPersistent");
+            
             this.snackBar.open(msg, SnackType.Warning, 0);
           }
         }),
