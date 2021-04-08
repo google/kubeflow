@@ -97,11 +97,11 @@ appearance="outline"
   <lib-advanced-options>
     <div class="row">
       <mat-form-field class="column" appearance="outline">
-        <mat-label>Image pull policy</mat-label>
+        <mat-label>{{ "formImage.lblImagePullPolicy" | translate }}</mat-label>
         <mat-select [formControl]="parentForm.get('imagePullPolicy')">
-          <mat-option value="Always">Always</mat-option>
-          <mat-option value="IfNotPresent">IfNotPresent</mat-option>
-          <mat-option value="Never">Never</mat-option>
+          <mat-option value="Always">{{ "formImage.optAlways" | translate }}</mat-option>
+          <mat-option value="IfNotPresent">{{ "formImage.optIfNotPresent" | translate }}</mat-option>
+          <mat-option value="Never">{{ "formImage.optNever" | translate }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>

@@ -92,6 +92,10 @@
     "plhImage": "Docker Image",
     "lblCustomImage": "Custom Image",
     "plhCustomImage": "Provide a custom Image",
+    "lblImagePullPolicy": "Image pull policy",
+    "optAlways": "Always",
+    "optIfNotPresent": "IfNotPresent",
+    "optNever": "Never",
     "errorImageRequired": "Please provide and Image to use"
   },
   "formName": {
