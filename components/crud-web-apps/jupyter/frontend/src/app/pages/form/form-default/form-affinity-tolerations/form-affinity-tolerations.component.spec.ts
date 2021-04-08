@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormAffinityTolerationsComponent } from './form-affinity-tolerations.component';
 
@@ -6,7 +6,7 @@ describe('FormAffinityTolerationsComponent', () => {
   let component: FormAffinityTolerationsComponent;
   let fixture: ComponentFixture<FormAffinityTolerationsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormAffinityTolerationsComponent ]
     })

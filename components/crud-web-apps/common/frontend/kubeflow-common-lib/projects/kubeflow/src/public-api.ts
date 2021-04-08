@@ -69,3 +69,14 @@ export * from './lib/services/date-time.service';
 
 export * from './lib/panel/panel.module';
 export * from './lib/panel/panel.component';
+
+export * from './lib/namespace-select/namespace-select.component';
+export * from './lib/form/name-namespace-inputs/name-namespace-inputs.component';
+export * from './lib/form/name-namespace-inputs/name-input/name-input.component';
+export * from './lib/form/positive-number-input/positive-number-input.component';
+export * from './lib/form/advanced-options/advanced-options.component';
+export * from './lib/details-list/details-list-item/details-list-item.component';
+export * from './lib/form/submit-bar/submit-bar.component';
+export * from './lib/form/step-info/step-info.component';
+export * from './lib/form/submit-bar/submit-bar.component';
+export * from './lib/form/step-info/step-info.component';

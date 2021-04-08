@@ -23,7 +23,7 @@ describe('BackendService', () => {
   );
 
   it('should be created', () => {
-    const service: BackendService = TestBed.get(BackendService);
+    const service: BackendService = TestBed.inject(BackendService);
     expect(service).toBeTruthy();
   });
 });

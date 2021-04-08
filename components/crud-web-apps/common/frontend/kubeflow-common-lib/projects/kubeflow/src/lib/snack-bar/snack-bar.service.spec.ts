@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SnackBarService } from './snack-bar.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Overlay } from '@angular/cdk/overlay';
 
 export class MockSnackBarService {
@@ -16,7 +16,7 @@ describe('SnackBarService', () => {
   );
 
   it('should be created', () => {
-    const service: SnackBarService = TestBed.get(SnackBarService);
+    const service: SnackBarService = TestBed.inject(SnackBarService);
     expect(service).toBeTruthy();
   });
 });

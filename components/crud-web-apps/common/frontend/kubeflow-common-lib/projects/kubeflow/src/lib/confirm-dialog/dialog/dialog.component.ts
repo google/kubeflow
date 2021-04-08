@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, EventEmitter } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogConfig, DIALOG_RESP } from '../types';
 import { Subject } from 'rxjs';
 

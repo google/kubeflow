@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SnackBarComponent } from './snack-bar.component';
-import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material';
+import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { SnackBarModule } from '../snack-bar.module';
 
 describe('SnackBarComponent', () => {
   let component: SnackBarComponent;
   let fixture: ComponentFixture<SnackBarComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SnackBarModule],
       providers: [

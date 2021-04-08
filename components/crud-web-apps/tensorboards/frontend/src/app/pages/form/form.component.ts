@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 import { NamespaceService, DIALOG_RESP } from 'kubeflow';
 import { TWABackendService } from 'src/app/services/backend.service';
 import { TensorboardPostObject } from 'src/app/types';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form',

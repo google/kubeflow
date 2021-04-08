@@ -5,6 +5,8 @@ run:
 	gunicorn -w 3 --bind 0.0.0.0:5000 --access-logfile - entrypoint:_app
 
 run-dev:
+	UI_FLAVOR=default \
 	BACKEND_MODE=dev \
+	APP_PREFIX=/ \
 	APP_SECURE_COOKIES=False \
-	python entrypoint.py
+	gunicorn -w 3 --bind 0.0.0.0:5000 --access-logfile - entrypoint:app

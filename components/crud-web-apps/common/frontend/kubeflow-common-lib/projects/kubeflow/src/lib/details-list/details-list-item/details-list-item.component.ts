@@ -2,7 +2,7 @@ import { Component, Input, HostBinding } from '@angular/core';
 import { ListValueType, ChipDescriptor, ListValue } from '../types';
 import { SnackBarService } from '../../snack-bar/snack-bar.service';
 import { SnackType } from '../../snack-bar/types';
-import { Clipboard } from '@angular/cdk-experimental/clipboard';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'lib-details-list-item',

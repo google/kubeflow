@@ -12,6 +12,5 @@ import { PopoverComponent } from './popover.component';
   imports: [PortalModule, OverlayModule, MatCardModule],
   exports: [PopoverDirective],
   declarations: [PopoverDirective, PopoverComponent],
-  entryComponents: [PopoverComponent],
 })
 export class PopoverModule {}

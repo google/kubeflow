@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PositiveNumberInputComponent } from './positive-number-input.component';
 import { FormControl } from '@angular/forms';
@@ -9,7 +9,7 @@ describe('PositiveNumberInputComponent', () => {
   let component: PositiveNumberInputComponent;
   let fixture: ComponentFixture<PositiveNumberInputComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [FormModule, BrowserAnimationsModule],
     }).compileComponents();

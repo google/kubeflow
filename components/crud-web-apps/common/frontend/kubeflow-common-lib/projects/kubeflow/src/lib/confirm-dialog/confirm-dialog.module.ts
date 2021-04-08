@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from './dialog/dialog.component';
-import { MatDialogModule, MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
@@ -12,6 +13,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatButtonModule,
     MatProgressSpinnerModule,
   ],
-  entryComponents: [ConfirmDialogComponent],
 })
 export class ConfirmDialogModule {}

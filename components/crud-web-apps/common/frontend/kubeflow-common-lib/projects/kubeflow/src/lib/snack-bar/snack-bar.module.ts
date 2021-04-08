@@ -8,6 +8,5 @@ import { SnackBarComponent } from './component/snack-bar.component';
 @NgModule({
   imports: [CommonModule, MatIconModule, MatButtonModule, MatSnackBarModule],
   declarations: [SnackBarComponent],
-  entryComponents: [SnackBarComponent],
 })
 export class SnackBarModule {}

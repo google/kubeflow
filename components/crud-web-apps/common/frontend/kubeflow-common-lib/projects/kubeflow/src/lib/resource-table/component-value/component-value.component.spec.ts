@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {
   ComponentValueComponent,
@@ -33,7 +33,6 @@ class MockDictComponent implements TableColumnComponent {
   declarations: [MockComponent, MockDictComponent],
   imports: [],
   exports: [MockComponent, MockDictComponent],
-  entryComponents: [MockComponent, MockDictComponent],
 })
 class MockModule {}
 
@@ -41,7 +40,7 @@ describe('ComponentValueComponent', () => {
   let component: ComponentValueComponent;
   let fixture: ComponentFixture<ComponentValueComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ResourceTableModule, MockModule],
     }).compileComponents();

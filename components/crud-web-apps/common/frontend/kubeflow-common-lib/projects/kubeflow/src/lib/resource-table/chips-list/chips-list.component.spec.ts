@@ -1,9 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TableChipsListComponent } from './chips-list.component';
 import { ChipsListValue } from '../types';
 import { ChipDescriptor } from '../../details-list/types';
-import { MatTooltipModule, MatChipsModule } from '@angular/material';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 
@@ -15,7 +16,7 @@ describe('TableChipsListComponent', () => {
   let component: TableChipsListComponent;
   let fixture: ComponentFixture<TableChipsListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TableChipsListComponent],
       imports: [MatTooltipModule, MatChipsModule, CommonModule],

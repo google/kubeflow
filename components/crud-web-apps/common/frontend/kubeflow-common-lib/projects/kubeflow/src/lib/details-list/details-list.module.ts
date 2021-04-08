@@ -6,7 +6,7 @@ import { DetailsListComponent } from './details-list.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DetailsListItemComponent } from './details-list-item/details-list-item.component';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({

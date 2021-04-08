@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
 import { FormImageComponent } from "./form-image.component";
 
@@ -6,7 +6,7 @@ describe("FormImageComponent", () => {
   let component: FormImageComponent;
   let fixture: ComponentFixture<FormImageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [FormImageComponent]
     }).compileComponents();

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NameInputComponent } from './name-input.component';
 import { FormControl } from '@angular/forms';
@@ -9,7 +9,7 @@ describe('NameInputComponent', () => {
   let component: NameInputComponent;
   let fixture: ComponentFixture<NameInputComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [FormModule, BrowserAnimationsModule],
     }).compileComponents();

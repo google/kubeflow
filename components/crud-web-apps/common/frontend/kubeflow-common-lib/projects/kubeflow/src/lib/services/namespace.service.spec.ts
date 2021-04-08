@@ -12,7 +12,7 @@ describe('NamespaceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: NamespaceService = TestBed.get(NamespaceService);
+    const service: NamespaceService = TestBed.inject(NamespaceService);
     expect(service).toBeTruthy();
   });
 });

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RokFormWorkspaceVolumeComponent } from './rok-form-workspace-volume.component';
 
@@ -6,7 +6,7 @@ describe('RokFormWorkspaceVolumeComponent', () => {
   let component: RokFormWorkspaceVolumeComponent;
   let fixture: ComponentFixture<RokFormWorkspaceVolumeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RokFormWorkspaceVolumeComponent ]
     })

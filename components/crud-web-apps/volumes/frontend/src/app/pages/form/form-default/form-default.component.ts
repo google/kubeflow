@@ -16,7 +16,7 @@ import {
 } from 'kubeflow';
 import { VWABackendService } from 'src/app/services/backend.service';
 import { PVCPostObject } from 'src/app/types';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form-default',

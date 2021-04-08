@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ActionComponent } from './action.component';
 import { ActionIconValue } from '../types';
@@ -8,7 +8,7 @@ describe('ActionComponent', () => {
   let component: ActionComponent;
   let fixture: ComponentFixture<ActionComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ResourceTableModule],
     }).compileComponents();

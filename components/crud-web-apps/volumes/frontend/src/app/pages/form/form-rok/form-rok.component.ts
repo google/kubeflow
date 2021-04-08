@@ -12,7 +12,7 @@ import {
 
 import { VWABackendService } from 'src/app/services/backend.service';
 import { PVCPostObject } from 'src/app/types';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormDefaultComponent } from '../form-default/form-default.component';
 import { environment } from '@app/environment';
 import { rokStorageClassValidator } from './utils';

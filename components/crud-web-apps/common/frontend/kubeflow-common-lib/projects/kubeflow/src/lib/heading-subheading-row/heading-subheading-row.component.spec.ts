@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { HeadingSubheadingRowComponent } from './heading-subheading-row.component';
 import { HeadingSubheadingRowModule } from './heading-subheading-row.module';
@@ -7,7 +7,7 @@ describe('HeadingSubheadingRowComponent', () => {
   let component: HeadingSubheadingRowComponent;
   let fixture: ComponentFixture<HeadingSubheadingRowComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HeadingSubheadingRowModule],
     }).compileComponents();
