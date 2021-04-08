@@ -1,9 +1,6 @@
 <lib-form-section
-  [title]="'Name'"
-  [text]="
-    'Specify the name of the Notebook Server and the Namespace it
-        will belong to.'
-  "
+  title="{{ 'formName.h3Name' | translate }}"
+  text="{{ 'formName.txtName' | translate }}"
   icon="fa:fas:book"
 >
   <lib-form-name-namespace-inputs

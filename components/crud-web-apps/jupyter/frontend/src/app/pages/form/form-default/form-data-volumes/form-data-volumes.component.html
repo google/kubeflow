@@ -1,8 +1,6 @@
 <lib-form-section
-  title="Data Volumes"
-  text="
-    Configure the Volumes to be mounted as your Datasets.
-  "
+  title="{{ 'formDataVolumes.h3DataVolumes' | translate }}"
+  text="{{ 'formDataVolumes.txtDataVolumes' | translate }}"
   icon="fa:fas:hdd"
 >
   <div [formGroup]="parentForm">
@@ -14,7 +12,7 @@
       type="button"
       [disabled]="readonly"
     >
-      <mat-icon>add</mat-icon>ADD VOLUME
+      <mat-icon>add</mat-icon>{{ "formDataVolumes.btnAddVolume" | translate }}
     </button>
 
     <div *ngFor="let vol of datavols; let i = index" class="volume-wrapper">

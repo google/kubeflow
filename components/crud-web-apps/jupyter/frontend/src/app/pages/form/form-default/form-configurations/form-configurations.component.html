@@ -1,13 +1,10 @@
 <lib-form-section
-  title="Configurations"
-  text="
-    Extra layers of configurations that will be applied to the new Notebook.
-    (e.g. Insert credentials as Secrets, set Environment Variables.)
-  "
+  title="{{ 'formConfiguration.h3Configuration' | translate }}"
+  text="{{ 'formConfiguration.txtConfiguration' | translate }}"
   icon="fa:fas:sliders-h"
 >
   <mat-form-field class="wide" appearance="outline">
-    <mat-label>Configurations</mat-label>
+    <mat-label>{{ "formConfiguration.lblConfigurations" | translate }}</mat-label>
     <mat-select [formControl]="parentForm.get('configurations')" multiple>
       <mat-option *ngFor="let config of podDefaults" [value]="config.label">
         {{ config.desc }}

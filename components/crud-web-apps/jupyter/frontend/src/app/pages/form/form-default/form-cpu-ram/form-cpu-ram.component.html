@@ -1,7 +1,6 @@
 <lib-form-section
-  title="CPU / RAM"
-  text="Specify the total amount of CPU and RAM reserved by your Notebook Server.
-    For CPU-intensive workloads, you can choose more than 1 CPU (e.g. 1.5)."
+  title="{{ 'formSpecs.titleCpuRam' | translate }}"
+  text="{{ 'formSpecs.txtCpu' | translate }}"
   icon="fa:fas:microchip"
 >
   <div class="row">
@@ -11,7 +10,7 @@
       min="0.1"
       step="0.1"
       [sizeControl]="parentForm.get('cpu')"
-      label="CPUs"
+      label="{{ 'formSpecs.lblCpu' | translate }}"
     ></lib-positive-number-input>
 
     <!--RAM-->
@@ -20,7 +19,7 @@
       min="0.1"
       step="0.1"
       [sizeControl]="parentForm.get('memory')"
-      label="RAM size in Gi"
+      label="{{ 'formSpecs.lblMemory' | translate }}"
     ></lib-positive-number-input>
   </div>
 </lib-form-section>

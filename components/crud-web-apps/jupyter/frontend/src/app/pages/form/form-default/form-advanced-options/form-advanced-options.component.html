@@ -1,9 +1,9 @@
 <lib-form-section
-  title="Miscellaneous Settings"
-  text="Other possible settings to be applied to the Notebook Server."
+  title="{{ 'formAdvancedOptions.h3MiscSettings' | translate }}"
+  text="{{ 'formAdvancedOptions.txtMiscSettings' | translate }}"
   icon="fa:fas:cogs"
 >
   <mat-slide-toggle [formControl]="parentForm.get('shm')">
-    Enable Shared Memory
+    {{ "formAdvancedOptions.toggleSharedMemory" | translate }}
   </mat-slide-toggle>
 </lib-form-section>

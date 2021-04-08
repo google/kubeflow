@@ -48,6 +48,8 @@
     "deleteDialogNo": "Annuler"
   },
   "formAdvancedOptions": {
+    "h3MiscSettings": "Paramètres divers",
+    "txtMiscSettings": "Autres paramètres pouvant être appliqué au serveur bloc-notes.",
     "h3AdvancedSettings": "Paramètres avancés",
     "toggleSharedMemory": "Activer la mémoire partagée",
     "lblSystemLanguage":"Langue du système",
@@ -71,6 +73,7 @@
     "lblNumGpu": "Nombre GPUs",
     "optNone": "Aucun",
     "lblGpuVendor": "Vendeur de GPU",
+    "errorGpuVendorNotFound": "Aucun GPU {{vendoruiName}} trouvé installé dans le cluster.",
     "errorGpuVendorRequired": "Vous devez spécifier le vendeur des GPUs assignés",
     "specsWarningMessage": "La sélection de 1 GPU définira automatiquement 4 processeurs et 96Gi de la mémoire."
 
@@ -108,7 +111,7 @@
     "errorCpuMin": "Spécifier au moins {{min}} CPUs",
     "errorCpuMax": "Ne peut excéder {{max}} CPUs",
     "errorCpuMaxLimit": " avec {{gpu}} GPU(s) sélectionné(s)",
-    "lblMemory": "Mémoire",
+    "lblMemory": "Taille de la mémoire en Gi",
     "plhMemory": "Quantié de mémoire",
     "errorRamRequired": "Spécifier la quantité de mémoire (ex. 2Gi)",
     "errorRamMin": "Spécifier au moins {{min}}Gi de mémoire",

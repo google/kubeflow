@@ -60,11 +60,11 @@
       (click)="onSubmit()"
       [disabled]="!formCtrl.valid || blockSubmit"
     >
-      LAUNCH
+      {{ "resourceForm.btnLaunch" | translate }}
     </button>
 
     <button mat-raised-button type="button" (click)="onCancel()">
-      CANCEL
+      {{ "resourceForm.btnCancel" | translate }}
     </button>
   </div>
 </div>
