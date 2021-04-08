@@ -1,14 +1,14 @@
 <lib-form-section
-  title="Affinity / Tolerations"
-  text="Configure the Notebook's Affinity and Tolerations."
+  title="{{'formAffinityTolerations.h3AffinityTolerations' | translate }}"
+  text="{{'formAffinityTolerations.txtAffinityTolerations' | translate }}"
   icon="fa:fas:bullseye"
 >
   <div class="row">
     <!--Affinity-->
     <mat-form-field class="wide column" appearance="outline">
-      <mat-label>Affinity Config</mat-label>
+      <mat-label>{{"formAffinityTolerations.lblAffinity" | translate }}</mat-label>
       <mat-select [formControl]="parentForm.get('affinityConfig')">
-        <mat-option value="">None</mat-option>
+        <mat-option value="">{{"formAffinityTolerations.optNone" | translate }}</mat-option>
         <mat-option
           *ngFor="let affinityConfig of affinityConfigs"
           [value]="affinityConfig.configKey"
@@ -20,9 +20,9 @@
 
     <!--Tolerations-->
     <mat-form-field class="wide column" appearance="outline">
-      <mat-label>Tolerations Group</mat-label>
+      <mat-label>{{"formAffinityTolerations.lblTolerations" | translate }}</mat-label>
       <mat-select [formControl]="parentForm.get('tolerationGroup')">
-        <mat-option value="">None</mat-option>
+        <mat-option value="">{{"formAffinityTolerations.optNone" | translate }}</mat-option>
         <mat-option
           *ngFor="let tolerationGroup of tolerationGroups"
           [value]="tolerationGroup.groupKey"

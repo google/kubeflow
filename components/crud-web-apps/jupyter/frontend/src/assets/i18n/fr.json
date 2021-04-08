@@ -56,6 +56,13 @@
     "lblEnglish": "English",
     "lblFrench": "Français"
   },
+  "formAffinityTolerations": {
+    "h3AffinityTolerations": "Affinité / Les Tolérances",
+    "txtAffinityTolerations": "Configurez l'affinité et les tolérances pour votre Notebook Server.",
+    "lblAffinity":"Affinité Config",
+    "lblTolerations": "Groupe de Tolérances",
+    "optNone": "Aucun"
+  },
   "formConfiguration": {
     "h3Configuration": "Configurations",
     "txtConfiguration": "Couche supplémentaire de configurations qui sera appliquée au nouveau bloc-note. (ex. insérer les informations d'identification en tant que secret, définir les variables d'environnement.)",

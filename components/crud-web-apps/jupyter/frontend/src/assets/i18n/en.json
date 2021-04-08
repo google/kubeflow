@@ -56,6 +56,13 @@
     "lblEnglish": "English",
     "lblFrench": "Français"
   },
+  "formAffinityTolerations": {
+    "h3AffinityTolerations": "Affinity / Tolerations",
+    "txtAffinityTolerations": "Configure the Notebook's Affinity and Tolerations.",
+    "lblAffinity":"Affinity Config",
+    "lblTolerations": "Tolerations Group",
+    "optNone": "None"
+  },
   "formConfiguration": {
     "h3Configuration": "Configurations",
     "txtConfiguration": "Extra layers of configurations that will be applied to the new Notebook. (e.g. Insert credentials as Secrets, set Environment Variables.)",
