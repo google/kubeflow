@@ -23,8 +23,11 @@ FROM node:12-buster-slim as frontend
 
 WORKDIR /src
 
-COPY ./jupyter/frontend/package*.json ./
-COPY ./jupyter/frontend/tsconfig*.json ./
+COPY ./jupyter/frontend/package.json ./
+COPY ./jupyter/frontend/package-lock.json ./
+COPY ./jupyter/frontend/tsconfig.json ./
+COPY ./jupyter/frontend/tsconfig.app.json ./
+COPY ./jupyter/frontend/tsconfig.spec.json ./
 COPY ./jupyter/frontend/angular.json ./
 COPY ./jupyter/frontend/src ./src
 
