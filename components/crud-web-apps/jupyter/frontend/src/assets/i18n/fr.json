@@ -1,13 +1,4 @@
 {
-  "costTable": {
-    "title": "Coût",
-    "txtCost": "Approximation du coût des ressources de serveur bloc-notes des dernières 24h – la somme des valeurs pourraient être différentes du total du à l'arrondissement",
-    "thCompute": "Calculé",
-    "thGpus": "GPUs",
-    "thStorage": "Stockage",
-    "thTotal": "Total",
-    "errMessage": "Échec de la récupération des informations des coûts."
-  },
   "namespaceSelect": {
     "lblSelectNamespace": "Sélectionner l'espace de noms",
     "btnUpdate": "Mettre à jour"
@@ -32,21 +23,6 @@
     "tooltipError": "Une erreur est advenue, échec de la création du pod. Vérifier 'kubectl describe pod' pour plus d'information.",
     "tooltipWaiting": "En cours..."
   },
-  "volumeTable": {
-    "title": "Bloc-notes volumes",
-    "thStatus": "Statut",
-    "toolTipAttached": "Attaché",
-    "toolTipUnattached": "Libre",
-    "toolTipDeleting": "En supression",
-    "thName": "Nom",
-    "thSize": "Taille",
-    "thUsedBy": "Utilisé par",
-    "lblNone": "(aucun)",
-    "deleteDialogTitle": "Vous êtes sur le point de supprimer ce volume: ",
-    "deleteDialogMessage": "Êtes-vous sûr de vouloir supprimer ce volume? Cette action ne peut pas être annulée.",
-    "deleteDialogYes": "Supprimer",
-    "deleteDialogNo": "Annuler"
-  },
   "formAdvancedOptions": {
     "h3MiscSettings": "Paramètres divers",
     "txtMiscSettings": "Autres paramètres pouvant être appliqué au serveur bloc-notes.",
@@ -57,10 +33,10 @@
     "lblFrench": "Français"
   },
   "formAffinityTolerations": {
-    "h3AffinityTolerations": "Affinité / Les Tolérances",
-    "txtAffinityTolerations": "Configurez l'affinité et les tolérances pour votre Notebook Server.",
-    "lblAffinity":"Affinité Config",
-    "lblTolerations": "Groupe de Tolérances",
+    "h3AffinityTolerations": "Affinité / Tolérances",
+    "txtAffinityTolerations": "Configuration de l'affinité et des tolérances du bloc-notes.",
+    "lblAffinity":"Config d'affinité",
+    "lblTolerations": "Groupe de tolérances",
     "optNone": "Aucun"
   },
   "formConfiguration": {
@@ -80,14 +56,14 @@
     "lblNumGpu": "Nombre GPUs",
     "optNone": "Aucun",
     "lblGpuVendor": "Vendeur de GPU",
-    "errorGpuVendorNotFound": "Aucun GPU {{vendoruiName}} trouvé installé dans le cluster.",
+    "errorGpuVendorNotFound": "Aucun GPU {{vendoruiName}} n’a été trouvé installé dans le cluster.",
     "errorGpuVendorRequired": "Vous devez spécifier le vendeur des GPUs assignés",
     "specsWarningMessage": "La sélection de 1 GPU définira automatiquement 4 processeurs et 96Gi de la mémoire."
 
   },
   "formImage": {
     "h3Image": "Image",
-    "txtImage": "Une image Jupyter Docker démarrée avec un déploiement de base et des packages ML typiques.",
+    "txtImage": "Une image Jupyter Docker démarrée avec un déploiement de base et des paquets ML typiques.",
     "ckbImage": "Image personnalisée",
     "lblImage": "Image",
     "plhImage": "Image Docker",
@@ -116,7 +92,7 @@
     "titleCpuRam": "CPU / Mémoire vive",
     "lblCpu": "CPU",
     "plhCpu": "# de coeurs de CPU",
-    "txtCpu": "Spécifier le nombre total de CPU et mémoire vive reservé pour votre Notebook Server. Pour les charges de travail lourde pour le CPU, vous pouvez choisir plus d'un CPU (ex. 1.5).",
+    "txtCpu": "Spécifier le nombre total de CPU et mémoire vive reservé pour votre serveur bloc-notes. Pour les charges de travail lourde pour le CPU, vous pouvez choisir plus d'un CPU (ex. 1.5).",
     "errorCpuRequired": "Spécifier le nombre de CPUs",
     "errorCpuNumber": "Doit être un nombre",
     "errorCpuMin": "Spécifier au moins {{min}} CPUs",
