@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormWorkspaceVolumeComponent } from "./form-workspace-volume.component";
+import { FormWorkspaceVolumeComponent } from './form-workspace-volume.component';
 
-describe("FormWorkspaceVolumeComponent", () => {
+describe('FormWorkspaceVolumeComponent', () => {
   let component: FormWorkspaceVolumeComponent;
   let fixture: ComponentFixture<FormWorkspaceVolumeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FormWorkspaceVolumeComponent]
+      declarations: [FormWorkspaceVolumeComponent],
     }).compileComponents();
   }));
 
@@ -18,7 +18,7 @@ describe("FormWorkspaceVolumeComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

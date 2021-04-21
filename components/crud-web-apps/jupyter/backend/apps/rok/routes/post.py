@@ -1,7 +1,6 @@
 from flask import request
 
-from kubeflow.kubeflow.crud_backend import (api, decorators, helpers,
-                                                  logging)
+from kubeflow.kubeflow.crud_backend import api, decorators, helpers, logging
 
 from ...common import form, utils
 from ..utils import common as rok_common

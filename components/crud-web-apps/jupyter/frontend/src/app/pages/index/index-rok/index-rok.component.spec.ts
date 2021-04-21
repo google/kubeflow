@@ -8,9 +8,8 @@ describe('IndexRokComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IndexRokComponent ]
-    })
-    .compileComponents();
+      declarations: [IndexRokComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

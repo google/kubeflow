@@ -8,7 +8,7 @@ export interface JWABackendResponse extends BackendResponse {
   vendors?: string[];
 }
 
-export type ServerType = 'jupyter' | 'vscode' | 'rstudio';
+export type ServerType = 'jupyter' | 'group-one' | 'group-two';
 
 export interface NotebookResponseObject {
   name: string;
@@ -20,11 +20,11 @@ export interface NotebookResponseObject {
   image: string;
   volumes: string[];
   cpu: string;
+  memory: string;
   gpus: {
     count: number;
     message: string;
   };
-  memory: string;
   environment: string;
   shortImage: string;
 }
@@ -39,15 +39,17 @@ export interface NotebookFormObject {
   name: string;
   namespace: string;
   image: string;
-  imageVSCode: string;
-  imageRStudio: string;
+  imageGroupOne: string;
+  imageGroupTwo: string;
   allowCustomImage: boolean;
   imagePullPolicy: string;
   customImage?: string;
   customImageCheck: boolean;
   serverType: string;
   cpu: number | string;
+  cpuLimit: number | string;
   memory: number | string;
+  memoryLimit: number | string;
   gpus: GPU;
   environment?: string;
   noWorkspace: boolean;
@@ -142,12 +144,12 @@ export interface Config {
     options: string[];
   };
 
-  imageVSCode?: {
+  imageGroupOne?: {
     value: string;
     options: string[];
   };
 
-  imageRStudio?: {
+  imageGroupTwo?: {
     value: string;
     options: string[];
   };
@@ -161,11 +163,13 @@ export interface Config {
 
   cpu?: {
     value: string;
+    limitFactor: string;
     readOnly?: boolean;
   };
 
   memory?: {
     value: string;
+    limitFactor: string;
     readOnly?: boolean;
   };
 

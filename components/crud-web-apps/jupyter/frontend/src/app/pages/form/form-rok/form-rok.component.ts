@@ -24,7 +24,8 @@ import { FormDefaultComponent } from '../form-default/form-default.component';
     '../form-default/form-default.component.scss',
   ],
 })
-export class FormRokComponent extends FormDefaultComponent
+export class FormRokComponent
+  extends FormDefaultComponent
   implements OnInit, OnDestroy {
   env = environment;
 

@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+
+import sys
+import logging
+import argparse
+import ruamel.yaml
+
+
+log = logging.getLogger(__name__)
+
+
+class YAMLEmitterNoVersionDirective(ruamel.yaml.emitter.Emitter):
+    """YAML Emitter that doesn't emit the YAML version directive."""
+
+    def write_version_directive(self, version_text):
+        """Disable emitting version directive, i.e., %YAML 1.1."""
+        pass
+
+    def expect_document_start(self, first=False):
+        """Do not print '---' at the beginning."""
+        if not isinstance(self.event, ruamel.yaml.events.DocumentStartEvent):
+            return super(YAMLEmitterNoVersionDirective, self).\
+                expect_document_start(first=first)
+
+        version = self.event.version
+        self.event.version = None
+        ret = super(YAMLEmitterNoVersionDirective, self).\
+            expect_document_start(first=first)
+        self.event.version = version
+        return ret
+
+
+class YAML(ruamel.yaml.YAML):
+    """Wrapper of the ruamel.yaml.YAML class with our custom settings."""
+
+    def __init__(self, *args, **kwargs):
+        super(YAML, self).__init__(*args, **kwargs)
+        # XXX: Explicitly set version for producing K8s compatible manifests.
+        # https://yaml.readthedocs.io/en/latest/detail.html#document-version-support
+        self.version = (1, 1)
+        # XXX: Do not emit version directive since tools might fail to
+        # parse manifests.
+        self.Emitter = YAMLEmitterNoVersionDirective
+        # Preserve original quotes
+        self.preserve_quotes = True
+
+
+yaml = YAML()
+
+apps = [
+    {
+        "name": "Admission Webhook",
+        "kustomization": "components/admission-webhook/manifests/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/admission-webhook",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/admission-webhook",
+            },
+        ],
+    },
+    {
+        "name": "Central Dashboard",
+        "kustomization": "components/centraldashboard/manifests/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/central-dashboard",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/central-dashboard",
+            },
+        ],
+    },
+    {
+        "name": "Jupyter Web App",
+        "kustomization": "components/crud-web-apps/jupyter/manifests/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app",
+            },
+        ],
+    },
+    {
+        "name": "Tensorboard Web App",
+        "kustomization": "components/crud-web-apps/tensorboards/manifests/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/tensorboards-web-app",
+            },
+        ],
+    },
+    {
+        "name": "Volumes Web App",
+        "kustomization": "components/crud-web-apps/volumes/manifests/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/volumes-web-app",
+            },
+        ],
+    },
+    {
+        "name": "Notebook Controller",
+        "kustomization": "components/notebook-controller/config/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/notebook-controller",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/notebook-controller",
+            },
+        ],
+    },
+    {
+        "name": "Tensorboard Controller",
+        "kustomization": "components/tensorboard-controller/config/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/tensorboard-controller",
+            },
+        ],
+    },
+    {
+        "name": "Profile Controller",
+        "kustomization": "components/profile-controller/config/base/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/profile-controller",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/profile-controller",
+            },
+        ],
+    },
+    {
+        "name": "Access Management",
+        "kustomization": "components/profile-controller/config/overlays/kubeflow/kustomization.yaml",
+        "images": [
+            {
+                "name": "public.ecr.aws/j1r0q0g6/notebooks/access-management",
+                "newName": "public.ecr.aws/j1r0q0g6/notebooks/access-management",
+            },
+        ],
+    },
+]
+
+
+def update_manifests_images(apps, tag):
+    for app in apps:
+        log.info("Updating manifests for app `%s`", app["name"])
+        with open(app["kustomization"], "r") as f:
+            kust = yaml.load(f)
+        images = kust.get("images", [])
+        for target_image in app["images"]:
+            found = False
+            for image in images:
+                if image["name"] == target_image["name"]:
+                    image["newName"] = target_image["newName"]
+                    image["newTag"] = tag
+                    found = True
+                    break
+            if not found:
+                images.append({
+                    "name": target_image["name"],
+                    "newName": target_image["newName"],
+                    "newTag": tag})
+        kust["images"] = images
+        with open(app["kustomization"], "w") as f:
+            yaml.dump(kust, f)
+
+    # Update JWA ConfigMap
+    JWA_SPAWNER_CONFIG = "components/crud-web-apps/jupyter/manifests/base/configs/spawner_ui_config.yaml"
+    log.info("Updating JWA Spawner config `%s`", JWA_SPAWNER_CONFIG)
+    with open(JWA_SPAWNER_CONFIG, "r") as f:
+        jwa_config = yaml.load(f)
+    for nb_type in ["image", "imageGroupTwo", "imageGroupOne"]:
+        jwa_config["spawnerFormDefaults"][nb_type]["value"] = change_image_tag(jwa_config["spawnerFormDefaults"][nb_type]["value"], tag)
+        for i in range(len(jwa_config["spawnerFormDefaults"][nb_type]["options"])):
+            jwa_config["spawnerFormDefaults"][nb_type]["options"][i] = change_image_tag(jwa_config["spawnerFormDefaults"][nb_type]["options"][i], tag)
+    with open(JWA_SPAWNER_CONFIG, "w") as f:
+        yaml.dump(jwa_config, f)
+
+
+def change_image_tag(img, newTag):
+    parts = img.split(":")
+    if len(parts) != 2:
+        raise RuntimeError("Image `%s` doesn't have expected format <img>:<tag>")
+    return parts[0] + ":" + newTag
+
+
+def parse_args():
+    parser = argparse.ArgumentParser("Update image tags in manifests.")
+    parser.add_argument("tag", type=str, help="Image tag to use.")
+    return parser.parse_args()
+
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    args = parse_args()
+    update_manifests_images(apps, args.tag)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

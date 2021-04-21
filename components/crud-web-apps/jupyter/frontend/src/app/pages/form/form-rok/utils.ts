@@ -167,10 +167,7 @@ export function setLabValues(lab: JupyterLab, formCtrl: AbstractControl) {
     .get('extraFields')
     .get('rokUrl')
     .setValue(lab.workspace.extraFields.rokUrl);
-  formCtrl
-    .get('workspace')
-    .get('type')
-    .setValue('Existing');
+  formCtrl.get('workspace').get('type').setValue('Existing');
 
   // Clear the existing Data Volumes array
   const dataVols = formCtrl.get('datavols') as FormArray;
@@ -191,10 +188,7 @@ export function setLabValues(lab: JupyterLab, formCtrl: AbstractControl) {
       .get('rokUrl')
       .setValue(lab.datavols[i].extraFields.rokUrl);
 
-    volsArr
-      .at(i)
-      .get('type')
-      .setValue('Existing');
+    volsArr.at(i).get('type').setValue('Existing');
   }
 }
 

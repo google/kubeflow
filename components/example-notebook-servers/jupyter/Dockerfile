@@ -1,4 +1,4 @@
-FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/base:master-4892c583
+FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/base:master-1831e436
 
 USER root
 

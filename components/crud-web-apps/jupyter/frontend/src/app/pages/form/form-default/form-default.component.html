@@ -9,12 +9,18 @@
         <app-form-image
           [parentForm]="formCtrl"
           [images]="config?.image?.options"
-          [imagesVSCode]="config?.imageVSCode?.options"
-          [imagesRStudio]="config?.imageRStudio?.options"
+          [imagesGroupOne]="config?.imageGroupOne?.options"
+          [imagesGroupTwo]="config?.imageGroupTwo?.options"
           [allowCustomImage]="config?.allowCustomImage"
         ></app-form-image>
 
-        <app-form-cpu-ram [parentForm]="formCtrl"></app-form-cpu-ram>
+        <app-form-cpu-ram
+          [parentForm]="formCtrl"
+          [readonlyCPU]="config?.cpu?.readOnly"
+          [readonlyMemory]="config?.memory?.readOnly"
+          [cpuLimitFactor]="config?.cpu?.limitFactor"
+          [memoryLimitFactor]="config?.memory?.limitFactor"
+        ></app-form-cpu-ram>
 
         <app-form-gpus
           [parentForm]="formCtrl"
@@ -63,8 +69,6 @@
       LAUNCH
     </button>
 
-    <button mat-raised-button type="button" (click)="onCancel()">
-      CANCEL
-    </button>
+    <button mat-raised-button type="button" (click)="onCancel()">CANCEL</button>
   </div>
 </div>

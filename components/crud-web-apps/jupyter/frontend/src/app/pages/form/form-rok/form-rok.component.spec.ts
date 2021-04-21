@@ -8,9 +8,8 @@ describe('FormRokComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormRokComponent ]
-    })
-    .compileComponents();
+      declarations: [FormRokComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

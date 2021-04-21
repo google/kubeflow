@@ -14,6 +14,7 @@ resources:
 - role.yaml
 - service-account.yaml
 - service.yaml
+- configs/logos-configmap.yaml
 namePrefix: jupyter-web-app-
 namespace: kubeflow
 commonLabels:
@@ -22,7 +23,7 @@ commonLabels:
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
   newName: public.ecr.aws/j1r0q0g6/notebooks/jupyter-web-app
-  newTag: master-05ba7a65
+  newTag: master-43e03d4a
 # We need the name to be unique without the suffix because the original name is what
 # gets used with patches
 configMapGenerator:

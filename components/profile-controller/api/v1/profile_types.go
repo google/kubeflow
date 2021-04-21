@@ -25,7 +25,8 @@ import (
 // Plugin is for customize actions on different platform.
 type Plugin struct {
 	metav1.TypeMeta `json:",inline"`
-	Spec            *runtime.RawExtension `json:"spec,omitempty"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	Spec *runtime.RawExtension `json:"spec,omitempty"`
 }
 
 type ProfileCondition struct {
@@ -37,8 +38,10 @@ type ProfileCondition struct {
 // ProfileSpec defines the desired state of Profile
 type ProfileSpec struct {
 	// The profile owner
-	Owner   rbacv1.Subject `json:"owner,omitempty"`
-	Plugins []Plugin       `json:"plugins,omitempty"`
+	Owner rbacv1.Subject `json:"owner,omitempty"`
+
+	Plugins []Plugin `json:"plugins,omitempty"`
+
 	// Resourcequota that will be applied to target namespace
 	ResourceQuotaSpec v1.ResourceQuotaSpec `json:"resourceQuotaSpec,omitempty"`
 }

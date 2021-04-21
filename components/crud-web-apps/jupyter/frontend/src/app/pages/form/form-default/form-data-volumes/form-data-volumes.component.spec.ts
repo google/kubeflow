@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormDataVolumesComponent } from "./form-data-volumes.component";
+import { FormDataVolumesComponent } from './form-data-volumes.component';
 
-describe("FormDataVolumesComponent", () => {
+describe('FormDataVolumesComponent', () => {
   let component: FormDataVolumesComponent;
   let fixture: ComponentFixture<FormDataVolumesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FormDataVolumesComponent]
+      declarations: [FormDataVolumesComponent],
     }).compileComponents();
   }));
 
@@ -18,7 +18,7 @@ describe("FormDataVolumesComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

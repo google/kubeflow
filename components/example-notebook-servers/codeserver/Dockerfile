@@ -1,9 +1,9 @@
-FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/base:master-4892c583
+FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/base:master-1831e436
 
 USER root
 
 # args - software versions
-ARG CODESERVER_VERSION=3.9.1
+ARG CODESERVER_VERSION=3.9.2
 
 # install - code-server
 RUN curl -sL "https://github.com/cdr/code-server/releases/download/v${CODESERVER_VERSION}/code-server_${CODESERVER_VERSION}_amd64.deb" -o /tmp/code-server.deb \

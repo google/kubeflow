@@ -9,15 +9,17 @@ export function getFormDefaults(): FormGroup {
     name: ['', [Validators.required]],
     namespace: ['', [Validators.required]],
     image: ['', [Validators.required]],
-    imageVSCode: ['', [Validators.required]],
-    imageRStudio: ['', [Validators.required]],
+    imageGroupOne: ['', [Validators.required]],
+    imageGroupTwo: ['', [Validators.required]],
     allowCustomImage: [true, []],
     imagePullPolicy: ['IfNotPresent', [Validators.required]],
     customImage: ['', []],
     customImageCheck: [false, []],
     serverType: ['jupyter', [Validators.required]],
     cpu: [1, [Validators.required]],
+    cpuLimit: ['', []],
     memory: [1, [Validators.required]],
+    memoryLimit: ['', []],
     gpus: fb.group({
       vendor: ['', []],
       num: ['', []],
@@ -140,20 +142,38 @@ export function initFormControls(formCtrl: FormGroup, config: Config) {
   // Sets the values from our internal dict. This is an initialization step
   // that should be only run once
   formCtrl.controls.cpu.setValue(configSizeToNumber(config.cpu.value));
+  if (config.cpu.limitFactor !== 'none') {
+    formCtrl.controls.cpuLimit.setValue(
+      (
+        configSizeToNumber(config.cpu.value) *
+        configSizeToNumber(config.cpu.limitFactor)
+      ).toFixed(1),
+    );
+  }
   if (config.cpu.readOnly) {
     formCtrl.controls.cpu.disable();
+    formCtrl.controls.cpuLimit.disable();
   }
 
   formCtrl.controls.memory.setValue(configSizeToNumber(config.memory.value));
+  if (config.memory.limitFactor !== 'none') {
+    formCtrl.controls.memoryLimit.setValue(
+      (
+        configSizeToNumber(config.memory.value) *
+        configSizeToNumber(config.memory.limitFactor)
+      ).toFixed(1),
+    );
+  }
   if (config.memory.readOnly) {
     formCtrl.controls.memory.disable();
+    formCtrl.controls.memoryLimit.disable();
   }
 
   formCtrl.controls.image.setValue(config.image.value);
 
-  formCtrl.controls.imageVSCode.setValue(config.imageVSCode.value);
+  formCtrl.controls.imageGroupOne.setValue(config.imageGroupOne.value);
 
-  formCtrl.controls.imageRStudio.setValue(config.imageRStudio.value);
+  formCtrl.controls.imageGroupTwo.setValue(config.imageGroupTwo.value);
 
   formCtrl.controls.imagePullPolicy.setValue(config.imagePullPolicy.value);
   if (config.imagePullPolicy.readOnly) {

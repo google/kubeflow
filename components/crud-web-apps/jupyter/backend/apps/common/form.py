@@ -8,6 +8,10 @@ from . import utils
 
 log = logging.getLogger(__name__)
 
+SERVER_TYPE_ANNOTATION = "notebooks.kubeflow.org/server-type"
+HEADERS_ANNOTATION = "notebooks.kubeflow.org/http-headers-request-set"
+URI_REWRITE_ANNOTATION = "notebooks.kubeflow.org/http-rewrite-uri"
+
 
 def get_form_value(body, defaults, body_field, defaults_field=None):
     """
@@ -136,39 +140,75 @@ def set_notebook_image_pull_policy(notebook, body, defaults):
 
 
 def set_server_type(notebook, body, defaults):
-    valid_server_types = ["jupyter", "vs-code", "rstudio"]
+    valid_server_types = ["jupyter", "group-one", "group-two"]
     notebook_annotations = notebook["metadata"]["annotations"]
     server_type = get_form_value(body, defaults, "serverType")
-    if server_type == "" :
+    if server_type == "":
         server_type == "jupyter"
     if server_type not in valid_server_types:
-        raise BadRequest("'%s' is not a valid server type" % server_type) 
+        raise BadRequest("'%s' is not a valid server type" % server_type)
 
     nb_name = get_form_value(body, defaults, "name")
     nb_ns = get_form_value(body, defaults, "namespace")
-    rstudio_header = ('{"X-RStudio-Root-Path":"/notebook/%s/%s/"}' % (nb_ns, nb_name))
-
-    notebook_annotations["notebooks.kubeflow.org/server-type"] = server_type
-    if server_type == "vs-code" or server_type == "rstudio":
-        notebook_annotations["notebooks.kubeflow.org/http-rewrite-uri"] = "/"
-    if server_type == "rstudio":
-        notebook_annotations["notebooks.kubeflow.org/http-headers-request-set"] = rstudio_header
+    rstudio_header = '{"X-RStudio-Root-Path":"/notebook/%s/%s/"}' % (nb_ns,
+                                                                     nb_name)
+    notebook_annotations[SERVER_TYPE_ANNOTATION] = server_type
+    if server_type == "group-one" or server_type == "group-two":
+        notebook_annotations[URI_REWRITE_ANNOTATION] = "/"
+    if server_type == "group-two":
+        notebook_annotations[HEADERS_ANNOTATION] = rstudio_header
 
 
 def set_notebook_cpu(notebook, body, defaults):
     container = notebook["spec"]["template"]["spec"]["containers"][0]
 
     cpu = get_form_value(body, defaults, "cpu")
+    cpu_limit = get_form_value(body, defaults, "cpuLimit")
+
+    limit_factor = utils.load_spawner_ui_config()["cpu"].get("limitFactor")
+    if not cpu_limit and limit_factor != "none":
+        cpu_limit = str(round((float(cpu) * float(limit_factor)), 1))
 
     container["resources"]["requests"]["cpu"] = cpu
+
+    if cpu_limit is None or cpu_limit == "":
+        # user explicitly asked for no limits
+        return
+
+    if float(cpu_limit) < float(cpu):
+        raise BadRequest("CPU limit must be greater than the request")
+
+    limits = container["resources"].get("limits", {})
+    limits["cpu"] = cpu_limit
+    container["resources"]["limits"] = limits
 
 
 def set_notebook_memory(notebook, body, defaults):
     container = notebook["spec"]["template"]["spec"]["containers"][0]
 
     memory = get_form_value(body, defaults, "memory")
+    memory_limit = get_form_value(body, defaults, "memoryLimit")
+
+    limit_factor = utils.load_spawner_ui_config()["memory"].get("limitFactor")
+    if not memory_limit and limit_factor != "none":
+        memory_limit = str(
+            round((
+                float(memory.replace('Gi', '')) * float(
+                    limit_factor)), 1)) + "Gi"
 
     container["resources"]["requests"]["memory"] = memory
+
+    if memory_limit is None or memory_limit == "":
+        # user explicitly asked for no limits
+        return
+
+    if float(memory_limit.replace('Gi', '')) < float(
+            memory.replace('Gi', '')):
+        raise BadRequest("Memory limit must be greater than the request")
+
+    limits = container["resources"].get("limits", {})
+    limits["memory"] = memory_limit
+    container["resources"]["limits"] = limits
 
 
 def set_notebook_tolerations(notebook, body, defaults):

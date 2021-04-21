@@ -9,10 +9,10 @@ export const environment = {
   ui: 'default',
   jupyterlabLogo: 'static/assets/jupyterlab-logo.svg',
   jupyterIcon: 'static/assets/jupyter-icon.svg',
-  vscodeLogo: 'static/assets/visual-studio-code-logo.svg',
-  vscodeIcon: 'static/assets/visual-studio-code-icon.svg',
-  rstudioLogo: 'static/assets/rstudio-logo.svg',
-  rstudioIcon: 'static/assets/rstudio-icon.svg',
+  groupOneLogo: 'static/assets/group-one-logo.svg',
+  groupOneIcon: 'static/assets/group-one-icon.svg',
+  groupTwoLogo: 'static/assets/group-two-logo.svg',
+  groupTwoIcon: 'static/assets/group-two-icon.svg',
 
   // Rok specifics
   rokUrl: '',

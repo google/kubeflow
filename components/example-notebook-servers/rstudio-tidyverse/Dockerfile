@@ -1,4 +1,4 @@
-FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio:master-15d229d4
+FROM public.ecr.aws/j1r0q0g6/notebooks/notebook-servers/rstudio:master-ebc0c4f0
 
 # args - software versions
 ARG R_TIDYVERSE_VERSION="1.3.0"

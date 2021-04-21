@@ -13,8 +13,8 @@
         <app-form-image
           [parentForm]="formCtrl"
           [images]="config?.image?.options"
-          [imagesVSCode]="config?.imageVSCode?.options"
-          [imagesRStudio]="config?.imageRStudio?.options"
+          [imagesGroupOne]="config?.imageGroupOne?.options"
+          [imagesGroupTwo]="config?.imageGroupTwo?.options"
           [allowCustomImage]="config?.allowCustomImage"
         ></app-form-image>
 
@@ -65,8 +65,6 @@
       LAUNCH
     </button>
 
-    <button mat-raised-button type="button" (click)="onCancel()">
-      CANCEL
-    </button>
+    <button mat-raised-button type="button" (click)="onCancel()">CANCEL</button>
   </div>
 </div>

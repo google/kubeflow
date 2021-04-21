@@ -8,9 +8,8 @@ describe('RokVolumeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RokVolumeComponent ]
-    })
-    .compileComponents();
+      declarations: [RokVolumeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

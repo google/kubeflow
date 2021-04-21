@@ -107,23 +107,43 @@ export class FormDefaultComponent implements OnInit, OnDestroy {
     // Use the custom image instead
     if (notebook.customImageCheck) {
       notebook.image = notebook.customImage;
-    } else if (notebook.serverType === 'vs-code') { // Set notebook image from imageVSCode
-        notebook.image = notebook.imageVSCode;
-    } else if (notebook.serverType === 'rstudio') { // Set notebook image from imageRStudio
-        notebook.image = notebook.imageRStudio;
+    } else if (notebook.serverType === 'group-one') {
+      // Set notebook image from imageGroupOne
+      notebook.image = notebook.imageGroupOne;
+    } else if (notebook.serverType === 'group-two') {
+      // Set notebook image from imageGroupTwo
+      notebook.image = notebook.imageGroupTwo;
     }
 
     // Remove unnecessary images from the request sent to the backend
-    delete notebook.imageVSCode;
-    delete notebook.imageRStudio;
+    delete notebook.imageGroupOne;
+    delete notebook.imageGroupTwo;
 
     // Ensure CPU input is a string
     if (typeof notebook.cpu === 'number') {
       notebook.cpu = notebook.cpu.toString();
     }
 
+    // Remove cpuLimit from request if null
+    if (notebook.cpuLimit == null) {
+      delete notebook.cpuLimit;
+      // Ensure CPU Limit input is a string
+    } else if (typeof notebook.cpuLimit === 'number') {
+      notebook.cpuLimit = notebook.cpuLimit.toString();
+    }
+
+    // Remove memoryLimit from request if null
+    if (notebook.memoryLimit == null) {
+      delete notebook.memoryLimit;
+      // Add Gi to memoryLimit
+    } else if (notebook.memoryLimit) {
+      notebook.memoryLimit = notebook.memoryLimit.toString() + 'Gi';
+    }
+
     // Add Gi to all sizes
-    notebook.memory = notebook.memory.toString() + 'Gi';
+    if (notebook.memory) {
+      notebook.memory = notebook.memory.toString() + 'Gi';
+    }
 
     if (notebook.workspace.size) {
       notebook.workspace.size = notebook.workspace.size.toString() + 'Gi';

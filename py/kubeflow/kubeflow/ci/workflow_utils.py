@@ -1,7 +1,7 @@
 import logging
 import os
-import string
 import random
+import string
 
 from kubeflow.testing import argo_build_util
 
@@ -29,7 +29,7 @@ AWS_WORKER_IMAGE = "public.ecr.aws/j1r0q0g6/kubeflow-testing:latest"
 
 class ArgoTestBuilder:
     def __init__(self, name=None, namespace=None, bucket=None,
-                 test_target_name=None,
+                 test_target_name=None, release=False,
                  **kwargs):
         self.name = name
         self.namespace = namespace
@@ -37,6 +37,7 @@ class ArgoTestBuilder:
         self.template_label = "argo_test"
         self.test_target_name = test_target_name
         self.mkdir_task_name = "make-artifacts-dir"
+        self.release = release
 
         # *********************************************************************
         #
@@ -141,7 +142,8 @@ class ArgoTestBuilder:
         mem_lim = "4Gi"
         if mem_override:
             mem_lim = mem_override
-        active_deadline_sec=3000
+
+        active_deadline_sec = 3000
         if deadline_override:
             active_deadline_sec = deadline_override
 
@@ -199,6 +201,46 @@ class ArgoTestBuilder:
 
         return task_template
 
+    # Common tasks
+    def create_install_modules_task(self, task_template, workingDir):
+        install = argo_build_util.deep_copy(task_template)
+
+        install["name"] = "npm-modules-install"
+        install["container"]["image"] = "node:12.20.1-stretch-slim"
+
+        install["container"]["command"] = ["npm"]
+        install["container"]["args"] = ["ci"]
+
+        install["container"]["workingDir"] = workingDir
+
+        return install
+
+    def create_format_typescript_task(self, task_template, workingDir):
+        format_task = argo_build_util.deep_copy(task_template)
+
+        format_task["name"] = "check-frontend-formatting"
+        format_task["container"]["image"] = "node:12.20.1-stretch-slim"
+
+        format_task["container"]["command"] = ["npm"]
+        format_task["container"]["args"] = ["run", "format:check"]
+
+        format_task["container"]["workingDir"] = workingDir
+
+        return format_task
+
+    def create_format_python_task(self, task_template, workingDir):
+        format_task = argo_build_util.deep_copy(task_template)
+
+        format_task["name"] = "check-python-formatting"
+        format_task["container"]["image"] = "python:3.7-slim-buster"
+
+        format_task["container"]["command"] = ["/bin/sh", "-c"]
+        format_task["container"]["args"] = ["pip install flake8 && flake8 ."]
+
+        format_task["container"]["workingDir"] = workingDir
+
+        return format_task
+
     def create_kaniko_task(self, task_template, dockerfile, context,
                            destination, no_push=False):
         """
@@ -213,12 +255,19 @@ class ArgoTestBuilder:
 
         # append the tag base-commit[0:7]
         if ":" not in destination:
-            sha = os.getenv("PULL_BASE_SHA", "12341234kanikotest")
-            base = os.getenv("PULL_BASE_REF", "master")
-            destination += ":%s-%s" % (base, sha[0:8])
+            if self.release:
+                with open(os.path.join("/src/kubeflow/kubeflow",
+                                       "releasing/version/VERSION")) as f:
+                    version = f.read().strip()
+                destination += ":%s" % version
+            else:
+                sha = os.getenv("PULL_BASE_SHA", "12341234kanikotest")
+                base = os.getenv("PULL_BASE_REF", "master")
+                destination += ":%s-%s" % (base, sha[0:8])
 
         # add short UUID to step name to ensure it is unique
-        kaniko["name"] = "kaniko-build-push-" + ''.join(random.choices(alphabet, k=8))
+        random_suffix = ''.join(random.choices(alphabet, k=8))
+        kaniko["name"] = "kaniko-build-push-" + random_suffix
         kaniko["container"]["image"] = "gcr.io/kaniko-project/executor:v1.5.0"
         kaniko["container"]["command"] = ["/kaniko/executor"]
         kaniko["container"]["args"] = ["--dockerfile=%s" % dockerfile,

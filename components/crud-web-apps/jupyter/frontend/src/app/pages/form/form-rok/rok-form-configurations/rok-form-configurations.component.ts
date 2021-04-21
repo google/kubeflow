@@ -6,5 +6,6 @@ import { FormConfigurationsComponent } from '../../form-default/form-configurati
   templateUrl: './rok-form-configurations.component.html',
   styleUrls: ['./rok-form-configurations.component.scss'],
 })
-export class RokFormConfigurationsComponent extends FormConfigurationsComponent
+export class RokFormConfigurationsComponent
+  extends FormConfigurationsComponent
   implements OnInit, OnDestroy {}

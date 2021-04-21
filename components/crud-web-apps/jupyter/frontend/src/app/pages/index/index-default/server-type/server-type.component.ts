@@ -8,21 +8,27 @@ import { MatIconRegistry } from '@angular/material/icon';
 @Component({
   selector: 'app-server-type',
   templateUrl: './server-type.component.html',
-  styleUrls: ['./server-type.component.scss']
+  styleUrls: ['./server-type.component.scss'],
 })
 export class ServerTypeComponent implements TableColumnComponent {
-
   constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon('jupyterlab-icon', sanitizer.bypassSecurityTrustResourceUrl(environment.jupyterIcon));
-    iconRegistry.addSvgIcon('vs-code-icon', sanitizer.bypassSecurityTrustResourceUrl(environment.vscodeIcon));
-    iconRegistry.addSvgIcon('rstudio-icon', sanitizer.bypassSecurityTrustResourceUrl(environment.rstudioIcon));
+    iconRegistry.addSvgIcon(
+      'jupyterlab-icon',
+      sanitizer.bypassSecurityTrustResourceUrl(environment.jupyterIcon),
+    );
+    iconRegistry.addSvgIcon(
+      'group-one-icon',
+      sanitizer.bypassSecurityTrustResourceUrl(environment.groupOneIcon),
+    );
+    iconRegistry.addSvgIcon(
+      'group-two-icon',
+      sanitizer.bypassSecurityTrustResourceUrl(environment.groupTwoIcon),
+    );
   }
 
   notebookServerType: string;
 
   set element(notebook: NotebookProcessedObject) {
-    this.notebookServerType = notebook.serverType
+    this.notebookServerType = notebook.serverType;
   }
-
 }
-

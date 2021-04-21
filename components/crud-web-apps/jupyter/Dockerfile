@@ -11,8 +11,9 @@ FROM node:12-buster-slim as frontend-kubeflow-lib
 
 WORKDIR /src
 
+ENV NG_CLI_ANALYTICS "ci"
 COPY ./common/frontend/kubeflow-common-lib/package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY ./common/frontend/kubeflow-common-lib/ .
 RUN npm run build
@@ -21,11 +22,15 @@ RUN npm run build
 FROM node:12-buster-slim as frontend
 
 WORKDIR /src
-COPY ./jupyter/frontend/package*.json ./
-RUN npm install
-COPY --from=frontend-kubeflow-lib /src/dist/kubeflow/ ./node_modules/kubeflow/
 
-COPY ./jupyter/frontend/ .
+COPY ./jupyter/frontend/package*.json ./
+COPY ./jupyter/frontend/tsconfig*.json ./
+COPY ./jupyter/frontend/angular.json ./
+COPY ./jupyter/frontend/src ./src
+
+ENV NG_CLI_ANALYTICS "ci"
+RUN npm ci
+COPY --from=frontend-kubeflow-lib /src/dist/kubeflow/ ./node_modules/kubeflow/
 
 RUN npm run build -- --output-path=./dist/default --configuration=production
 RUN npm run build -- --output-path=./dist/rok --configuration=rok-prod

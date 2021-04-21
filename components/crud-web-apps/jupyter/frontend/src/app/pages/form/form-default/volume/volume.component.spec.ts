@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VolumeComponent } from "./volume.component";
+import { VolumeComponent } from './volume.component';
 
-describe("VolumeComponent", () => {
+describe('VolumeComponent', () => {
   let component: VolumeComponent;
   let fixture: ComponentFixture<VolumeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [VolumeComponent]
+      declarations: [VolumeComponent],
     }).compileComponents();
   }));
 
@@ -18,7 +18,7 @@ describe("VolumeComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -8,9 +8,8 @@ describe('RokFormWorkspaceVolumeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RokFormWorkspaceVolumeComponent ]
-    })
-    .compileComponents();
+      declarations: [RokFormWorkspaceVolumeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

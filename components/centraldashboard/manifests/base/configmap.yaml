@@ -27,24 +27,21 @@ data:
         },
         {
           "type": "item",
+          "link": "/katib/",
+          "text": "Experiments (AutoML)",
+          "icon": "kubeflow:katib"
+        },
+        {
+          "type": "item",
+          "text": "Experiments (KFP)",
+          "link": "/pipeline/#/experiments",
+          "icon": "done-all"
+        },
+        {
+          "type": "item",
           "link": "/pipeline/#/pipelines",
           "text": "Pipelines",
           "icon": "kubeflow:pipeline-centered"
-        },
-        {
-          "type": "section",
-          "text": "Experiments",
-          "icon": "done-all",
-          "items": [
-            {
-              "link": "/pipeline/#/experiments",
-              "text": "Pipelines"
-            },
-            {
-              "link": "/katib/",
-              "text": "AutoML"
-            }
-          ]
         },
         {
           "type": "item",

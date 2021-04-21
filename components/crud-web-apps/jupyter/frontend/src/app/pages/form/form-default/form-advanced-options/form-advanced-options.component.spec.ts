@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormAdvancedOptionsComponent } from "./form-advanced-options.component";
+import { FormAdvancedOptionsComponent } from './form-advanced-options.component';
 
-describe("FormAdvancedOptionsComponent", () => {
+describe('FormAdvancedOptionsComponent', () => {
   let component: FormAdvancedOptionsComponent;
   let fixture: ComponentFixture<FormAdvancedOptionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FormAdvancedOptionsComponent]
+      declarations: [FormAdvancedOptionsComponent],
     }).compileComponents();
   }));
 
@@ -18,7 +18,7 @@ describe("FormAdvancedOptionsComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -65,7 +65,7 @@ export const defaultConfig = {
       matHeaderCellDef: 'Type',
       matColumnDef: 'type',
       value: new ComponentValue({
-        component: ServerTypeComponent
+        component: ServerTypeComponent,
       }),
     },
     {

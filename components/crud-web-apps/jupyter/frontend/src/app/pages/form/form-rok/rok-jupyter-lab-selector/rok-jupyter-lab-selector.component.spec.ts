@@ -8,9 +8,8 @@ describe('RokJupyterLabSelectorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RokJupyterLabSelectorComponent ]
-    })
-    .compileComponents();
+      declarations: [RokJupyterLabSelectorComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

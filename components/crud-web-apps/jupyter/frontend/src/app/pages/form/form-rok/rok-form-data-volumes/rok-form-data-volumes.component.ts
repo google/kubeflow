@@ -6,9 +6,7 @@ import { addRokDataVolume } from '../utils';
 @Component({
   selector: 'app-rok-form-data-volumes',
   templateUrl: './rok-form-data-volumes.component.html',
-  styleUrls: [
-    './rok-form-data-volumes.component.scss',
-  ],
+  styleUrls: ['./rok-form-data-volumes.component.scss'],
 })
 export class RokFormDataVolumesComponent implements OnInit {
   @Input() parentForm: FormGroup;

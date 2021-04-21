@@ -18,7 +18,7 @@ def get_config(mode):
     cfg_class = config_classes.get(mode)
     if not cfg_class:
         raise RuntimeError("Backend mode '%s' is not implemented. Choose one"
-                            " of %s" % (mode, list(config_classes.keys())))
+                           " of %s" % (mode, list(config_classes.keys())))
     return cfg_class()
 
 

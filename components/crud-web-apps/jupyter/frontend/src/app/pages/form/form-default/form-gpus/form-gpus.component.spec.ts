@@ -8,9 +8,8 @@ describe('FormGpusComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormGpusComponent ]
-    })
-    .compileComponents();
+      declarations: [FormGpusComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

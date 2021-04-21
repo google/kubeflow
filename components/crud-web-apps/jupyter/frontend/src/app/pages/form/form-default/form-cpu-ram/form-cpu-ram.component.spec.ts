@@ -8,9 +8,8 @@ describe('FormCpuRamComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormCpuRamComponent ]
-    })
-    .compileComponents();
+      declarations: [FormCpuRamComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

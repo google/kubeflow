@@ -8,9 +8,8 @@ describe('FormAffinityTolerationsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormAffinityTolerationsComponent ]
-    })
-    .compileComponents();
+      declarations: [FormAffinityTolerationsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

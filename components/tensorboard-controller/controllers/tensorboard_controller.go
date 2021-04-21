@@ -204,7 +204,7 @@ func generateDeployment(tb *tensorboardv1alpha1.Tensorboard, log logr.Logger, r 
 			//If the PVC is mounted as a ReadWriteOnce volume by a pod that is running on a node X,
 			//then we find the NodeName of X so that the Tensorboard server
 			//(that must access the volume) will be deployed on X using nodeAffinity.
-			if pvc.Status.AccessModes[0] == corev1.ReadWriteOnce {
+			if len(pvc.Status.AccessModes) > 0 && pvc.Status.AccessModes[0] == corev1.ReadWriteOnce {
 				if err := generateNodeAffinity(affinity, pvcname, r, tb); err != nil {
 					return nil, err
 				}

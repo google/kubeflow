@@ -1,14 +1,14 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormImageComponent } from "./form-image.component";
+import { FormImageComponent } from './form-image.component';
 
-describe("FormImageComponent", () => {
+describe('FormImageComponent', () => {
   let component: FormImageComponent;
   let fixture: ComponentFixture<FormImageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FormImageComponent]
+      declarations: [FormImageComponent],
     }).compileComponents();
   }));
 
@@ -18,7 +18,7 @@ describe("FormImageComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

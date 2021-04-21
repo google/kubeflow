@@ -17,6 +17,8 @@ spec:
         volumeMounts:
         - mountPath: /etc/config
           name: config-volume
+        - mountPath: /src/apps/default/static/assets
+          name: logos-volume
         env:
         - name: APP_PREFIX
           value: $(JWA_PREFIX)
@@ -31,3 +33,6 @@ spec:
       - configMap:
           name: config
         name: config-volume
+      - configMap:
+          name: jupyter-web-app-logos
+        name: logos-volume
