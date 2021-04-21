@@ -65,14 +65,7 @@ const (
 	istioInjectionLabel = "istio-injection"
 )
 
-var kubeflowNamespaceLabels = map[string]string{
-	"katib-metricscollector-injection":      "enabled",
-	"serving.kubeflow.org/inferenceservice": "enabled",
-	"pipelines.kubeflow.org/enabled":        "true",
-	"app.kubernetes.io/part-of":             "kubeflow-profile",
-}
-
-var enforcedKubeflowNamespaceLabels = map[string]string{}
+var defaultKubeflowNamespaceLabels = map[string]string{}
 
 const DEFAULT_EDITOR = "default-editor"
 const DEFAULT_VIEWER = "default-viewer"
@@ -93,7 +86,7 @@ type ProfileReconciler struct {
 	UserIdHeader           string
 	UserIdPrefix           string
 	WorkloadIdentity       string
-	EnforceNamespaceLabels map[string]string
+	DefaultNamespaceLabels map[string]string
 }
 
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs="*"
@@ -108,7 +101,7 @@ type ProfileReconciler struct {
 func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	logger := r.Log.WithValues("profile", request.NamespacedName)
-	enforcedKubeflowNamespaceLabels = r.EnforceNamespaceLabels
+	defaultKubeflowNamespaceLabels = r.DefaultNamespaceLabels
 
 	// Fetch the Profile instance
 	instance := &profilev1.Profile{}
@@ -138,8 +131,7 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			Name: instance.Name,
 		},
 	}
-	updateNamespaceLabels(ns)
-	enforceNamespaceLabelsFromConfig(ns, logger)
+	setNamespaceLabelsFromConfig(ns)
 	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
@@ -183,8 +175,7 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			for k, v := range foundNs.Labels {
 				oldLabels[k] = v
 			}
-			updateNamespaceLabels(foundNs)
-			enforceNamespaceLabelsFromConfig(foundNs, logger)
+			setNamespaceLabelsFromConfig(foundNs)
 			eq := reflect.DeepEqual(oldLabels, foundNs.Labels)
 			if !eq {
 				err = r.Update(ctx, foundNs)
@@ -630,47 +621,23 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
-func enforceNamespaceLabelsFromConfig(ns *corev1.Namespace, logger logr.Logger) {
+func setNamespaceLabelsFromConfig(ns *corev1.Namespace) {
 	if ns.Labels == nil {
 		ns.Labels = make(map[string]string)
 	}
 
-	for k, v := range enforcedKubeflowNamespaceLabels {
+	for k, v := range defaultKubeflowNamespaceLabels {
 		_, ok := ns.Labels[k]
 		if len(v) == 0 {
 			// When there is an empty value, k should be removed.
 			if ok {
 				delete(ns.Labels, k)
-			}
-		} else {
-			// Add or overwrite value for label.
-			ns.Labels[k] = v
-		}
-	}
-}
-
-func updateNamespaceLabels(ns *corev1.Namespace) bool {
-	updated := false
-
-	if ns.Labels == nil {
-		ns.Labels = make(map[string]string)
-	}
-
-	for k, v := range kubeflowNamespaceLabels {
-		_, ok := ns.Labels[k]
-		if len(v) == 0 {
-			// When there is an empty value, k should be removed.
-			if ok {
-				delete(ns.Labels, k)
-				updated = true
 			}
 		} else {
 			if !ok {
 				// Add label if not exist, otherwise skipping update.
 				ns.Labels[k] = v
-				updated = true
 			}
 		}
 	}
-	return updated
 }

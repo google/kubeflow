@@ -15,5 +15,5 @@ spec:
       - name: manager
         volumeMounts:
         - name: namespace-labels
-          mountPath: /etc/config/labels
+          mountPath: /etc/profile-controller
           readOnly: true

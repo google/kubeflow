@@ -8,7 +8,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func TestUpdateNamespaceLabels(t *testing.T) {
+func TestEnforceNamespaceLabelsFromConfig(t *testing.T) {
 	name := "test-namespace"
 	tests := []map[string]*corev1.Namespace{
 		map[string]*corev1.Namespace{
@@ -54,7 +54,13 @@ func TestUpdateNamespaceLabels(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		updateNamespaceLabels(test["current"])
+		defaultKubeflowNamespaceLabels = map[string]string{
+			"katib-metricscollector-injection":      "enabled",
+			"serving.kubeflow.org/inferenceservice": "enabled",
+			"pipelines.kubeflow.org/enabled":        "true",
+			"app.kubernetes.io/part-of":             "kubeflow-profile",
+		}
+		setNamespaceLabelsFromConfig(test["current"])
 		if !reflect.DeepEqual(test["expected"], test["current"]) {
 			t.Errorf("Expect:\n%v; Output:\n%v", test["expected"], test["current"])
 		}
@@ -63,7 +69,13 @@ func TestUpdateNamespaceLabels(t *testing.T) {
 
 func TestUpdateNamespaceLabels_withLabelRemoval(t *testing.T) {
 	name := "test-namespace"
-	kubeflowNamespaceLabels["removal-label"] = ""
+	defaultKubeflowNamespaceLabels = map[string]string{
+		"katib-metricscollector-injection":      "enabled",
+		"serving.kubeflow.org/inferenceservice": "enabled",
+		"pipelines.kubeflow.org/enabled":        "true",
+		"app.kubernetes.io/part-of":             "kubeflow-profile",
+	}
+	defaultKubeflowNamespaceLabels["removal-label"] = ""
 	current := &corev1.Namespace{
 		ObjectMeta: metav1.ObjectMeta{
 			Labels: map[string]string{
@@ -79,12 +91,13 @@ func TestUpdateNamespaceLabels_withLabelRemoval(t *testing.T) {
 				"user-name":                             "Jim",
 				"katib-metricscollector-injection":      "enabled",
 				"serving.kubeflow.org/inferenceservice": "enabled",
+				"pipelines.kubeflow.org/enabled":        "true",
 				"app.kubernetes.io/part-of":             "kubeflow-profile",
 			},
 			Name: name,
 		},
 	}
-	updateNamespaceLabels(current)
+	setNamespaceLabelsFromConfig(current)
 	if !reflect.DeepEqual(expected, current) {
 		t.Errorf("Expect:\n%v; Output:\n%v", expected, current)
 	}
