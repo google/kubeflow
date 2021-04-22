@@ -131,7 +131,7 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			Name: instance.Name,
 		},
 	}
-	setNamespaceLabelsFromConfig(ns)
+	setNamespaceLabels(ns, defaultKubeflowNamespaceLabels)
 	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
@@ -175,7 +175,8 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			for k, v := range foundNs.Labels {
 				oldLabels[k] = v
 			}
-			setNamespaceLabelsFromConfig(foundNs)
+			setNamespaceLabels(foundNs, defaultKubeflowNamespaceLabels)
+			logger.Info("List of labels to be added to found namespace", "labels", ns.Labels)
 			eq := reflect.DeepEqual(oldLabels, foundNs.Labels)
 			if !eq {
 				err = r.Update(ctx, foundNs)
@@ -621,12 +622,12 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
-func setNamespaceLabelsFromConfig(ns *corev1.Namespace) {
+func setNamespaceLabels(ns *corev1.Namespace, newLabels map[string]string) {
 	if ns.Labels == nil {
 		ns.Labels = make(map[string]string)
 	}
 
-	for k, v := range defaultKubeflowNamespaceLabels {
+	for k, v := range newLabels {
 		_, ok := ns.Labels[k]
 		if len(v) == 0 {
 			// When there is an empty value, k should be removed.
