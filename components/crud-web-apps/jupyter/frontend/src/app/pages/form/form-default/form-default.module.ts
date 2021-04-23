@@ -23,10 +23,6 @@ import { FormDataVolumesComponent } from './form-data-volumes/form-data-volumes.
 import { FormConfigurationsComponent } from './form-configurations/form-configurations.component';
 import { FormAffinityTolerationsComponent } from './form-affinity-tolerations/form-affinity-tolerations.component';
 
-import { TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { HttpClient } from "@angular/common/http";
-
 @NgModule({
   declarations: [
     FormDefaultComponent,
@@ -47,14 +43,7 @@ import { HttpClient } from "@angular/common/http";
     MatCheckboxModule,
     MatSlideToggleModule,
     MatIconModule,
-    MatButtonToggleModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpTranslateLoader,
-        deps: [HttpClient]
-      }
-    })
+    MatButtonToggleModule
   ],
   exports: [
     FormDefaultComponent,
@@ -71,9 +60,4 @@ import { HttpClient } from "@angular/common/http";
   ],
 })
 export class FormDefaultModule {}
-
-// AOT compilation support
-export function httpTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, "../static/assets/i18n/", ".json");
-}
 
