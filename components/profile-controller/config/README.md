@@ -24,3 +24,8 @@ The breakdown is the following:
         - Add KFAM container.
         - Add KFAM Service and VirtualService.
     - `overlays/standalone`: Install `profile-controller` in its own namespace. Useful for testing or for users that prefer to install just the controller.
+
+## Namespace label injection
+
+For kubeflow overlay, we inject several namespace labels in each profile by default in `overlays/kubeflow/namespace-labels.yaml`, it is to enable other 
+kubeflow components and cloud infrastructure to work appropriately in multi-user mode. You can refer to the yaml file for more detail about how to use it to add or remove labels as your scenario fits.

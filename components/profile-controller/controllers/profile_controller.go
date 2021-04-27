@@ -65,8 +65,6 @@ const (
 	istioInjectionLabel = "istio-injection"
 )
 
-var defaultKubeflowNamespaceLabels = map[string]string{}
-
 const DEFAULT_EDITOR = "default-editor"
 const DEFAULT_VIEWER = "default-viewer"
 
@@ -101,7 +99,7 @@ type ProfileReconciler struct {
 func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	logger := r.Log.WithValues("profile", request.NamespacedName)
-	defaultKubeflowNamespaceLabels = r.DefaultNamespaceLabels
+	defaultKubeflowNamespaceLabels := r.DefaultNamespaceLabels
 
 	// Fetch the Profile instance
 	instance := &profilev1.Profile{}
