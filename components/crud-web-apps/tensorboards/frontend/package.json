@@ -31,7 +31,7 @@
     "date-fns": "^1.29.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.14",
     "material-icons": "^0.3.1",
     "raw-loader": "^4.0.0",
     "rxjs": "~6.4.0",
