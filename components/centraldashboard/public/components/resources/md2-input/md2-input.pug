@@ -3,7 +3,8 @@
     slot(name='prefix', slot='prefix')
     iron-input#ironInput(allowed-pattern='[[allowedPattern]]', bind-value='{{value}}')
         input#inputElement(placeholder='[[placeholder]]', maxlength$='[[maxlength]]'
-            on-focus='inputFocused', on-blur='inputBlurred', on-keydown='validateRange')
+            on-focus='inputFocused', on-blur='inputBlurred', on-keydown='validateRange',
+            disabled='[[disabled]]')
     slot(name='suffix', slot='suffix')
     iron-a11y-keys#keys(target='[[inputElement]]', keys='enter', on-keys-pressed='fireEnter')
 aside.Error [[error]]
