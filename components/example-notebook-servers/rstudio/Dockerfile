@@ -92,6 +92,8 @@ RUN curl -sL "https://download2.rstudio.org/server/bionic/${RSTUDIO_ARCH}/rstudi
  && mv -n /var/run/rstudio-server* /run \
     # use advisory file-locks to improve PVC support
  && echo "lock-type=advisory" > /etc/rstudio/file-locks \
+    # allow kubeflow to display rstudio in an iframe
+ && echo "www-frame-origin=same" >> /etc/rstudio/rserver.conf \
     # allows the non-root NB_USER to run rstudio
  && chown -R ${NB_USER}:users /etc/rstudio \
  && chown -R ${NB_USER}:users /run/rstudio-server* \
