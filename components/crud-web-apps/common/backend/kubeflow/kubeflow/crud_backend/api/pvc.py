@@ -2,6 +2,13 @@ from .. import authz
 from . import v1_core
 
 
+def get_pvc(pvc, namespace):
+    authz.ensure_authorized(
+        "get", "", "v1", "persistentvolumeclaims", namespace
+    )
+    return v1_core.read_namespaced_persistent_volume_claim(pvc, namespace)
+
+
 def create_pvc(pvc, namespace):
     authz.ensure_authorized(
         "create", "", "v1", "persistentvolumeclaims", namespace
