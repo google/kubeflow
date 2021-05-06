@@ -30,7 +30,7 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM gcr.io/distroless/base:debug
+FROM gcr.io/distroless/base:nonroot
 WORKDIR /
 COPY --from=builder /workspace/notebook-controller/manager .
 COPY --from=builder /workspace/notebook-controller/third_party/license.txt third_party/license.txt
