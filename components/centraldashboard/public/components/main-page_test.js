@@ -46,6 +46,10 @@ const MENU_LINKS = [
         link: '/pipeline/#/runs',
         text: 'Runs',
     },
+    {
+        link: '/myapp/{ns}',
+        text: 'MyApp',
+    }
 ];
 
 describe('Main Page', () => {
@@ -330,4 +334,27 @@ describe('Main Page', () => {
             expect(activeMenuItem.length).toBe(1);
             expect(activeMenuItem[0].parentElement.href).toBe('/katib/trials');
         });
+
+    it('Replace namespace path by current namespace',
+        () => {
+            mainPage.menuLinks = MENU_LINKS;
+            flush();
+            mainPage.set('queryParams.ns', 'test');
+            expect(mainPage._buildHref('/myapp/{ns}', {ns: 'test'})).toBe(
+                   '/myapp/test?ns=test');
+       })
+
+    it('Sets active menu item from namespaced URL',
+        () => {
+            mainPage.menuLinks = MENU_LINKS;
+            flush();
+            mainPage.set('queryParams.ns', 'test');
+            mainPage._setActiveMenuLink('/myapp/test', '');
+            flush();
+            const activeMenuItem = getSelectedMenuItem();
+            expect(activeMenuItem.length).toBe(1);
+            expect(activeMenuItem[0].parentElement.href).toBe(
+                   '/myapp/test?ns=test');
+       });
+
 });
