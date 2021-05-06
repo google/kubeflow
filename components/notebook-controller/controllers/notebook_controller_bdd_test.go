@@ -62,10 +62,7 @@ var _ = Describe("Notebook controller", func() {
 
 			Eventually(func() bool {
 				err := k8sClient.Get(ctx, notebookLookupKey, createdNotebook)
-				if err != nil {
-					return false
-				}
-				return true
+				return err == nil
 			}, timeout, interval).Should(BeTrue())
 			/*
 				Checking for the underlying statefulset.

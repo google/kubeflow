@@ -95,3 +95,14 @@ build-gcr: test
 push-gcr: build-gcr
 	docker push $(IMG):$(TAG)
 	@echo Pushed $(IMG):$(TAG)
+
+GOLANGCI_LINT = $(shell pwd)/bin/golangci-lint
+
+golangci-lint:
+ifeq (, $(shell which golangci-lint))
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/77e211ba75b7802fe5e40b276bca0e928553fc7f/install.sh | sh -s -- -b $(shell dirname $(GOLANGCI_LINT)) v1.29.0 ;
+endif
+
+.PHONY: lint
+lint: golangci-lint ## Run golangci-lint linter
+	$(GOLANGCI_LINT) run --new-from-rev=origin/master
