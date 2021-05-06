@@ -11,6 +11,7 @@
 package kfam
 
 import (
+	"strings"
 	"encoding/json"
 	"net/http"
 	"net/url"
@@ -83,7 +84,7 @@ func NewKfamClient(userIdHeader string, userIdPrefix string, clusterAdmin string
 			kubeClient:        kubeClient,
 			roleBindingLister: roleBindingLister,
 		},
-		clusterAdmin: []string{clusterAdmin},
+		clusterAdmin: strings.Split(clusterAdmin, ","),
 		userIdHeader: userIdHeader,
 		userIdPrefix: userIdPrefix,
 	}, nil
