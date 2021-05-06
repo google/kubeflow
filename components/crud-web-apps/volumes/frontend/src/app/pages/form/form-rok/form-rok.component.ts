@@ -27,7 +27,8 @@ import { concatMap } from 'rxjs/operators';
   ],
 })
 // TODO: Use an abstract class to eliminate common code
-export class FormRokComponent extends FormDefaultComponent
+export class FormRokComponent
+  extends FormDefaultComponent
   implements OnInit, OnDestroy {
   public env = environment;
 
