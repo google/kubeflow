@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "schedule:weekly",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":semanticCommitScope(deps)",
+    "group:linters",
+    "group:googleapis",
+    "group:goOpenapi"
+  ],
+  "packageRules": [
+    {
+      "datasources": ["docker"],
+      "updateTypes": ["patch"],
+      "groupName": "docker patch updates",
+      "groupSlug": "docker-updates"
+    },
+    {
+      "datasources": ["go"],
+      "updateTypes": ["patch", "minor"],
+      "groupName": "go.mod dependencies",
+      "groupSlug": "go-mod-updates"
+    },
+    {
+      "datasources": ["npm"],
+      "rangeStrategy": "update-lockfile",
+    },
+    {
+      "datasources": ["npm"],
+      "updateTypes": ["patch", "minor"],
+      "groupName": "npm dependencies",
+      "groupSlug": "npm-updates",
+    },
+    { // major updates do not create PRs automatically
+      "updateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+    }
+  ],
+  "separateMinorPatch": true
+}
