@@ -1,0 +1,7 @@
+version: "2"
+domain: kubeflow.org
+repo: pvcviewer-controller
+resources:
+- group: pvcviewer
+  version: v1alpha1
+  kind: pvcviewer

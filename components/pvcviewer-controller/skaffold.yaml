@@ -1,0 +1,40 @@
+# Reference: https://skaffold.dev/docs/references/yaml/
+#
+# TODO(jlewi): This is just a rudimentary skaffold config.
+# Users probably need to create their own profile based on the resources (e.g. GCR)
+# They have access too.
+apiVersion: skaffold/v2alpha1
+kind: Config
+metadata:
+  name: notebook-controller
+build:
+  artifacts:
+  - image: gcr.io/kubeflow-ci/pvcviewer-controller
+    # Context should be ${KUBEFLOW_REPO}/components
+    context: ..
+    kaniko:
+      dockerfile: pvcviewer-controller/Dockerfile
+      buildContext:
+        gcsBucket: kubeflow-ci_skaffold
+      env: 
+        # TODO(GoogleContainerTools/skaffold#3468) skaffold doesn't
+        # appear to work with workload identity and the kubeflow-testing
+        # cluster isn't using it yet.
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secret/key.json
+      cache: {}
+  cluster:    
+    pullSecretName: gcp-credentials
+    # Build in the kaniko namespace because we need to disable ISTIO sidecar injection
+    # see  GoogleContainerTools/skaffold#3442
+    namespace: kubeflow-test-infra
+    resources:
+      requests:
+        # TODO(https://github.com/kubeflow/testing/issues/565): Right now the nodes in our cluster
+        # have a max of 8 CPU so we need to set the requests small enough so the pods get scheduled.
+        cpu: 6
+        memory: 16Gi
+
+# TODO(jlewi): We should add a deploy section to actually deploy the controller. Assuming 
+# kubeflow/manifests is checked out we should be able to just point to he kustomize manifest in that
+# directory

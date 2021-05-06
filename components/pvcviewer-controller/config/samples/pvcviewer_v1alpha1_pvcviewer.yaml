@@ -1,0 +1,9 @@
+apiVersion: pvcviewer.kubeflow.org/v1alpha1
+kind: PVCViewer
+metadata:
+  name: workspace-test
+  namespace: user
+spec:
+  # Add fields here
+  viewerimage: davidspek/kubeflow-filebrowser:0.31
+  pvcname: workspace-test
