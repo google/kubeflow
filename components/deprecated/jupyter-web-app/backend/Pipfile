@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask-cors = "==3.0.7"
+flask-cors = "==3.0.9"
 flask = "==1.0.2"
 kubernetes = "==8.0.1"
 
