@@ -12,7 +12,7 @@ spec:
     listKind: TensorboardList
     plural: tensorboards
     singular: tensorboard
-  scope: ""
+  scope: Namespaced
   subresources:
     status: {}
   validation:
