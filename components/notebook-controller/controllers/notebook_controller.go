@@ -601,18 +601,25 @@ func (r *NotebookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 				}},
 			}
 		})
+
+	// helper common function for pod predicates. Filter pods not containing the "notebook-name" label key
+	checkNBLabel := func (m metav1.Object) bool {
+		_, ok := m.GetLabels()["notebook-name"]
+		return ok
+	}
+	// TODO: refactor to use predicate.NewPredicateFuncs when controller-runtime module version is updated
 	p := predicate.Funcs{
 		UpdateFunc: func(e event.UpdateEvent) bool {
-			if _, ok := e.MetaOld.GetLabels()["notebook-name"]; !ok {
-				return false
-			}
-			return e.ObjectOld != e.ObjectNew
+			return checkNBLabel(e.MetaOld) && e.ObjectOld != e.ObjectNew
 		},
 		CreateFunc: func(e event.CreateEvent) bool {
-			if _, ok := e.Meta.GetLabels()["notebook-name"]; !ok {
-				return false
-			}
-			return true
+			return checkNBLabel(e.Meta)
+		},
+		DeleteFunc: func(e event.DeleteEvent) bool {
+			return checkNBLabel(e.Meta)
+		},
+		GenericFunc: func(e event.GenericEvent) bool {
+			return checkNBLabel(e.Meta)
 		},
 	}
 
@@ -626,25 +633,28 @@ func (r *NotebookReconciler) SetupWithManager(mgr ctrl.Manager) error {
 			}
 		})
 
+	// helper common function for event predicates. Filter events not coming from Pod or STS, and coming from unknown NBs
+	checkEvent := func (o runtime.Object, m metav1.Object) bool {
+		event := o.(*corev1.Event)
+		nbName, err := nbNameFromInvolvedObject(r.Client, &event.InvolvedObject)
+		if err != nil {
+			return false
+		}
+		return isStsOrPodEvent(event) && nbNameExists(r.Client, nbName, m.GetNamespace())
+	}
+	// TODO: refactor to use predicate.NewPredicateFuncs when controller-runtime module version is updated
 	eventsPredicates := predicate.Funcs{
 		UpdateFunc: func(e event.UpdateEvent) bool {
-			event := e.ObjectNew.(*corev1.Event)
-			nbName, err := nbNameFromInvolvedObject(r.Client, &event.InvolvedObject)
-			if err != nil {
-				return false
-			}
-			return e.ObjectOld != e.ObjectNew &&
-				isStsOrPodEvent(event) &&
-				nbNameExists(r.Client, nbName, e.MetaNew.GetNamespace())
+			return e.ObjectOld != e.ObjectNew && checkEvent(e.ObjectNew, e.MetaNew)
 		},
 		CreateFunc: func(e event.CreateEvent) bool {
-			event := e.Object.(*corev1.Event)
-			nbName, err := nbNameFromInvolvedObject(r.Client, &event.InvolvedObject)
-			if err != nil {
-				return false
-			}
-			return isStsOrPodEvent(event) &&
-				nbNameExists(r.Client, nbName, e.Meta.GetNamespace())
+			return checkEvent(e.Object, e.Meta)
+		},
+		DeleteFunc: func(e event.DeleteEvent) bool {
+			return checkEvent(e.Object, e.Meta)
+		},
+		GenericFunc: func(e event.GenericEvent) bool {
+			return checkEvent(e.Object, e.Meta)
 		},
 	}
 
