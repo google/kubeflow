@@ -52,6 +52,7 @@ export class IndexDefaultComponent implements OnInit, OnDestroy {
     // Poll for new data and reset the poller if different data is found
     this.subs.add(
       this.poller.start().subscribe(() => {
+        //this.config = defaultConfig();
         if (!this.currNamespace) {
           return;
         }

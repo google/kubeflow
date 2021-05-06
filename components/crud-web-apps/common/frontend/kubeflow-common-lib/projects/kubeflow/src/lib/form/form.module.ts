@@ -26,10 +26,7 @@ import { AdvancedOptionsComponent } from './advanced-options/advanced-options.co
 import { PopoverModule } from '../popover/popover.module';
 import { SubmitBarComponent } from './submit-bar/submit-bar.component';
 import { StepInfoComponent } from './step-info/step-info.component';
-
-import { TranslateLoader, TranslateModule} from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { HttpClient } from "@angular/common/http";
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -54,13 +51,7 @@ import { HttpClient } from "@angular/common/http";
     IconModule,
     MatProgressSpinnerModule,
     PopoverModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: httpTranslateLoader,
-        deps: [HttpClient]
-      }
-    })
+    TranslateModule,
   ],
   exports: [
     FormSectionComponent,
@@ -81,12 +72,7 @@ import { HttpClient } from "@angular/common/http";
     MatTooltipModule,
     MatIconModule,
     MatDividerModule,
-    TranslateModule
+    TranslateModule,
   ],
 })
 export class FormModule {}
-
-// AOT compilation support
-export function httpTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, "../static/assets/i18n/", ".json");
-}

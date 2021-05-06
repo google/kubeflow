@@ -1,7 +1,7 @@
 <!--TODO(kimwnasptd): we shouldn't add any padding in the top at all in here-->
 <!--if a page would like to add some padding then it should be its own-->
 <!--responsibility.-->
-<div class="center-flex " [class.space-top]="tableTheme == TABLE_THEME.CARD">
+<div class="center-flex" [class.space-top]="tableTheme == TABLE_THEME.CARD">
   <!--CARD table theme-->
   <mat-card
     *ngIf="tableTheme == TABLE_THEME.CARD"
@@ -10,7 +10,7 @@
     [style.min-width]="minTableWidth"
   >
     <div class="header card-title-padding">
-      <div>{{ config?.title }}</div>
+      <div>{{ config?.title | translate }}</div>
 
       <button
         *ngIf="config?.newButtonText"
@@ -21,7 +21,7 @@
         (click)="newButtonTriggered()"
       >
         <mat-icon class="new-resource-button">add</mat-icon>
-        {{ config?.newButtonText }}
+        {{ config?.newButtonText | translate }}
       </button>
     </div>
 
@@ -45,7 +45,7 @@
     *ngIf="tableTheme == TABLE_THEME.FLAT"
   >
     <div class="header">
-      <p>{{ config?.title }}</p>
+      <p>{{ config?.title | translate }}</p>
 
       <button
         *ngIf="config?.newButtonText"
@@ -56,7 +56,7 @@
         (click)="newButtonTriggered()"
       >
         <mat-icon class="new-resource-button">add</mat-icon>
-        {{ config?.newButtonText }}
+        {{ config?.newButtonText | translate }}
       </button>
     </div>
 

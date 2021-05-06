@@ -1,5 +1,9 @@
 <mat-form-field class="wide" appearance="outline">
-  <mat-label>{{ "formName.h3Name" | translate }}</mat-label>
-  <input matInput placeholder="Name" [formControl]="nameControl" />
-  <mat-error>{{ nameError() }}</mat-error>
+  <mat-label>{{ 'common.name' | translate }}</mat-label>
+  <input
+    matInput
+    placeholder="{{ 'common.name' | translate }}"
+    [formControl]="nameControl"
+  />
+  <mat-error>{{ nameError().key | translate: nameError().params }}</mat-error>
 </mat-form-field>

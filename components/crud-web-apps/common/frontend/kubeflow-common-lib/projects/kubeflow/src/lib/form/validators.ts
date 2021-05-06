@@ -29,10 +29,7 @@ export const dns1123Validator: IValidator = {
 // TODO(kimwnasptd): We only use this validator, do we need the others?
 export const dns1035Validator: IValidator = {
   regex: '^[a-z]([-a-z0-9]*[a-z0-9])?$',
-  help:
-    "Name must consist of lowercase alphanumeric characters or '-', " +
-    ' start with an alphabetic character, and end with an alphanumeric ' +
-    'character',
+  help: 'commonProject.namespaceInput.namePattern',
 };
 
 export const volSizeValidator: IValidator = {
@@ -99,14 +96,20 @@ export const MAX_NAME_LENGTH = 50;
 
 export function getNameError(nameCtrl: AbstractControl, resource: string) {
   if (nameCtrl.hasError('existingName')) {
-    return `${resource} "${nameCtrl.value}" already exists`;
+    return {
+      key: 'commonProject.namespaceInput.nameAlreadyExists',
+      params: { name: nameCtrl.value },
+    };
   } else if (nameCtrl.hasError('pattern')) {
     // TODO: "pattern", is generic error, this might break in the future
-    return dns1035Validator.help;
+    return { key: dns1035Validator.help, params: {} };
   } else if (nameCtrl.hasError('maxlength')) {
-    return `Name is too long`;
+    return { key: 'commonProject.namespaceInput.nameTooLong', params: {} };
   } else {
-    return 'Name cannot be empty';
+    return {
+      key: 'commonProject.namespaceInput.nameCannotBeEmpty',
+      params: {},
+    };
   }
 }
 

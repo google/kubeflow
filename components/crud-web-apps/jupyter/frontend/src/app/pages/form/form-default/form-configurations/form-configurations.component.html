@@ -1,10 +1,10 @@
 <lib-form-section
-  title="{{ 'formConfiguration.h3Configuration' | translate }}"
-  text="{{ 'formConfiguration.txtConfiguration' | translate }}"
+  title="{{ 'formConfiguration.configurations' | translate }}"
+  text="{{ 'formConfiguration.configurationDesc' | translate }}"
   icon="fa:fas:sliders-h"
 >
   <mat-form-field class="wide" appearance="outline">
-    <mat-label>{{ "formConfiguration.lblConfigurations" | translate }}</mat-label>
+    <mat-label>{{ 'formConfiguration.configurations' | translate }}</mat-label>
     <mat-select [formControl]="parentForm.get('configurations')" multiple>
       <mat-option *ngFor="let config of podDefaults" [value]="config.label">
         {{ config.desc }}

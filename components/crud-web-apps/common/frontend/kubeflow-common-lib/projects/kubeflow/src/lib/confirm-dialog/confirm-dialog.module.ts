@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ConfirmDialogComponent } from './dialog/dialog.component';
 import { MatDialogModule, MatButtonModule } from '@angular/material';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ConfirmDialogComponent],
@@ -11,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatDialogModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    TranslateModule,
   ],
   entryComponents: [ConfirmDialogComponent],
 })

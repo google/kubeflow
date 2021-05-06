@@ -1,9 +1,9 @@
 <lib-form-section
-  title="{{ 'formAdvancedOptions.h3MiscSettings' | translate }}"
-  text="{{ 'formAdvancedOptions.txtMiscSettings' | translate }}"
+  title="{{ 'formAdvancedOptions.miscSettings' | translate }}"
+  text="{{ 'formAdvancedOptions.miscSettingsDesc' | translate }}"
   icon="fa:fas:cogs"
 >
   <mat-slide-toggle [formControl]="parentForm.get('shm')">
-    {{ "formAdvancedOptions.toggleSharedMemory" | translate }}
+    {{ 'formAdvancedOptions.enableSharedMemory' | translate }}
   </mat-slide-toggle>
 </lib-form-section>

@@ -1,12 +1,12 @@
 <lib-form-section
-  title="{{ 'formWorkspaceVolume.h3WorkspaceVolume' | translate }}"
-  text="{{ 'formWorkspaceVolume.txtWorkspaceVolume' | translate }}"
+  title="{{ 'formWorkspaceVolume.workspaceVolume' | translate }}"
+  text="{{ 'formWorkspaceVolume.workspaceVolumeDesc' | translate }}"
   icon="fa:fas:laptop-code"
 >
   <div [formGroup]="parentForm">
-    <mat-checkbox formControlName="noWorkspace"
-      >{{ "formWorkspaceVolume.ckbNoPersistent" | translate }}</mat-checkbox
-    >
+    <mat-checkbox formControlName="noWorkspace">
+      {{ 'formWorkspaceVolume.ckbNoPersistent' | translate }}
+    </mat-checkbox>
 
     <app-volume
       [volume]="parentForm.get('workspace')"

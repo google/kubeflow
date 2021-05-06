@@ -1,12 +1,12 @@
-<h1 mat-dialog-title>{{ data.title }}</h1>
+<h1 mat-dialog-title>{{ data.title.key | translate: data.title.params }}</h1>
 <div mat-dialog-content>
-  <p>{{ data.message }}</p>
+  <p>{{ data.message | translate }}</p>
 
-  <p class="error">{{ data.error }}</p>
+  <p class="error">{{ data.error | translate }}</p>
 </div>
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="DIALOG_RESP.CANCEL" cdkFocusInitial>
-    {{ data.cancel.toUpperCase() }}
+    {{ data.cancel | translate }}
   </button>
 
   <button
@@ -15,13 +15,13 @@
     (click)="onAcceptClicked()"
     [color]="data.confirmColor"
   >
-    {{ data.accept.toUpperCase() }}
+    {{ data.accept | translate }}
   </button>
 
   <button *ngIf="isApplying" mat-button disabled>
     <div class="waiting-button-wrapper">
       <mat-spinner diameter="16"></mat-spinner>
-      <p>{{ data.applying }}</p>
+      <p>{{ data.applying | translate }}</p>
     </div>
   </button>
 </div>

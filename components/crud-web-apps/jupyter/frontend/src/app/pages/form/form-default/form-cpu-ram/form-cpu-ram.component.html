@@ -1,6 +1,6 @@
 <lib-form-section
-  title="{{ 'formSpecs.titleCpuRam' | translate }}"
-  text="{{ 'formSpecs.txtCpu' | translate }}"
+  title="{{ 'formSpecs.cpuRam' | translate }}"
+  text="{{ 'formSpecs.cpuDesc' | translate }}"
   icon="fa:fas:microchip"
 >
   <div class="row">
@@ -10,7 +10,7 @@
       min="0.1"
       step="0.1"
       [sizeControl]="parentForm.get('cpu')"
-      label="{{ 'formSpecs.lblCpu' | translate }}"
+      label="{{ 'formSpecs.cpu' | translate }}"
     ></lib-positive-number-input>
 
     <!--RAM-->
@@ -19,7 +19,7 @@
       min="0.1"
       step="0.1"
       [sizeControl]="parentForm.get('memory')"
-      label="{{ 'formSpecs.lblMemory' | translate }}"
+      label="{{ 'formSpecs.ramSize' | translate }}"
     ></lib-positive-number-input>
   </div>
 </lib-form-section>

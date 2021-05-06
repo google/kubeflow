@@ -1,10 +1,10 @@
 <button
   mat-button
-  [matTooltip]="action.tooltip"
+  matTooltip="{{ action.tooltip | translate }}"
   matTooltipClass="custom-tooltip"
   (click)="emitClickedEvent()"
   [color]="action.color"
   [disabled]="!isPhaseReady()"
 >
-  {{ action.text }}
+  {{ action.text | translate }}
 </button>

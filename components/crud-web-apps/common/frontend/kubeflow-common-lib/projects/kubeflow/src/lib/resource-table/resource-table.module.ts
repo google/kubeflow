@@ -23,6 +23,7 @@ import { PopoverModule } from '../popover/popover.module';
 import { TableChipsListComponent } from './chips-list/chips-list.component';
 import { ComponentValueComponent } from './component-value/component-value.component';
 import { PortalModule } from '@angular/cdk/portal';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import { PortalModule } from '@angular/cdk/portal';
     IconModule,
     DateTimeModule,
     PopoverModule,
+    TranslateModule.forChild(),
   ],
   declarations: [
     ResourceTableComponent,

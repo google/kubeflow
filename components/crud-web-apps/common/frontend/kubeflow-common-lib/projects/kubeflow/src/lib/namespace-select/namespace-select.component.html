@@ -1,7 +1,9 @@
 <!-- Namespaces Selector -->
 <div class="center-flex space-top">
   <mat-form-field>
-    <mat-label>Select Namespace</mat-label>
+    <mat-label>
+      {{ 'commonProject.namespaceSelect.selectNamespace' | translate }}
+    </mat-label>
     <mat-select
       [(ngModel)]="currNamespace"
       name="namespacesSelect"

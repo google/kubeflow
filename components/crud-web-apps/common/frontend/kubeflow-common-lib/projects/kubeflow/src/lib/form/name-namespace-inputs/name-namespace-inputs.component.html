@@ -8,10 +8,12 @@
   ></lib-name-input>
 
   <mat-form-field appearance="outline" class="column">
-    <mat-label>{{ "formName.lblNamespace" | translate }}</mat-label>
+    <mat-label>
+      {{ 'commonProject.namespaceInput.namespace' | translate }}
+    </mat-label>
     <input
       matInput
-      placeholder="Namespace"
+      placeholder="{{ 'commonProject.namespaceInput.namespace' | translate }}"
       readonly
       [formControl]="namespaceControl"
     />

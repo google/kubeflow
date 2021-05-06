@@ -1,138 +1,144 @@
 {
-  "namespaceSelect": {
-    "lblSelectNamespace": "Sélectionner l'espace de noms",
-    "btnUpdate": "Mettre à jour"
-  },
-  "resourceTable": {
-    "title": "Serveurs bloc-notes",
-    "btnNewServer": "NOUVEAU SERVEUR",
-    "thStatus": "Statut",
-    "thName": "Nom",
-    "thAge": "Âge",
-    "thImage": "Image",
-    "thCpu": "CPU",
-    "thMemory": "Mémoire",
-    "thVolumes": "Volumes",
-    "btnConnect": "Connecter",
-    "deleteDialogTitle": "Vous êtes sur le point de supprimer le serveur bloc-notes: ",
-    "deleteDialogMessage": "Êtes-vous sûr de vouloir supprimer ce serveur bloc-notes? Vos données pourraient être perdues si le serveur n'est pas sauvegardé par un stockage persistant.",
-    "deleteDialogYes": "Supprimer",
-    "deleteDialogNo": "Annuler",
-    "tooltipRunning": "En exécution",
-    "tooltipWarning": "Attention: un processus a échoué, nouvel essai... (pour plus d'information, vérifier 'kubectl describe pod')",
-    "tooltipError": "Une erreur est advenue, échec de la création du pod. Vérifier 'kubectl describe pod' pour plus d'information.",
-    "tooltipWaiting": "En cours..."
-  },
   "formAdvancedOptions": {
-    "h3MiscSettings": "Paramètres divers",
-    "txtMiscSettings": "Autres paramètres pouvant être appliqué au serveur bloc-notes.",
-    "h3AdvancedSettings": "Paramètres avancés",
-    "toggleSharedMemory": "Activer la mémoire partagée",
-    "lblSystemLanguage":"Langue du système",
-    "lblEnglish": "English",
-    "lblFrench": "Français"
+    "miscSettings": "Paramètres divers",
+    "miscSettingsDesc": "Autres paramètres pouvant être appliqué au serveur bloc-notes.",
+    "enableSharedMemory": "Activer la mémoire partagée"
   },
   "formAffinityTolerations": {
-    "h3AffinityTolerations": "Affinité / Tolérances",
-    "txtAffinityTolerations": "Configuration de l'affinité et des tolérances du bloc-notes.",
-    "lblAffinity":"Config d'affinité",
-    "lblTolerations": "Groupe de tolérances",
-    "optNone": "Aucun"
+    "affinityTolerations": "Affinité / Tolérances",
+    "affinityTolerationsDesc": "Configuration de l'affinité et des tolérances du bloc-notes.",
+    "affinityConfig": "Config d'affinité",
+    "tolerationsGroup": "Groupe de tolérances"
   },
   "formConfiguration": {
-    "h3Configuration": "Configurations",
-    "txtConfiguration": "Couche supplémentaire de configurations qui sera appliquée au nouveau bloc-note. (ex. insérer les informations d'identification en tant que secret, définir les variables d'environnement.)",
-    "lblConfigurations": "Configurations"
+    "configurations": "Configurations",
+    "configurationDesc": "Couche supplémentaire de configurations qui sera appliquée au nouveau bloc-note. (ex. insérer les informations d'identification en tant que secret, définir les variables d'environnement.)"
   },
   "formDataVolumes": {
-    "h3DataVolumes": "Volumes de données",
-    "txtDataVolumes": "Configurer le volume qui sera monter comme base de données.",
-    "txtDataVolumesIf": " *L'administrateur de la grappe a désactiver l'édition dans cette section!",
-    "btnAddVolume": "AJOUTER UN VOLUME"
+    "dataVolumes": "Volumes de données",
+    "dataVolumesDesc": "Configurer le volume qui sera monter comme base de données.",
+    "addVolumeCaps": "AJOUTER UN VOLUME"
   },
   "formGpus": {
-    "h3Gpu": "GPUs",
-    "txtGpu": "Spécifier le nombre et le vendeur de GPUs qui sera assigné au containeur du serveur bloc-notes.",
-    "lblNumGpu": "Nombre GPUs",
-    "optNone": "Aucun",
-    "lblGpuVendor": "Vendeur de GPU",
+    "gpus": "GPUs",
+    "gpusDesc": "Spécifier le nombre et le vendeur de GPUs qui sera assigné au containeur du serveur bloc-notes.",
+    "numGpus": "Nombre GPUs",
+    "gpuVendor": "Vendeur de GPU",
     "errorGpuVendorNotFound": "Aucun GPU {{vendoruiName}} n’a été trouvé installé dans le cluster.",
-    "errorGpuVendorRequired": "Vous devez spécifier le vendeur des GPUs assignés",
-    "specsWarningMessage": "La sélection de 1 GPU définira automatiquement 4 processeurs et 96Gi de la mémoire."
-
+    "errorGpuVendorRequired": "Vous devez spécifier le vendeur des GPUs assignés"
   },
   "formImage": {
-    "h3Image": "Image",
-    "txtImage": "Une image Jupyter Docker démarrée avec un déploiement de base et des paquets ML typiques.",
-    "ckbImage": "Image personnalisée",
-    "lblImage": "Image",
-    "plhImage": "Image Docker",
-    "lblCustomImage": "Image personnalisée",
-    "plhCustomImage": "Fournir une image personnalisée",
-    "lblImagePullPolicy": "Télécharge l'image",
+    "image": "Image",
+    "frmImageDescription": "Une image Jupyter Docker démarrée avec un déploiement de base et des paquets ML typiques.",
+    "customImage": "Image personnalisée",
+    "imageDocker": "Image Docker",
+    "customImagePhl": "Fournir une image personnalisée",
+    "imagePullPolicy": "Télécharge l'image",
     "optAlways": "Toujours",
     "optIfNotPresent": "Si elle n'est pas présente",
     "optNever": "Jamais",
-    "errorImageRequired": "Veuillez fournir une image a utiliser"
+    "errorImageRequired": "Veuillez fournir une image a utiliser",
+    "rstudioTrademark": "RStudio® et le logo RStudio sont des marques déposées de RStudio, PBC",
+    "serverType": "Type de serveur",
+    "useJupyterLabBasedServer": "Utiliser le serveur basé sur JupyterLab",
+    "useVSCodeBasedServer": "Utiliser le serveur basé sur VS-Code",
+    "useRStudioBasedServer": "Utiliser le serveur basé sur RStudio"
   },
   "formName": {
-    "h3Name": "Nom",
-    "txtName": "Spécifier le nom du serveur bloc-notes et l'espace de noms dont il fera partie.",
-    "lblName": "Nom",
-    "plhName": "Nom du serveur bloc-notes",
-    "errorNameRequired": "Le nom du serveur bloc-notes ne peut pas être vide",
-    "errorNameExists": "Le serveur bloc-notes {{existingName}} existe déjà",
-    "errorNamePattern": "Le nom du serveur bloc-notes doit être des caractères minuscules alphanumériques ou '-' et doit commencer et terminer par des caractères alphanumériques.",
-    "errorNameMaxLenght": "Le nom du serveur bloc-notes ne peut excéder 52 caractères",
-    "lblNamespace": "Espace de noms",
-    "plhNamespace": "Nom de l'espace de noms",
-    "errorNamespaceRequired": "Une valeur est requise."
+    "name": "Nom",
+    "nameDesc": "Spécifier le nom du serveur bloc-notes et l'espace de noms dont il fera partie."
   },
   "formSpecs": {
-    "titleCpuRam": "CPU / Mémoire vive",
-    "lblCpu": "CPU",
-    "plhCpu": "# de coeurs de CPU",
-    "txtCpu": "Spécifier le nombre total de CPU et mémoire vive reservé pour votre serveur bloc-notes. Pour les charges de travail lourde pour le CPU, vous pouvez choisir plus d'un CPU (ex. 1.5).",
+    "cpuRam": "CPU / Mémoire vive",
+    "cpu": "CPU",
+    "cpuDesc": "Spécifier le nombre total de CPU et mémoire vive reservé pour votre serveur bloc-notes. Pour les charges de travail lourde pour le CPU, vous pouvez choisir plus d'un CPU (ex. 1.5).",
+    "ramSize": "Taille de la mémoire en Gi",
     "errorCpuRequired": "Spécifier le nombre de CPUs",
     "errorCpuNumber": "Doit être un nombre",
     "errorCpuMin": "Spécifier au moins {{min}} CPUs",
     "errorCpuMax": "Ne peut excéder {{max}} CPUs",
     "errorCpuMaxLimit": " avec {{gpu}} GPU(s) sélectionné(s)",
-    "lblMemory": "Taille de la mémoire en Gi",
-    "plhMemory": "Quantié de mémoire",
     "errorRamRequired": "Spécifier la quantité de mémoire (ex. 2Gi)",
     "errorRamMin": "Spécifier au moins {{min}}Gi de mémoire",
     "errorRamMax": "Ne peut excéder {{max}}Gi de mémoire",
     "errorRamMaxLimit": " avec {{gpu}} GPU(s) sélectionné(s)"
   },
   "formWorkspaceVolume": {
-    "h3WorkspaceVolume": "Volume d'espace de travail",
-    "txtWorkspaceVolume": "Configurer le volume qui sera monté en tant que votre espace de travail personnel.",
-    "txtWorkspaceVolumeIf": "*L'administrateur de la grappe a désactiver l'édition dans cette section!",
+    "workspaceVolume": "Volume d'espace de travail",
+    "workspaceVolumeDesc": "Configurer le volume qui sera monté en tant que votre espace de travail personnel.",
     "ckbNoPersistent": "Ne pas utiliser le stockage persistant",
     "msgNoPersistent": "Votre espace de travail ne sera pas persistant. Toutes les données seront perdues si le bloc-notes est terminé, pour quelque raison que ce soit."
   },
   "volume": {
-    "lblType": "Type",
+    "type": "Type",
     "optNew": "Nouveau",
     "optExisting": "Existant",
-    "lblName": "Nom",
+    "name": "Nom",
     "errorNameRequired": "Le nom du volume ne peut pas être vide",
     "errorNamePattern": "Le nom du volume ne peut contenir que des caractères alphanumériques en minuscule, '-' ou '.', et doit commencer et se terminer par un caractères alphanumériques",
-    "errorMountedVolume":"Le volume est déjà monté sur un autre bloc-notes et ne peut être sélectionné actuellement",
-    "lblSize": "Taille en Gi",
-    "lblMode": "Mode",
+    "errorMountedVolume": "Le volume est déjà monté sur un autre bloc-notes et ne peut être sélectionné actuellement",
+    "sizeInGi": "Taille en Gi",
+    "mode": "Mode",
     "optReadWriteOnce": "ReadWriteOnce",
     "optReadOnlyMany": "ReadOnlyMany",
     "optReadWriteMany": "ReadWriteMany",
-    "lblMountPoint": "Point de montage"
+    "mountPoint": "Point de montage"
   },
   "resourceForm": {
-    "btnLaunch": "LANCER",
-    "btnCancel": "ANNULER",
     "msgDefaultStorageClass": "Aucun stockage par default n'est définie. Impossible de créer un nouveau disque pour le nouveau bloc-notes. Veuillez utiliser un disque existant."
   },
-  "snackBar": {
-    "btnDismiss": "REJETER"
+  "common": {
+    "deleteCaps": "SUPPRIMER",
+    "cancelCaps": "ANNULER",
+    "name": "Nom",
+    "type": "Type",
+    "status": "Statut",
+    "stopCaps": "ARRÊTER",
+    "dismissCaps": "REJETER",
+    "optNone": "Aucun",
+    "lauchCaps": "LANCER"
+  },
+  "commonProject": {
+    "advancedOptions": {
+      "advancedOptions": "Options avancés",
+      "hideAdvancedOptions": "Minimiser les options avancés"
+    },
+    "errorNegative": "Ne peut pas être negative.",
+    "namespaceSelect": {
+      "selectNamespace": "Sélectionner l'espace de noms"
+    },
+    "namespaceInput": {
+      "namespace": "Espace de noms",
+      "nameCannotBeEmpty": "Nom ne peut être vide",
+      "nameTooLong": "Le nom est trop long",
+      "nameAlreadyExists": "Le serveur bloc-notes '{{name}}' existe déjà",
+      "namePattern": "Le nom doit être des caractères minuscules alphanumériques ou '-' et doit commencer et terminer par des caractères alphanumériques."
+    }
+  },
+  "dialog": {
+    "deleteDialogTitle": "Êtes-vous sûr de vouloir supprimer ce serveur bloc-notes? {{name}}",
+    "deleteDialogMessage": "Attention: Vos données pourraient être perdues si le serveur n'est pas sauvegardé par un stockage persistant.",
+    "stopDialogTitle": "Êtes-vous sûr de vouloir arrêter ce serveur bloc-notes? {{name}}",
+    "stopDialogMessage": "Attention: Vos données pourraient être perdues si le serveur n'est pas sauvegardé par un stockage persistant.",
+    "stoppingCaps": "En cours d'arrêt",
+    "deletingCaps": "Supression en cours"
+  },
+  "indexTableConfig": {
+    "notebookServers": "Serveurs bloc-notes",
+    "newServersCaps": "NOUVEAU SERVEUR",
+    "status": "Statut",
+    "name": "Nom",
+    "type": "Type",
+    "age": "Âge",
+    "image": "Image",
+    "gpus": "GPUs",
+    "cpus": "CPUs",
+    "memory": "Mémoire",
+    "volumes": "Volumes",
+    "connectCaps": "CONNECTER",
+    "connectTooltip": "Connecter à ce serveur bloc-notes",
+    "deleteTooltip": "Supprimer ce serveur bloc-notes",
+    "startNotebookServer": "Démarer ce serveur bloc-notes",
+    "stopNotebookServer": "Arrêter ce serveur bloc-notes"
   }
 }

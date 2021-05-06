@@ -8,6 +8,6 @@
     [formControl]="sizeControl"
   />
   <mat-error *ngIf="sizeControl.hasError('min')">
-    Cannot be negative.
+    {{ 'commonProject.errorNegative' | translate }}
   </mat-error>
 </mat-form-field>
