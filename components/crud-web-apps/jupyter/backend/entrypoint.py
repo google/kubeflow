@@ -41,7 +41,7 @@ if UI_FLAVOR == "default":
 elif UI_FLAVOR == "rok":
     app = rok.create_app(APP_NAME, cfg)
 else:
-    log.error(f"No UI flavor for '{UI_FLAVOR}'")
+    log.error("No UI flavor for '%s'" % UI_FLAVOR)
     sys.exit(1)
 
 if __name__ == "__main__":

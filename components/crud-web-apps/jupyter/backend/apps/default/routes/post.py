@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 @decorators.required_body_params("name")
 def post_pvc(namespace):
     body = request.get_json()
-    log.info(f"Got body: {body}")
+    log.info("Got body: %s" % body)
 
     notebook = helpers.load_param_yaml(
         utils.NOTEBOOK_TEMPLATE_YAML,
