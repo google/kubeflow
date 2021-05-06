@@ -12,6 +12,7 @@ commonLabels:
 patchesStrategicMerge:
 - patches/kfam.yaml
 - patches/remove-namespace.yaml
+- patches/manager.yaml
 
 configurations:
 - params.yaml
@@ -25,6 +26,10 @@ vars:
     kind: Service
     apiVersion: v1
 
+configMapGenerator:
+- name: namespace-labels-data
+  files:
+  - namespace-labels.yaml
 images:
 - name: public.ecr.aws/j1r0q0g6/notebooks/access-management
   newName: public.ecr.aws/j1r0q0g6/notebooks/access-management

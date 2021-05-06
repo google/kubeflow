@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment
+spec:
+  template:
+    spec:
+      volumes:
+        - name: namespace-labels
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: namespace-labels-data
+      containers:
+      - name: manager
+        volumeMounts:
+        - name: namespace-labels
+          mountPath: /etc/profile-controller
+          readOnly: true

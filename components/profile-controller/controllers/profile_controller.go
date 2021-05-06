@@ -65,13 +65,6 @@ const (
 	istioInjectionLabel = "istio-injection"
 )
 
-var kubeflowNamespaceLabels = map[string]string{
-	"katib-metricscollector-injection":      "enabled",
-	"serving.kubeflow.org/inferenceservice": "enabled",
-	"pipelines.kubeflow.org/enabled":        "true",
-	"app.kubernetes.io/part-of":             "kubeflow-profile",
-}
-
 const DEFAULT_EDITOR = "default-editor"
 const DEFAULT_VIEWER = "default-viewer"
 
@@ -86,11 +79,12 @@ type Plugin interface {
 // ProfileReconciler reconciles a Profile object
 type ProfileReconciler struct {
 	client.Client
-	Scheme           *runtime.Scheme
-	Log              logr.Logger
-	UserIdHeader     string
-	UserIdPrefix     string
-	WorkloadIdentity string
+	Scheme                 *runtime.Scheme
+	Log                    logr.Logger
+	UserIdHeader           string
+	UserIdPrefix           string
+	WorkloadIdentity       string
+	DefaultNamespaceLabels map[string]string
 }
 
 // +kubebuilder:rbac:groups=core,resources=namespaces,verbs="*"
@@ -105,6 +99,7 @@ type ProfileReconciler struct {
 func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	logger := r.Log.WithValues("profile", request.NamespacedName)
+	defaultKubeflowNamespaceLabels := r.DefaultNamespaceLabels
 
 	// Fetch the Profile instance
 	instance := &profilev1.Profile{}
@@ -134,7 +129,8 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 			Name: instance.Name,
 		},
 	}
-	updateNamespaceLabels(ns)
+	setNamespaceLabels(ns, defaultKubeflowNamespaceLabels)
+	logger.Info("List of labels to be added to namespace", "labels", ns.Labels)
 	if err := controllerutil.SetControllerReference(instance, ns, r.Scheme); err != nil {
 		IncRequestErrorCounter("error setting ControllerReference", SEVERITY_MAJOR)
 		logger.Error(err, "error setting ControllerReference")
@@ -173,7 +169,14 @@ func (r *ProfileReconciler) Reconcile(request ctrl.Request) (ctrl.Result, error)
 		// Check exising namespace ownership before move forward
 		owner, ok := foundNs.Annotations["owner"]
 		if ok && owner == instance.Spec.Owner.Name {
-			if updated := updateNamespaceLabels(foundNs); updated {
+			oldLabels := map[string]string{}
+			for k, v := range foundNs.Labels {
+				oldLabels[k] = v
+			}
+			setNamespaceLabels(foundNs, defaultKubeflowNamespaceLabels)
+			logger.Info("List of labels to be added to found namespace", "labels", ns.Labels)
+			eq := reflect.DeepEqual(oldLabels, foundNs.Labels)
+			if !eq {
 				err = r.Update(ctx, foundNs)
 				if err != nil {
 					IncRequestErrorCounter("error updating namespace label", SEVERITY_MAJOR)
@@ -617,16 +620,23 @@ func removeString(slice []string, s string) (result []string) {
 	return
 }
 
-func updateNamespaceLabels(ns *corev1.Namespace) bool {
-	updated := false
+func setNamespaceLabels(ns *corev1.Namespace, newLabels map[string]string) {
 	if ns.Labels == nil {
 		ns.Labels = make(map[string]string)
 	}
-	for k, v := range kubeflowNamespaceLabels {
-		if _, ok := ns.Labels[k]; !ok {
-			ns.Labels[k] = v
-			updated = true
+
+	for k, v := range newLabels {
+		_, ok := ns.Labels[k]
+		if len(v) == 0 {
+			// When there is an empty value, k should be removed.
+			if ok {
+				delete(ns.Labels, k)
+			}
+		} else {
+			if !ok {
+				// Add label if not exist, otherwise skipping update.
+				ns.Labels[k] = v
+			}
 		}
 	}
-	return updated
 }
